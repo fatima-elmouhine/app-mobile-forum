@@ -29,7 +29,9 @@ async function postmessage (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newmessage = {            
-            //TODO : CLASS FIELDS
+            text: req.body.text,
+            id_topic: req.body,id_topic,
+            id_user: req.body.id_user
         }
         const jane = await message.create(newmessage);
         res.status(201).json(newmessage)
@@ -50,7 +52,9 @@ async function updatemessage (req, res)
         await message.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS
+                text: req.body.text,
+                id_topic: req.body,id_topic,
+                id_user: req.body.id_user
             }, 
             {
                 where: 

@@ -29,7 +29,8 @@ async function postcourse (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newcourse = {            
-            //TODO : CLASS FIELDS
+            link: req.body.link,
+            id_theme: req.body.id_theme
         }
         const jane = await course.create(newcourse);
         res.status(201).json(newcourse)
@@ -50,7 +51,8 @@ async function updatecourse (req, res)
         await course.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS
+                link: req.body.link,
+                id_theme: req.body.id_theme
             }, 
             {
                 where: 
