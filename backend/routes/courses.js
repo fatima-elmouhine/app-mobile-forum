@@ -1,7 +1,7 @@
-import {getcourses, postcourse, getcourse, updatecourse, deletecourse} from '../controllers/courses'
+const {getcourses, postcourse, getcourse, updatecourse, deletecourse} = require('../controllers/courses')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/courses', (req, res) => {
     getcourses(req, res);

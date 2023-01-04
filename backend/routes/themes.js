@@ -1,7 +1,7 @@
-import {getthemes, posttheme, gettheme, logintheme, updatetheme, deletetheme} from '../controllers/themes'
+const {getthemes, posttheme, gettheme, logintheme, updatetheme, deletetheme} = require('../controllers/themes')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/themes', (req, res) => {
     getthemes(req, res);

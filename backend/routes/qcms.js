@@ -1,7 +1,7 @@
-import {getqcms, postqcm, getqcm, loginqcm, updateqcm, deleteqcm} from '../controllers/qcms'
+const {getqcms, postqcm, getqcm, loginqcm, updateqcm, deleteqcm} = require('../controllers/qcms')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/qcms', (req, res) => {
     getqcms(req, res);

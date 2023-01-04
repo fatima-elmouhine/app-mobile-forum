@@ -1,7 +1,7 @@
-import {getresults, postresult, getresult, loginresult, updateresult, deleteresult} from '../controllers/results'
+const {getresults, postresult, getresult, loginresult, updateresult, deleteresult} = require('../controllers/results')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/results', (req, res) => {
     getresults(req, res);

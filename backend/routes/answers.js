@@ -1,7 +1,7 @@
-import {getanswers, postanswer, getanswer, updateanswer, deleteanswer} from '../controllers/answers'
+const {getanswers, postanswer, getanswer, updateanswer, deleteanswer} = require('../controllers/answers')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/answers', (req, res) => {
     getanswers(req, res);

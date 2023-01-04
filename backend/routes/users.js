@@ -1,6 +1,6 @@
 const express = require('express');
-const router = this.express.Router();
-import {getUsers, postUser, getUser, loginUser, updateUser, deleteUser} from '../controllers/users'
+const router = express.Router();
+const {getUsers, postUser, getUser, loginUser, updateUser, deleteUser} = require('../controllers/users')
 
 router.get('/users', (req, res) => {
     getUsers(req, res);

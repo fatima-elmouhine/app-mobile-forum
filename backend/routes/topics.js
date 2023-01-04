@@ -1,7 +1,7 @@
-import {gettopics, posttopic, gettopic, logintopic, updatetopic, deletetopic} from '../controllers/topics'
+const {gettopics, posttopic, gettopic, logintopic, updatetopic, deletetopic} = require('../controllers/topics')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/topics', (req, res) => {
     gettopics(req, res);
