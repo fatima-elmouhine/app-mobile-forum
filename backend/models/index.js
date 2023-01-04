@@ -1,38 +1,69 @@
-'use strict';
+// 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+// const fs = require('fs');
+// const path = require('path');
+// const Sequelize = require('sequelize');
+// const process = require('process');
+// const basename = path.basename(__filename);
+// const env = process.env.NODE_ENV || 'development';
+// const config = require(__dirname + '/../config/config.json')[env];
+// const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+// let sequelize;
+// if (config.use_env_variable) {
+//   sequelize = new Sequelize(process.env[config.use_env_variable], config);
+// } else {
+//   sequelize = new Sequelize(config.database, config.username, config.password, config);
+// }
+
+// fs
+//   .readdirSync(__dirname)
+//   .filter(file => {
+//     return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
+//   })
+//   .forEach(file => {
+//     const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+//     db[model.name] = model;
+//   });
+
+// Object.keys(db).forEach(modelName => {
+//   if (db[modelName].associate) {
+//     db[modelName].associate(db);
+//   }
+// });
+
+// db.sequelize = sequelize;
+// db.Sequelize = Sequelize;
+
+// module.exports = db;
+
+const { Sequelize } = require('sequelize');
+const { association } = require('./association');
+
+const sequelize = new Sequelize('mysql://root:root@localhost:3306/medenpharmakine');
+
+const modelDefiners = [
+  require('./User'),
+  require('./Qcm.js'),
+  require('./Topic.js'),
+];
+
+// console.log(modelDefiners);
+// return
+
+for (const modelDefiner of modelDefiners) {
+  modelDefiner(sequelize);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+// mode.forEach(element => {
+  
+// });
 
-module.exports = db;
+association(sequelize);
+
+module.exports = sequelize;
+
+sequelize.sync({alter: true, force: true}).then(() => {return});
+

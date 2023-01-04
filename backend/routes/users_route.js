@@ -1,13 +1,11 @@
-import express from 'express';
-import dotenv from 'dotenv';
-
+const express = require('express');
+const dotenv = require('dotenv');
+const UserControllers = require('../controllers/users');
 const app = express();
 dotenv.config();
 
 // routes
-app.get('/users', (req, res) => {
-
-});
+app.get('/users',UserControllers.getUsers );
 
 app.get('/users/:id', (req, res) => {
     
