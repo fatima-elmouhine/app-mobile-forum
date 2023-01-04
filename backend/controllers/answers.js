@@ -29,7 +29,8 @@ async function postanswer (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newanswer = {            
-            //TODO : CLASS FIELDS
+            text: req.body.text,
+            isCorrect_answer: req.body.isCorrect_answer
         }
         const jane = await answer.create(newanswer);
         res.status(201).json(newanswer)
@@ -50,7 +51,8 @@ async function updateanswer (req, res)
         await answer.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS 
+                ext: req.body.text,
+                isCorrect_answer: req.body.isCorrect_answer 
             }, 
             {
                 where: 

@@ -29,7 +29,8 @@ async function postquestion (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newquestion = {            
-            //TODO : CLASS FIELDS
+            text: req.body.text,
+            id_theme: req.body.id_theme
         }
         const jane = await question.create(newquestion);
         res.status(201).json(newquestion)
@@ -50,7 +51,8 @@ async function updatequestion (req, res)
         await question.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS
+                text: req.body.text,
+                id_theme: req.body.id_theme
             }, 
             {
                 where: 

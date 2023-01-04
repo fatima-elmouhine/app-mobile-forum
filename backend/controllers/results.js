@@ -26,11 +26,9 @@ async function postresult (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newresult = {            
-            firstname: req.body.firstname,            
-            lastname: req.body.lastname,
-            email: req.body.email,
-            //TODO: HASHPASSWORD
-            password: req.body.password 
+            result: req.body.result,
+            id_question: req.body.id_question,
+            id_user_qcm: req.body.id_user_qcm
         }
         const jane = await result.create(newresult);
         res.status(201).json(newresult)
@@ -51,7 +49,9 @@ async function updateresult (req, res)
         await result.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS 
+                result: req.body.result,
+                id_question: req.body.id_question,
+                id_user_qcm: req.body.id_user_qcm 
             }, 
             {
                 where: 

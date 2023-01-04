@@ -29,7 +29,8 @@ async function posttheme (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newtheme = {            
-            //TODO : CLASS FIELDS 
+            title: req.body.title,
+            description: req.body.description
         }
         const jane = await theme.create(newtheme);
         res.status(201).json(newtheme)
@@ -50,7 +51,8 @@ async function updatetheme (req, res)
         await theme.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS
+                title: req.body.title,
+                description: req.body.description
             }, 
             {
                 where: 
