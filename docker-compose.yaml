@@ -13,15 +13,15 @@ services:
     volumes: 
       - db-config:/etc/mysql
       - db-data:/var/lib/mysql
-  app:
-    build:
-      context: .
-      dockerfile: ./backend/Dockerfile
-    image: node-mysql-app
-    depends_on:
-      - mysqldb
-    stdin_open: true
-    tty: true
+  # app:
+  #   build:
+  #     context: .
+  #     dockerfile: ./backend/Dockerfile
+  #   image: node-mysql-app
+  #   depends_on:
+  #     - mysqldb
+  #   stdin_open: true
+  #   tty: true
 
 volumes: 
   db-config:
