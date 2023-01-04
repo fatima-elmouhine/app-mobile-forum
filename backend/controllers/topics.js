@@ -29,7 +29,8 @@ async function posttopic (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newtopic = {            
-            //TODO : CLASS FIELDS
+            title: req.body.title,
+            id_user: req.body.id_user
         }
         const jane = await topic.create(newtopic);
         res.status(201).json(newtopic)
@@ -50,7 +51,8 @@ async function updatetopic (req, res)
         await topic.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS 
+                title: req.body.title,
+                id_user: req.body.id_user
             }, 
             {
                 where: 

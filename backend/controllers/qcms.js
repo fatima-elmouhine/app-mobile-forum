@@ -29,7 +29,10 @@ async function postqcm (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newqcm = {            
-            //TODO : CLASS FIELDS
+            title: req.body.title,
+            isGenerated: req.body.isGenerated,
+            id_type: req.body.id_type,
+            id_user: req.body.id_user
         }
         const jane = await qcm.create(newqcm);
         res.status(201).json(newqcm)
@@ -50,7 +53,10 @@ async function updateqcm (req, res)
         await qcm.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS
+                title: req.body.title,
+                isGenerated: req.body.isGenerated,
+                id_type: req.body.id_type,
+                id_user: req.body.id_user
             }, 
             {
                 where: 

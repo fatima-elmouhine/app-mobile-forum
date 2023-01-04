@@ -41,7 +41,7 @@ async function posttype (req, res)
         if(!isValidEmailForm(req.body.email)) throw new Error('Error');
         if(emailExist(req.body.email)) throw new Error('Error');
         const newtype = {            
-            //TODO : CLASS FIELDS
+            type_name: req.body.type_name
         }
         const jane = await type.create(newtype);
         res.status(201).json(newtype)
@@ -62,7 +62,7 @@ async function updatetype (req, res)
         await type.update(
             { 
                 id: req.body.id,
-                //TODO : CLASS FIELDS
+                type_name: req.body.type_name
             }, 
             {
                 where: 
