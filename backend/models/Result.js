@@ -1,17 +1,22 @@
+
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('mysql::memory:');
 
 module.exports = (sequelize) => {
-const Topic = sequelize.define('Topic', {
+const Result = sequelize.define('Result', {
   // Model attributes are defined here
-  title: {
-    type: DataTypes.STRING,
+  result: {
+    type: DataTypes.FLOAT,
     allowNull: false
   },
-  id_user: {
+  id_question: {
     type: DataTypes.INTEGER
     // allowNull defaults to true
-  }
+  },
+  id_user_qcm: {
+    type: DataTypes.INTEGER
+    // allowNull defaults to true
+    }
 
 }, {
   // Other model options go here

@@ -3,21 +3,21 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('mysql::memory:');
 
 module.exports = (sequelize) => {
-const Qcm = sequelize.define('Qcm', {
+const UserQcm = sequelize.define('UserQcm', {
   // Model attributes are defined here
-  title: {
+  text_response: {
     type: DataTypes.TEXT,
     allowNull: false
   },
-  isGenerated: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false
-  },
-  id_type: {
-    type: DataTypes.INTEGER,
+  text_structure: {
+    type: DataTypes.TEXT,
     allowNull: false
   },
   id_user: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  id_qcm: {
     type: DataTypes.INTEGER,
     allowNull: false
   },
