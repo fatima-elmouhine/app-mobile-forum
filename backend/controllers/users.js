@@ -1,7 +1,7 @@
-import { isValidEmailForm, emailExist } from '../Tools/emailTools';
-import {} from '../Tools/hashDehashTools';
-
+const { isValidEmailForm, emailExist } = require('../Tools/emailTools');
 const users = require('../models/users')
+// import {} from '../Tools/hashDehashTools';
+
 
 
 async function getUsers(req, res)
