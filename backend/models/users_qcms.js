@@ -52,7 +52,7 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_users_qcms_id_user_users",
+        name: "id_user",
         using: "BTREE",
         fields: [
           { name: "id_user" },

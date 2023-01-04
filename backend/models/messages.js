@@ -41,17 +41,17 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "FK_messages_id_user_users",
-        using: "BTREE",
-        fields: [
-          { name: "id_user" },
-        ]
-      },
-      {
         name: "FK_messages_id_topic_topics",
         using: "BTREE",
         fields: [
           { name: "id_topic" },
+        ]
+      },
+      {
+        name: "id_user",
+        using: "BTREE",
+        fields: [
+          { name: "id_user" },
         ]
       },
     ]
