@@ -40,10 +40,17 @@ async function getAnswer (req, res)
 
 async function postAnswer (req, res) 
 {
-    const newAnswer = {            
-        text: req.body.text,
-        isCorrect_answer: req.body.isCorrect_answer
+    if(!req.body.text || !req.body.isCorrect_answer)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
     }
+    else
+    {
+        const newAnswer = {            
+            text: req.body.text,
+            isCorrect_answer: req.body.isCorrect_answer
+        }
+    }    
 
     await Answer.create(newAnswer)
     .then(answer => {
@@ -67,28 +74,35 @@ async function updateAnswer (req, res)
 
         if(answer == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
 
-            await Answer.update(
-                { 
-                    id: req.body.id,
-                    text: req.body.text,
-                    isCorrect_answer: req.body.isCorrect_answer
-                }, 
-                {
-                where: 
-                {
-                    id: req.params.id
-                }})
-                .then(answer => {
-                    res.status(201).send('La modification a été effectuée')
-                })
-                .catch(err => {
-                    res.status(406).send('Error');
-                })
+            if(!req.body.text || !req.body.isCorrect_answer || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Answer.update(
+                    { 
+                        id: req.body.id,
+                        text: req.body.text,
+                        isCorrect_answer: req.body.isCorrect_answer
+                    }, 
+                    {
+                    where: 
+                    {
+                        id: req.params.id
+                    }})
+                    .then(answer => {
+                        res.status(201).send('La modification a été effectuée')
+                    })
+                    .catch(err => {
+                        res.status(406).send('Error');
+                    })
+            }
         }
     } 
     catch (error) 

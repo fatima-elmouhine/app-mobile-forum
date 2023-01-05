@@ -40,10 +40,17 @@ async function getMessage (req, res)
 
 async function postMessage (req, res) 
 {
-    const newMessage = {            
-        text: req.body.text,
-        id_topic: req.body.id_topic,
-        id_user: req.body.id_user
+    if(!req.body.text || !req.body.id_topic || !req.body.id_user)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newMessage = {            
+            text: req.body.text,
+            id_topic: req.body.id_topic,
+            id_user: req.body.id_user
+        }
     }
 
     await Message.create(newMessage)
@@ -68,12 +75,17 @@ async function updateMessage (req, res)
 
         if(message == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Message.update(
+            if(!req.body.text || !req.body.id_topic || !req.body.id_user || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Message.update(
                 { 
                     id: req.body.id,
                     text: req.body.text,
@@ -91,6 +103,7 @@ async function updateMessage (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

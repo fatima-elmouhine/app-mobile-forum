@@ -40,9 +40,16 @@ async function getTypes (req, res)
 
 async function postTypes (req, res) 
 {
-    const newTypes = {            
-        id: req.body.id,
-        type_name: req.body.type_name
+    if(!req.body.id || !req.body.type_name)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newTypes = {            
+            id: req.body.id,
+            type_name: req.body.type_name
+        }
     }
 
     await Types.create(newTypes)
@@ -67,12 +74,17 @@ async function updateTypes (req, res)
 
         if(types == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Types.update(
+            if(!req.body.id || !req.body.type_name || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Types.update(
                 { 
                     id: req.body.id,
                     id: req.body.id,
@@ -89,6 +101,7 @@ async function updateTypes (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

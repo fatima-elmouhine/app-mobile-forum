@@ -40,9 +40,16 @@ async function getCourse (req, res)
 
 async function postCourse (req, res) 
 {
-    const newCourse = {            
-        link: req.body.link,
-        id_theme:req.body.id_theme
+    if(!req.body.link || !req.body.id_theme)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newCourse = {            
+            link: req.body.link,
+            id_theme: req.body.id_theme
+        }
     }
 
     await Course.create(newCourse)
@@ -67,12 +74,17 @@ async function updateCourse (req, res)
 
         if(course == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Course.update(
+            if(!req.body.link || !req.body.id_theme || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Course.update(
                 { 
                     id: req.body.id,
                     link: req.body.link,
@@ -89,6 +101,7 @@ async function updateCourse (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

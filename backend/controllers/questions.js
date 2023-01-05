@@ -40,9 +40,16 @@ async function getQuestion (req, res)
 
 async function postQuestion (req, res) 
 {
-    const newQuestion = {            
-        text: req.body.text,
-        id_theme: req.body.id_theme
+    if(!req.body.text || !req.body.id_theme)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newQuestion = {            
+            text: req.body.text,
+            id_theme: req.body.id_theme
+        }
     }
 
     await Question.create(newQuestion)
@@ -67,12 +74,17 @@ async function updateQuestion (req, res)
 
         if(question == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Question.update(
+            if(!req.body.text || !req.body.id_theme || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Question.update(
                 { 
                     id: req.body.id,
                     text: req.body.text,
@@ -89,6 +101,7 @@ async function updateQuestion (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

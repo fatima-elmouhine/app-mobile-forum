@@ -40,9 +40,16 @@ async function getTheme (req, res)
 
 async function postTheme (req, res) 
 {
-    const newTheme = {            
-        title: req.body.title,
-        description: req.body.description
+    if(!req.body.title || !req.body.description)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newTheme = {            
+            title: req.body.title,
+            description: req.body.description
+        }
     }
 
     await Theme.create(newTheme)
@@ -67,12 +74,17 @@ async function updateTheme (req, res)
 
         if(theme == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Theme.update(
+            if(!req.body.title || !req.body.description || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Theme.update(
                 { 
                     id: req.body.id,
                     title: req.body.title,
@@ -89,6 +101,7 @@ async function updateTheme (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

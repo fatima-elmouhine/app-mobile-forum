@@ -40,11 +40,18 @@ async function getQcm (req, res)
 
 async function postQcm (req, res) 
 {
-    const newQcm = {            
-        title: req.body.title,
-        isGenerated: req.body.isGenerated,
-        id_type: req.body.id_type,
-        id_user: req.body.id_user
+    if(!req.body.title || !req.body.isGenerated || !req.body.id_type || !req.body.id_user)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newQcm = {            
+            title: req.body.title,
+            isGenerated: req.body.isGenerated,
+            id_type: req.body.id_type,
+            id_user: req.body.id_user
+        }
     }
 
     await Qcm.create(newQcm)
@@ -69,12 +76,18 @@ async function updateQcm (req, res)
 
         if(qcm == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Qcm.update(
+            if(!req.body.title || !req.body.isGenerated || !req.body.id_type 
+                || !req.body.id_user || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Qcm.update(
                 { 
                     id: req.body.id,
                     title: req.body.title,
@@ -93,6 +106,7 @@ async function updateQcm (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

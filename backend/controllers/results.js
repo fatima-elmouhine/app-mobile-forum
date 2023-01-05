@@ -40,10 +40,17 @@ async function getResult (req, res)
 
 async function postResult (req, res) 
 {
-    const newResult = {            
-        result: req.body.result,
-        id_question: req.body.id_question,
-        id_user_qcm: req.body.id_user_qcm
+    if(!req.body.result || !req.body.id_question || !req.body.id_user_qcm)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newResult = {            
+            result: req.body.result,
+            id_question: req.body.id_question,
+            id_user_qcm: req.body.id_user_qcm
+        }
     }
 
     await Result.create(newResult)
@@ -68,12 +75,17 @@ async function updateResult (req, res)
 
         if(result == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Result.update(
+            if(!req.body.result || !req.body.id_question || !req.body.id_user_qcm || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Result.update(
                 { 
                     id: req.body.id,
                     result: req.body.result,
@@ -91,6 +103,7 @@ async function updateResult (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

@@ -40,9 +40,16 @@ async function getTopic (req, res)
 
 async function postTopic (req, res) 
 {
-    const newTopic = {            
-        title: req.body.title,
-        id_user: req.body.id_user
+    if(!req.body.title || !req.body.id_user)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newTopic = {            
+            title: req.body.title,
+            id_user: req.body.id_user
+        }
     }
 
     await Topic.create(newTopic)
@@ -67,12 +74,17 @@ async function updateTopic (req, res)
 
         if(topic == null) 
         {
-            res.status(404).send('La réponse n\'existe pas');
+            res.status(404).send('L\'artefact n\'existe pas');
         }
         else
         {
-
-            await Topic.update(
+            if(!req.body.title || !req.body.id_user || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Topic.update(
                 { 
                     id: req.body.id,
                     title: req.body.title,
@@ -89,6 +101,7 @@ async function updateTopic (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
+            }
         }
     } 
     catch (error) 

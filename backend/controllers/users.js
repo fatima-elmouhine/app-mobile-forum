@@ -49,12 +49,18 @@ async function postUser (req, res)
     }
     else
     {
-        
-        const newUser = {            
-            firstName: req.body.firstname,            
-            lastName: req.body.lastname,
-            email: req.body.email,
-            password: hashPassword(req.body.password)
+        if(!req.body.firstname || !req.body.lastname || !req.body.email || !req.body.password)
+        {
+            res.status(406).send('Les champs doivent être tous remplis');
+        }
+        else
+        {
+            const newUser = {            
+                firstName: req.body.firstname,            
+                lastName: req.body.lastname,
+                email: req.body.email,
+                password: hashPassword(req.body.password)
+            }
         }
 
         await User.create(newUser)
@@ -89,8 +95,14 @@ async function updateUser (req, res)
         }
         else
         {
-
-            await User.update(
+            if(!req.body.firstname || !req.body.lastname || !req.body.email 
+                || !req.body.password || !req.body.id)
+            {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await User.update(
                 { 
                     id: req.body.id,
                     firstName: req.body.firstname,
@@ -109,6 +121,7 @@ async function updateUser (req, res)
                 .catch(err => {
                     res.status(406).send('Cette adresse email est déjà utilisée');
                 })
+            }
         }
     } 
     catch (error) 
