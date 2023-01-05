@@ -1,26 +1,16 @@
-const {getmessages, postmessage, getmessage, updatemessage, deletemessage} = require('../controllers/messages')
+const {getMessages, postMessage, getMessage, updateMessage, deleteMessage} = require('../controllers/messages')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/messages', (req, res) => {
-    getmessages(req, res);
-});
+router.get('/', getMessages);
 
-router.get('/messages/:id', (req, res) => {
-    getmessage(req, res);
-});
+router.get('/:id', getMessage);
 
-router.post('/messages', (req, res) => {
-    postmessage(req, res);
-});
+router.post('/', postMessage);
 
-router.put('/messages/:id', (req, res) => {
-    updatemessage(req, res);
-});
+router.put('/:id', updateMessage);
 
-router.delete('/messages/:id', (req, res) => {
-    deletemessage(req, res);
-});
+router.delete('/:id', deleteMessage);
 
 module.exports = router

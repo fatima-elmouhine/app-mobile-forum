@@ -25,7 +25,7 @@ async function getMessage (req, res)
 
         if(messageReq == null) 
         {
-            res.status(404).send('Artefact not found');
+            res.status(404).send('Ce message n\'existe pas');
         }
         else
         {
@@ -51,16 +51,21 @@ async function postMessage (req, res)
             id_topic: req.body.id_topic,
             id_user: req.body.id_user
         }
+        await Message.create(newMessage)
+        .then(message => {
+            if(message == null) 
+            {
+                res.status(406).send('Error');
+            }else{
+                res.status(201).json(message)
+            }
+        })
+        // .catch(err => {
+        //     res.status(406).send('Cette adresse email est déjà utilisée');
+    
+        // });
     }
 
-    await Message.create(newMessage)
-    .then(message => {
-        res.status(201).json(message)
-    })
-    .catch(err => {
-        res.status(406).send('Cette adresse email est déjà utilisée');
-
-    });
 
 }
 
@@ -75,16 +80,10 @@ async function updateMessage (req, res)
 
         if(message == null) 
         {
-            res.status(404).send('L\'artefact n\'existe pas');
+            res.status(404).send('Ce message n\'existe pas');
         }
         else
         {
-            if(!req.body.text || !req.body.id_topic || !req.body.id_user || !req.body.id)
-            {
-                res.status(406).send('Les champs doivent être tous remplis');
-            }
-            else
-            {
                 await Message.update(
                 { 
                     id: req.body.id,
@@ -103,7 +102,6 @@ async function updateMessage (req, res)
                 .catch(err => {
                     res.status(406).send('Error');
                 })
-            }
         }
     } 
     catch (error) 
