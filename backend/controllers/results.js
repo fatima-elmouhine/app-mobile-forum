@@ -1,97 +1,162 @@
-async function getresults(req, res)
+const sequelize  = require('../models/index');
+const {Result} = sequelize.models;
+
+
+async function getResults(req, res)
 {
-    return await results.findAll();
+    var resultsReq =  await Result.findAll().then(resultArray => {
+        return resultArray;
+    });
+
+    res.json(resultsReq);
 }
 
-function getresult (req, res) 
+async function getResult (req, res) 
 {
+    
     try 
     {
+        const resultReq = await Result.findOne({ where: {id:req.params.id }})
+        .then(result => {
+            return result;
+        });
 
-        if(results.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(resultReq);
 
-        res.json(results.findOne({ where: {id: req.body.id }}));
-         
+        if(resultReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(resultReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-async function postresult (req, res) 
+async function postResult (req, res) 
 {
-    try 
+    if(!req.body.result || !req.body.id_question || !req.body.id_user_qcm)
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newresult = {            
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newResult = {            
             result: req.body.result,
             id_question: req.body.id_question,
             id_user_qcm: req.body.id_user_qcm
         }
-        const jane = await result.create(newresult);
-        res.status(201).json(newresult)
-    } catch (error) {
-        res.status(406)
     }
-    
+
+    await Result.create(newResult)
+    .then(result => {
+        res.status(201).json(result)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
 }
 
-async function updateresult (req, res) 
+async function updateResult (req, res) 
 {
-
     try 
     {
-        
-        if(results.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        const result = await Result.findOne({ where: {id: req.params.id }})
+        .then(result => {
+            return result;
+        })
 
-        await result.update(
-            { 
-                id: req.body.id,
-                result: req.body.result,
-                id_question: req.body.id_question,
-                id_user_qcm: req.body.id_user_qcm 
-            }, 
+        if(result == null) 
+        {
+            res.status(404).send('L\'artefact n\'existe pas');
+        }
+        else
+        {
+            if(!req.body.result || !req.body.id_question || !req.body.id_user_qcm || !req.body.id)
             {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Result.update(
+                { 
+                    id: req.body.id,
+                    result: req.body.result,
+                    id_question: req.body.id_question,
+                    id_user_qcm: req.body.id_user_qcm
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
+                    id: req.params.id
+                }})
+                .then(result => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
             }
-        );
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('result updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deleteresult (req, res) 
+async function deleteResult (req, res) 
 {
     try 
     {
+       const result = await Result.findOne({ where: {id: req.params.id }})
+        .then(result => {
+            return result;
+        })
 
-        if(results.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(result != null) 
+        {
+            await Result.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(result => {
+                res.status(200).send('La suppression a été effectuée')
+                // return result;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await result.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('result deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    getresults,
-    postresult,
-    getresult,
-    updateresult,
-    deleteresult
+    getResults,
+    postResult,
+    getResult,
+    updateResult,
+    deleteResult
 }

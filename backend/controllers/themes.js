@@ -1,98 +1,160 @@
-const themes = require('../models/themes')
+const sequelize  = require('../models/index');
+const {Theme} = sequelize.models;
 
 
-async function getthemes(req, res)
+async function getThemes(req, res)
 {
-    return await themes.findAll();
+    var themesReq =  await Theme.findAll().then(themeArray => {
+        return themeArray;
+    });
+
+    res.json(themesReq);
 }
 
-function gettheme (req, res) 
+async function getTheme (req, res) 
 {
+    
     try 
     {
+        const themeReq = await Theme.findOne({ where: {id:req.params.id }})
+        .then(theme => {
+            return theme;
+        });
 
-        if(themes.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(themeReq);
 
-        res.json(themes.findOne({ where: {id: req.body.id }}));
-         
+        if(themeReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(themeReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-async function posttheme (req, res) 
+async function postTheme (req, res) 
 {
-    try 
+    if(!req.body.title || !req.body.description)
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newtheme = {            
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newTheme = {            
             title: req.body.title,
             description: req.body.description
         }
-        const jane = await theme.create(newtheme);
-        res.status(201).json(newtheme)
-    } catch (error) {
-        res.status(406)
     }
-    
+
+    await Theme.create(newTheme)
+    .then(theme => {
+        res.status(201).json(theme)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
 }
 
-async function updatetheme (req, res) 
+async function updateTheme (req, res) 
 {
-
     try 
     {
-        
-        if(themes.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        const theme = await Theme.findOne({ where: {id: req.params.id }})
+        .then(theme => {
+            return theme;
+        })
 
-        await theme.update(
-            { 
-                id: req.body.id,
-                title: req.body.title,
-                description: req.body.description
-            }, 
+        if(theme == null) 
+        {
+            res.status(404).send('L\'artefact n\'existe pas');
+        }
+        else
+        {
+            if(!req.body.title || !req.body.description || !req.body.id)
             {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Theme.update(
+                { 
+                    id: req.body.id,
+                    title: req.body.title,
+                    description: req.body.description
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
+                    id: req.params.id
+                }})
+                .then(theme => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
             }
-        );
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('theme updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deletetheme (req, res) 
+async function deleteTheme (req, res) 
 {
     try 
     {
+       const theme = await Theme.findOne({ where: {id: req.params.id }})
+        .then(theme => {
+            return theme;
+        })
 
-        if(themes.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(theme != null) 
+        {
+            await Theme.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(theme => {
+                res.status(200).send('La suppression a été effectuée')
+                // return theme;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await theme.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('theme deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    getthemes,
-    posttheme,
-    gettheme,
-    updatetheme,
-    deletetheme
+    getThemes,
+    postTheme,
+    getTheme,
+    updateTheme,
+    deleteTheme
 }

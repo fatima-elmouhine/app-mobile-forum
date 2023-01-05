@@ -1,109 +1,160 @@
-const types = require('../models/types')
+const sequelize  = require('../models/index');
+const {Types} = sequelize.models;
 
-async function gettypes(req, res)
+
+async function getTypess(req, res)
 {
-    return await types.findAll();
+    var typessReq =  await Types.findAll().then(typesArray => {
+        return typesArray;
+    });
+
+    res.json(typessReq);
 }
 
-function gettype (req, res) 
+async function getTypes (req, res) 
 {
+    
     try 
     {
+        const typesReq = await Types.findOne({ where: {id:req.params.id }})
+        .then(types => {
+            return types;
+        });
 
-        if(types.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(typesReq);
 
-        res.json(types.findOne({ where: {id: req.body.id }}));
-         
+        if(typesReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(typesReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-function logintype (req, res) 
+async function postTypes (req, res) 
 {
-    try 
+    if(!req.body.id || !req.body.type_name)
     {
-        if(emailExist(req.body.email)) throw new Error('Error');
-        //TODO :DEHASH PASSWORD
-        if(types.findOne({ where: {password: req.body.password }}) == null) throw new Error('Error');
-        //FAIRE TON TRUC DE JWT
-    } catch (error) {
-        res.status(406)
+        res.status(406).send('Les champs doivent être tous remplis');
     }
-}
-
-async function posttype (req, res) 
-{
-    try 
+    else
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newtype = {            
+        const newTypes = {            
+            id: req.body.id,
             type_name: req.body.type_name
         }
-        const jane = await type.create(newtype);
-        res.status(201).json(newtype)
-    } catch (error) {
-        res.status(406)
     }
-    
+
+    await Types.create(newTypes)
+    .then(types => {
+        res.status(201).json(types)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
 }
 
-async function updatetype (req, res) 
+async function updateTypes (req, res) 
 {
-
     try 
     {
-        
-        if(types.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        const types = await Types.findOne({ where: {id: req.params.id }})
+        .then(types => {
+            return types;
+        })
 
-        await type.update(
-            { 
-                id: req.body.id,
-                type_name: req.body.type_name
-            }, 
+        if(types == null) 
+        {
+            res.status(404).send('L\'artefact n\'existe pas');
+        }
+        else
+        {
+            if(!req.body.id || !req.body.type_name || !req.body.id)
             {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Types.update(
+                { 
+                    id: req.body.id,
+                    id: req.body.id,
+                    type_name: req.body.type_name
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
+                    id: req.params.id
+                }})
+                .then(types => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
             }
-        );
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('type updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deletetype (req, res) 
+async function deleteTypes (req, res) 
 {
     try 
     {
+       const types = await Types.findOne({ where: {id: req.params.id }})
+        .then(types => {
+            return types;
+        })
 
-        if(types.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(types != null) 
+        {
+            await Types.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(types => {
+                res.status(200).send('La suppression a été effectuée')
+                // return types;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await type.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('type deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    gettypes,
-    posttype,
-    logintype,
-    gettype,
-    updatetype,
-    deletetype
+    getTypess,
+    postTypes,
+    getTypes,
+    updateTypes,
+    deleteTypes
 }

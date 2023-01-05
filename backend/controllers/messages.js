@@ -1,100 +1,162 @@
-const messages = require('../models/messages')
+const sequelize  = require('../models/index');
+const {Message} = sequelize.models;
 
 
-async function getmessages(req, res)
+async function getMessages(req, res)
 {
-    return await messages.findAll();
+    var messagesReq =  await Message.findAll().then(messageArray => {
+        return messageArray;
+    });
+
+    res.json(messagesReq);
 }
 
-function getmessage (req, res) 
+async function getMessage (req, res) 
 {
+    
     try 
     {
+        const messageReq = await Message.findOne({ where: {id:req.params.id }})
+        .then(message => {
+            return message;
+        });
 
-        if(messages.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(messageReq);
 
-        res.json(messages.findOne({ where: {id: req.body.id }}));
-         
+        if(messageReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(messageReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-async function postmessage (req, res) 
+async function postMessage (req, res) 
 {
-    try 
+    if(!req.body.text || !req.body.id_topic || !req.body.id_user)
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newmessage = {            
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newMessage = {            
             text: req.body.text,
-            id_topic: req.body,id_topic,
+            id_topic: req.body.id_topic,
             id_user: req.body.id_user
         }
-        const jane = await message.create(newmessage);
-        res.status(201).json(newmessage)
-    } catch (error) {
-        res.status(406)
     }
-    
+
+    await Message.create(newMessage)
+    .then(message => {
+        res.status(201).json(message)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
 }
 
-async function updatemessage (req, res) 
+async function updateMessage (req, res) 
 {
-
     try 
     {
-        
-        if(messages.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        const message = await Message.findOne({ where: {id: req.params.id }})
+        .then(message => {
+            return message;
+        })
 
-        await message.update(
-            { 
-                id: req.body.id,
-                text: req.body.text,
-                id_topic: req.body,id_topic,
-                id_user: req.body.id_user
-            }, 
+        if(message == null) 
+        {
+            res.status(404).send('L\'artefact n\'existe pas');
+        }
+        else
+        {
+            if(!req.body.text || !req.body.id_topic || !req.body.id_user || !req.body.id)
             {
+                res.status(406).send('Les champs doivent être tous remplis');
+            }
+            else
+            {
+                await Message.update(
+                { 
+                    id: req.body.id,
+                    text: req.body.text,
+                    id_topic: req.body.id_topic,
+                    id_user: req.body.id_user
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
+                    id: req.params.id
+                }})
+                .then(message => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
             }
-        );
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('message updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deletemessage (req, res) 
+async function deleteMessage (req, res) 
 {
     try 
     {
+       const message = await Message.findOne({ where: {id: req.params.id }})
+        .then(message => {
+            return message;
+        })
 
-        if(messages.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(message != null) 
+        {
+            await Message.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(message => {
+                res.status(200).send('La suppression a été effectuée')
+                // return message;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await message.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('message deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    getmessages,
-    postmessage,
-    getmessage,
-    updatemessage,
-    deletemessage
+    getMessages,
+    postMessage,
+    getMessage,
+    updateMessage,
+    deleteMessage
 }
