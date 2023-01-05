@@ -50,16 +50,16 @@ async function postCourse (req, res)
             link: req.body.link,
             id_theme: req.body.id_theme
         }
+        await Course.create(newCourse)
+        .then(course => {
+            res.status(201).json(course)
+        })
+        .catch(err => {
+            res.status(406).send('Cette adresse email est déjà utilisée');
+    
+        });
     }
 
-    await Course.create(newCourse)
-    .then(course => {
-        res.status(201).json(course)
-    })
-    .catch(err => {
-        res.status(406).send('Cette adresse email est déjà utilisée');
-
-    });
 
 }
 

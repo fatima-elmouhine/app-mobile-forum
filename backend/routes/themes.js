@@ -15,7 +15,7 @@ router.post('/themes', (req, res) => {
     posttheme(req, res);
 });
 
-router.update('/themes/:id', (req, res) => {
+router.put('/themes/:id', (req, res) => {
     updatetheme(req, res);
 });
 

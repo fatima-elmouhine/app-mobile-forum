@@ -15,7 +15,7 @@ router.post('/courses', (req, res) => {
     postcourse(req, res);
 });
 
-router.update('/courses/:id', (req, res) => {
+router.put('/courses/:id', (req, res) => {
     updatecourse(req, res);
 });
 

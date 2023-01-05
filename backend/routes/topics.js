@@ -15,7 +15,7 @@ router.post('/topics', (req, res) => {
     posttopic(req, res);
 });
 
-router.update('/topics/:id', (req, res) => {
+router.put('/topics/:id', (req, res) => {
     updatetopic(req, res);
 });
 

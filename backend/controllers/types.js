@@ -1,22 +1,24 @@
 const sequelize  = require('../models/index');
-const {Types} = sequelize.models;
+const {Type} = sequelize.models;
 
 
-async function getTypess(req, res)
+
+async function getTypes(req, res)
 {
-    var typessReq =  await Types.findAll().then(typesArray => {
+    var typesReq =  await Type.findAll().then(typesArray => {
+    
         return typesArray;
     });
 
-    res.json(typessReq);
+    res.json(typesReq);
 }
 
-async function getTypes (req, res) 
+async function getType (req, res) 
 {
     
     try 
     {
-        const typesReq = await Types.findOne({ where: {id:req.params.id }})
+        const typesReq = await Type.findOne({ where: {id:req.params.id }})
         .then(types => {
             return types;
         });
@@ -25,7 +27,8 @@ async function getTypes (req, res)
 
         if(typesReq == null) 
         {
-            res.status(404).send('Artefact not found');
+            // res.status(404).send('Artefact not found');
+            res.status(404).send('Ce type n\'existe pas');
         }
         else
         {
@@ -40,7 +43,7 @@ async function getTypes (req, res)
 
 async function postTypes (req, res) 
 {
-    if(!req.body.id || !req.body.type_name)
+    if(!req.body.type_name)
     {
         res.status(406).send('Les champs doivent être tous remplis');
     }
@@ -50,16 +53,16 @@ async function postTypes (req, res)
             id: req.body.id,
             type_name: req.body.type_name
         }
+        await Type.create(newTypes)
+        .then(types => {
+            res.status(201).json(types)
+        })
+        .catch(err => {
+            res.status(406).send('Ce type est déjà utilisé');
+    
+        });
     }
 
-    await Types.create(newTypes)
-    .then(types => {
-        res.status(201).json(types)
-    })
-    .catch(err => {
-        res.status(406).send('Cette adresse email est déjà utilisée');
-
-    });
 
 }
 
@@ -67,27 +70,25 @@ async function updateTypes (req, res)
 {
     try 
     {
-        const types = await Types.findOne({ where: {id: req.params.id }})
+        const types = await Type.findOne({ where: {id: req.params.id }})
         .then(types => {
             return types;
         })
 
         if(types == null) 
         {
-            res.status(404).send('L\'artefact n\'existe pas');
+            res.status(404).send('Ce type n\'existe pas');
         }
         else
         {
-            if(!req.body.id || !req.body.type_name || !req.body.id)
+            if( !req.body.type_name)
             {
                 res.status(406).send('Les champs doivent être tous remplis');
             }
             else
             {
-                await Types.update(
+                await Type.update(
                 { 
-                    id: req.body.id,
-                    id: req.body.id,
                     type_name: req.body.type_name
                 }, 
                 {
@@ -116,21 +117,20 @@ async function deleteTypes (req, res)
 {
     try 
     {
-       const types = await Types.findOne({ where: {id: req.params.id }})
+       const types = await Type.findOne({ where: {id: req.params.id }})
         .then(types => {
             return types;
         })
 
         if(types != null) 
         {
-            await Types.destroy({
+            await Type.destroy({
                 where: {
                 id: req.params.id
                 }
             })
             .then(types => {
                 res.status(200).send('La suppression a été effectuée')
-                // return types;
             })
             .catch(err => {
                 res.status(404).send('La suppression n\'a pas aboutie!');
@@ -152,9 +152,9 @@ async function deleteTypes (req, res)
 
 
 module.exports = {
-    getTypess,
-    postTypes,
     getTypes,
+    postTypes,
+    getType,
     updateTypes,
     deleteTypes
 }

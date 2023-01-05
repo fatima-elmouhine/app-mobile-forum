@@ -1,26 +1,17 @@
-const {gettypes, posttype, gettype, logintype, updatetype, deletetype} = require('../controllers/types')
+const {getTypes, postTypes, getType, updateTypes, deleteTypes} = require('../controllers/types')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/types', (req, res) => {
-    gettypes(req, res);
-});
+router.get('/',getTypes);
 
-router.get('/types/:id', (req, res) => {
-    gettype(req, res);
-});
+router.post('/',postTypes);
 
-router.post('/types', (req, res) => {
-    posttype(req, res);
-});
+router.get('/:id',getType);
 
-router.update('/types/:id', (req, res) => {
-    updatetype(req, res);
-});
 
-router.delete('/types/:id', (req, res) => {
-    deletetype(req, res);
-});
+router.put('/:id',updateTypes);
+
+router.delete('/:id', deleteTypes);
 
 module.exports = router;
