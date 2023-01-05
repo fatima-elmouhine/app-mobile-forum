@@ -1,5 +1,6 @@
 const express  = require('express');
-const dotenv  = require('dotenv');
+// const dotenv  = require('dotenv');
+const dotenv = require('dotenv');
 // const answersRouter  = require('./routes/answers');
 // const coursesRouter  = require('./routes/courses');
 // const messagesRouter  = require('./routes/messages');
@@ -9,12 +10,13 @@ const dotenv  = require('dotenv');
 // const themesRouter  = require('./routes/themes');
 // const topicsRouter  = require('./routes/topics');
 // const typesRouter  = require('./routes/types');
-const usersRouter  = require('./routes/users');
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
 dotenv.config();
+
+
+const usersRouter  = require('./routes/users');
 
 // start the server
 // app.listen(process.env.BACK_PORT, () => {
