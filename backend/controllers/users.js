@@ -1,5 +1,8 @@
 const { isValidEmailForm, emailExist, isUserExist } = require('../Tools/emailTools');
 const { hashPassword } = require('../Tools/hashDehashTools');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = process.env.SECRET_KEY;
 const sequelize  = require('../models/index');
 const {User} = sequelize.models;
 const users = User
@@ -138,17 +141,42 @@ async function deleteUser (req, res)
     
 }
 
-// pas encore testé
-function loginUser (req, res) 
+async function loginUser (req, res) 
 {
-    try 
-    {
-        if(emailExist(req.body.email)) throw new Error('Error');
-        //TODO :DEHASH PASSWORD pour la comparaison en BDD
-        if(users.findOne({ where: {password: req.body.password }}) == null) throw new Error('Error');
-        //FAIRE TON TRUC DE JWT
+
+    const { email, password } = req.body;
+    if (!(email && password)) {
+        res.status(400).send("Tous les champs doivent etre remplis");
+      }
+    try {
+        let user = await users.findOne({ where: {email: email }});
+        if (user != null) {
+            bcrypt.compare(password, user['dataValues'].password, function(err, response) {
+                if (err) {
+                    throw new Error(err);
+                }
+                if (response) {
+                    const expireIn = 24 * 60 * 60;
+                    const token    = jwt.sign({
+                        id: user['dataValues'].id,
+                        email: user['dataValues'].email,
+                    },
+                    SECRET_KEY,
+                    {
+                        expiresIn: expireIn
+                    });
+                    return res.status(200).json(token);
+                }else{
+                    return res.status(403).json(' Mot de passe incorrect');
+                }
+
+                return res.status(403).json(' Mot de passe incorrect');
+            });
+        } else {
+            return res.status(404).json('Email / Mot de passe incorrect');
+        }
     } catch (error) {
-        res.status(406)
+        return res.status(501).json(error);
     }
 }
 
