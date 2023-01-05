@@ -28,11 +28,4 @@ association(sequelize);
 
 module.exports = sequelize;
 
- sequelize.drop().then(() => {
-    console.log('All tables were dropped successfully');
-    sequelize.sync({force: true})
-  }).catch(err => {
-    console.error('Unable to drop all tables', err);
-  });
-
 

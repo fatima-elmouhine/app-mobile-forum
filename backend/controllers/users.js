@@ -1,30 +1,41 @@
-const { isValidEmailForm, emailExist } = require('../Tools/emailTools');
-const users = require('../models/users')
-// import {} from '../Tools/hashDehashTools';
+const { isValidEmailForm, emailExist, isUserExist } = require('../Tools/emailTools');
+const sequelize  = require('../models/index');
+const {User} = sequelize.models;
+const users = User
 
 
 
 async function getUsers(req, res)
 {
-    return await users.findAll();
+    // res.send('users');
+    var usersReq =  await users.findAll().then(userArray => {
+        return userArray;
+    });
+    res.json(usersReq);
 }
 
-function getUser (req, res) 
+async function getUser (req, res) 
 {
+    
     try 
     {
-
-        if(users.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
-
-        res.json(users.findOne({ where: {id: req.body.id }}));
-         
+        const userReq = await users.findOne({ where: {id:req.params.id }})
+        .then(user => {
+            return user;
+        });
+        console.log(userReq);
+        if(userReq == null) {
+            res.status(404).send('User not found');
+        }else{
+            res.status(200).send(userReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
-
+// pas encore testé
 function loginUser (req, res) 
 {
     try 
@@ -40,50 +51,64 @@ function loginUser (req, res)
 
 async function postUser (req, res) 
 {
-    try 
-    {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newUser = {            
-            firstname: req.body.firstname,            
-            lastname: req.body.lastname,
-            email: req.body.email,
-            //TODO: HASHPASSWORD
-            password: req.body.password 
+        if(!isValidEmailForm(req.body.email)){
+            res.status(406).send('Cette adresse email n\'est pas valide');
+        }else{
+            const newUser = {            
+                firstName: req.body.firstname,            
+                lastName: req.body.lastname,
+                email: req.body.email,
+                //TODO: HASHPASSWORD
+                password: req.body.password 
+            }
+
+            await users.create(newUser)
+            .then(user => {
+                res.status(201).json(user)
+            })
+            .catch(err => {
+                res.status(406).send('Cette adresse email est déjà utilisée');
+
+            });
         }
-        const jane = await User.create(newUser);
-        res.status(201).json(newUser)
-    } catch (error) {
-        res.status(406)
-    }
+
     
 }
 
 async function updateUser (req, res) 
 {
-
     try 
     {
-        
-        if(users.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(!isValidEmailForm(req.body.email)){
+            res.status(406).send('Cette adresse email n\'est pas valide');
+        }
 
-        await User.update(
-            { 
-                id: req.body.id,
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                email: req.body.email,
-                password: req.body.password }, 
-            {
-            where: {
-                id: req.body.id
-            }
-            }
-        );
+        const user = await users.findOne({ where: {id: req.params.id }})
+        .then(user => {
+            return user;
+        })
 
-        res.status(200).json('User updated')
+        if(user == null) {
+            res.status(404).send('L\'utilisateur n\'existe pas');
+        }else{
+
+            await users.update(
+                { 
+                    id: req.body.id,
+                    firstName: req.body.firstname,
+                    lastName: req.body.lastname,
+                    email: req.body.email,
+                    password: req.body.password }, 
+                {
+                where: {
+                    id: req.params.id
+                }}).then(user => {
+                res.status(201).send('L\'utilisateur a bien été modifié')
+            })
+        }
     } catch (error) {
-        res.status(406)
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
     }
     
 }
@@ -92,18 +117,32 @@ async function deleteUser (req, res)
 {
     try 
     {
+       const user = await users.findOne({ where: {id: req.params.id }})
+        .then(user => {
+            return user;
+        })
 
-        if(users.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(user != null) {
+            await users.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(user => {
+                res.status(200).send('L\'utilisateur a bien été supprimé')
+                // return user;
+            })
+            .catch(err => {
+                res.status(404).send('L\'utilisateur n\'a pas été trouvé');
+            })
 
-        await User.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('User deleted')
+        }else{
+            res.status(404).send('L\'utilisateur n\'a pas été trouvé');
+        }
     } catch (error) {
-        res.status(406)
+        res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
+
     }
     
 }

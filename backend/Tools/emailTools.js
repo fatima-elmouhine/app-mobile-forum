@@ -1,4 +1,7 @@
-const users = require('../models/users');
+
+const sequelize  = require('../models/index');
+const {User} = sequelize.models;
+const users = User
 
 function isValidEmailForm(email){
 
@@ -9,9 +12,27 @@ function isValidEmailForm(email){
 
 async function emailExist(email){
         
-    const users = await users.findAll();;
-    return users.findOne({ where: {id: email }}) ? true : false;
+    // const users = await users.findAll();
+    return users.findOne({ where: {email: email }}) ? true : false;
 
 }
 
-module.exports = { isValidEmailForm, emailExist }
+async function isUserExist(id){
+        
+    await users.findOne({ where: {id: id }})
+    .then(user => {
+        // console.log('user = ',user);
+        return user;
+    })
+
+    // console.log(Object.keys(userFinded));
+    // console.log(userFinded['dataValues']);
+
+    
+    
+
+}
+
+
+
+module.exports = { isValidEmailForm, emailExist, isUserExist }
