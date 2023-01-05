@@ -15,6 +15,9 @@ function association(sequelize){
     Type.hasOne(Qcm, {foreignKey: 'id_type'});
 
     Answer.belongsToMany(Question, { through: 'QuestionAnswered' });
+    Qcm.belongsToMany(Question, { through: 'QcmQuestion' });
+
+
     
 
 }

@@ -28,5 +28,3 @@ for (const modelDefiner of modelDefiners) {
 association(sequelize);
 
 module.exports = sequelize;
-
-
