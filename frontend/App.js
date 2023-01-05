@@ -1,20 +1,25 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+// import Carousel from 'react-native-reanimated-carousel';
+import PagerView from 'react-native-pager-view';
+import Home from './component/home.js';
+import GeneralCondition from './component/generalCondition.js';
+import Login from './component/login.js';
 
-export default function App() {
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Hello hichem la vaap</Text>
-      <StatusBar style="auto" />
-    </View>
+    <PagerView initialPage={0} style={{ flex: 1 }}>
+      <View key="1" style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <Home />
+      </View>
+      <View key="2" style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <GeneralCondition />
+      </View>
+      <View key="3" style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <Login />
+      </View>
+    </PagerView>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+};
+  
+export default App;

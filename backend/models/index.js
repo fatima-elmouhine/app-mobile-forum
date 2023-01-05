@@ -1,7 +1,8 @@
 const { Sequelize } = require('sequelize');
 const { association } = require('./association');
 
-const sequelize = new Sequelize('mysql://root:root@localhost:3306/medenpharmakine');
+const { MYSQL_LOCAL_PORT, MYSQL_ROOT, MYSQL_ROOT_PASSWORD, MYSQL_DATABASE } = process.env;
+const sequelize = new Sequelize(`mysql://${MYSQL_ROOT}:${MYSQL_ROOT_PASSWORD}@localhost:${MYSQL_LOCAL_PORT}/${MYSQL_DATABASE}`);
 
 const modelDefiners = [
   require('./User'),
@@ -27,8 +28,3 @@ for (const modelDefiner of modelDefiners) {
 association(sequelize);
 
 module.exports = sequelize;
-
- 
-
-  
-
