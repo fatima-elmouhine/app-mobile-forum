@@ -45,7 +45,7 @@ async function getUser (req, res)
 
 async function postUser (req, res) 
 {
-
+    
     if(!isValidEmailForm(req.body.email))
     {
         res.status(406).send('Cette adresse email n\'est pas valide');
@@ -181,7 +181,7 @@ async function loginUser (req, res)
         res.status(400).send("Tous les champs doivent etre remplis");
       }
     try {
-        let user = await users.findOne({ where: {email: email }});
+        let user = await User.findOne({ where: {email: email }});
         if (user != null) {
             bcrypt.compare(password, user['dataValues'].password, function(err, response) {
                 if (err) {

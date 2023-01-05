@@ -15,7 +15,7 @@ router.post('/results', (req, res) => {
     postresult(req, res);
 });
 
-router.update('/results/:id', (req, res) => {
+router.put('/results/:id', (req, res) => {
     updateresult(req, res);
 });
 

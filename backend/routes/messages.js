@@ -15,7 +15,7 @@ router.post('/messages', (req, res) => {
     postmessage(req, res);
 });
 
-router.update('/messages/:id', (req, res) => {
+router.put('/messages/:id', (req, res) => {
     updatemessage(req, res);
 });
 

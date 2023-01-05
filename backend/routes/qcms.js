@@ -15,7 +15,7 @@ router.post('/qcms', (req, res) => {
     postqcm(req, res);
 });
 
-router.update('/qcms/:id', (req, res) => {
+router.put('/qcms/:id', (req, res) => {
     updateqcm(req, res);
 });
 

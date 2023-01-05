@@ -1,26 +1,16 @@
-const {gettopics, posttopic, gettopic, logintopic, updatetopic, deletetopic} = require('../controllers/topics')
+const {getTopics, postTopic, getTopic, updateTopic, deleteTopic} = require('../controllers/topics')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/topics', (req, res) => {
-    gettopics(req, res);
-});
+router.get('/', getTopics);
 
-router.get('/topics/:id', (req, res) => {
-    gettopic(req, res);
-});
+router.get('/:id', getTopic);
 
-router.post('/topics', (req, res) => {
-    posttopic(req, res);
-});
+router.post('/', postTopic);
 
-router.update('/topics/:id', (req, res) => {
-    updatetopic(req, res);
-});
+router.put('/:id',updateTopic);
 
-router.delete('/topics/:id', (req, res) => {
-    deletetopic(req, res);
-});
+router.delete('/:id', deleteTopic);
 
 module.exports = router;
