@@ -1,38 +1,30 @@
-'use strict';
+const { Sequelize } = require('sequelize');
+const { association } = require('./association');
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
-const process = require('process');
-const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
-const db = {};
+const { MYSQL_LOCAL_PORT, MYSQL_ROOT, MYSQL_ROOT_PASSWORD, MYSQL_DATABASE } = process.env;
+const sequelize = new Sequelize(`mysql://${MYSQL_ROOT}:${MYSQL_ROOT_PASSWORD}@localhost:${MYSQL_LOCAL_PORT}/${MYSQL_DATABASE}`);
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(config.database, config.username, config.password, config);
+const modelDefiners = [
+  require('./User'),
+  require('./Qcm'),
+  require('./UserQcm'),
+  require('./Topic'),
+  require('./Message'),
+  require('./Question'),
+  require('./Answer'),
+  require('./Result'),
+  require('./Theme'),
+  require('./Type'),
+  require('./Course'),
+
+];
+
+for (const modelDefiner of modelDefiners) {
+  modelDefiner(sequelize);
 }
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
-    return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
-    db[model.name] = model;
-  });
 
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db);
-  }
-});
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+association(sequelize);
 
-module.exports = db;
+module.exports = sequelize;
