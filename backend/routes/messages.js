@@ -1,7 +1,7 @@
-import {getmessages, postmessage, getmessage, loginmessage, updatemessage, deletemessage} from '../controllers/messages'
+const {getmessages, postmessage, getmessage, updatemessage, deletemessage} = require('../controllers/messages')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/messages', (req, res) => {
     getmessages(req, res);

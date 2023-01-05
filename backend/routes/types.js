@@ -1,7 +1,7 @@
-import {gettypes, posttype, gettype, logintype, updatetype, deletetype} from '../controllers/types'
+const {gettypes, posttype, gettype, logintype, updatetype, deletetype} = require('../controllers/types')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/types', (req, res) => {
     gettypes(req, res);

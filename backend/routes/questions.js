@@ -1,7 +1,7 @@
-import {getquestions, postquestion, getquestion, loginquestion, updatequestion, deletequestion} from '../controllers/questions'
+const {getquestions, postquestion, getquestion, loginquestion, updatequestion, deletequestion} = require('../controllers/questions')
 
 const express = require('express');
-const router = this.express.Router();
+const router = express.Router();
 
 router.get('/questions', (req, res) => {
     getquestions(req, res);
