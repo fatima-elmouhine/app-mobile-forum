@@ -26,9 +26,9 @@ for (const modelDefiner of modelDefiners) {
 association(sequelize);
  
 sequelize.sync({force: true}).then(async () => {
-    const Admin = await sequelize.models.User.create({firstName: 'admin', lastName: 'admin', email:'admin@admin.com', password:hashPassword('admin'), createdAt: new Date(), updatedAt: new Date()})
-    const User = await sequelize.models.User.create({firstName: 'user', lastName: 'user', email:'user@user.com', password:hashPassword('user'), createdAt: new Date(), updatedAt: new Date()})
-    const User2 = await sequelize.models.User.create({firstName: 'user2', lastName: 'user2', email:'user2@user2.com', password:hashPassword('user2'), createdAt: new Date(), updatedAt: new Date()})
+    const Admin = await sequelize.models.User.create({firstName: 'admin', lastName: 'admin', email:'admin@admin.com', password:hashPassword('admin'), createdAt: new Date(), updatedAt: new Date(), role:'admin'})
+    const User = await sequelize.models.User.create({firstName: 'user', lastName: 'user', email:'user@user.com', password:hashPassword('user'), createdAt: new Date(), updatedAt: new Date(), role:'tuteur'})
+    const User2 = await sequelize.models.User.create({firstName: 'user2', lastName: 'user2', email:'user2@user2.com', password:hashPassword('user2'), createdAt: new Date(), updatedAt: new Date(), role:'etudiant'})
     const Topic1 = await sequelize.models.Topic.create({title: 'topic1', createdAt: new Date(new Date() - Math.random()*(1e+12)), updatedAt: new Date(new Date() - Math.random()*(1e+12)), id_user: Admin.id})
     const Topic2 = await sequelize.models.Topic.create({title: 'topic2', createdAt: new Date(new Date() - Math.random()*(1e+12)), updatedAt: new Date(new Date() - Math.random()*(1e+12)), id_user: User.id})
     const Topic3 = await sequelize.models.Topic.create({title: 'topic3', createdAt: new Date(new Date() - Math.random()*(1e+12)), updatedAt: new Date(new Date() - Math.random()*(1e+12)), id_user: User2.id})
