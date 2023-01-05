@@ -1,98 +1,147 @@
-const answers = require('../models/answers')
+const sequelize  = require('../models/index');
+const {Answer} = sequelize.models;
 
 
-async function getanswers(req, res)
+async function getAnswers(req, res)
 {
-    return await answers.findAll();
+    var answersReq =  await Answer.findAll().then(answerArray => {
+        return answerArray;
+    });
+
+    res.json(answersReq);
 }
 
-function getanswer (req, res) 
+async function getAnswer (req, res) 
 {
+    
     try 
     {
+        const answerReq = await Answer.findOne({ where: {id:req.params.id }})
+        .then(answer => {
+            return answer;
+        });
 
-        if(answers.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(answerReq);
 
-        res.json(answers.findOne({ where: {id: req.body.id }}));
-         
+        if(answerReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(answerReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-async function postanswer (req, res) 
+async function postAnswer (req, res) 
+{
+    const newAnswer = {            
+        text: req.body.text,
+        isCorrect_answer: req.body.isCorrect_answer
+    }
+
+    await Answer.create(newAnswer)
+    .then(answer => {
+        res.status(201).json(answer)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
+}
+
+async function updateAnswer (req, res) 
 {
     try 
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newanswer = {            
-            text: req.body.text,
-            isCorrect_answer: req.body.isCorrect_answer
+        const answer = await Answer.findOne({ where: {id: req.params.id }})
+        .then(answer => {
+            return answer;
+        })
+
+        if(answer == null) 
+        {
+            res.status(404).send('La réponse n\'existe pas');
         }
-        const jane = await answer.create(newanswer);
-        res.status(201).json(newanswer)
-    } catch (error) {
-        res.status(406)
-    }
-    
-}
+        else
+        {
 
-async function updateanswer (req, res) 
-{
-
-    try 
-    {
-        
-        if(answers.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
-
-        await answer.update(
-            { 
-                id: req.body.id,
-                ext: req.body.text,
-                isCorrect_answer: req.body.isCorrect_answer 
-            }, 
-            {
+            await Answer.update(
+                { 
+                    id: req.body.id,
+                    text: req.body.text,
+                    isCorrect_answer: req.body.isCorrect_answer
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
-            }
-        );
+                    id: req.params.id
+                }})
+                .then(answer => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('answer updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deleteanswer (req, res) 
+async function deleteAnswer (req, res) 
 {
     try 
     {
+       const answer = await Answer.findOne({ where: {id: req.params.id }})
+        .then(answer => {
+            return answer;
+        })
 
-        if(answers.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(answer != null) 
+        {
+            await Answer.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(answer => {
+                res.status(200).send('La suppression a été effectuée')
+                // return answer;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await answer.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('answer deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    getanswers,
-    postanswer,
-    getanswer,
-    updateanswer,
-    deleteanswer
+    getAnswers,
+    postAnswer,
+    getAnswer,
+    updateAnswer,
+    deleteAnswer
 }

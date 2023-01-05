@@ -1,98 +1,147 @@
-const courses = require('../models/courses')
+const sequelize  = require('../models/index');
+const {Course} = sequelize.models;
 
 
-async function getcourses(req, res)
+async function getCourses(req, res)
 {
-    return await courses.findAll();
+    var coursesReq =  await Course.findAll().then(courseArray => {
+        return courseArray;
+    });
+
+    res.json(coursesReq);
 }
 
-function getcourse (req, res) 
+async function getCourse (req, res) 
 {
+    
     try 
     {
+        const courseReq = await Course.findOne({ where: {id:req.params.id }})
+        .then(course => {
+            return course;
+        });
 
-        if(courses.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(courseReq);
 
-        res.json(courses.findOne({ where: {id: req.body.id }}));
-         
+        if(courseReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(courseReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-async function postcourse (req, res) 
+async function postCourse (req, res) 
+{
+    const newCourse = {            
+        link: req.body.link,
+        id_theme:req.body.id_theme
+    }
+
+    await Course.create(newCourse)
+    .then(course => {
+        res.status(201).json(course)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
+}
+
+async function updateCourse (req, res) 
 {
     try 
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newcourse = {            
-            link: req.body.link,
-            id_theme: req.body.id_theme
+        const course = await Course.findOne({ where: {id: req.params.id }})
+        .then(course => {
+            return course;
+        })
+
+        if(course == null) 
+        {
+            res.status(404).send('La réponse n\'existe pas');
         }
-        const jane = await course.create(newcourse);
-        res.status(201).json(newcourse)
-    } catch (error) {
-        res.status(406)
-    }
-    
-}
+        else
+        {
 
-async function updatecourse (req, res) 
-{
-
-    try 
-    {
-        
-        if(courses.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
-
-        await course.update(
-            { 
-                id: req.body.id,
-                link: req.body.link,
-                id_theme: req.body.id_theme
-            }, 
-            {
+            await Course.update(
+                { 
+                    id: req.body.id,
+                    link: req.body.link,
+                    id_theme:req.body.id_theme
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
-            }
-        );
+                    id: req.params.id
+                }})
+                .then(course => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('course updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deletecourse (req, res) 
+async function deleteCourse (req, res) 
 {
     try 
     {
+       const course = await Course.findOne({ where: {id: req.params.id }})
+        .then(course => {
+            return course;
+        })
 
-        if(courses.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(course != null) 
+        {
+            await Course.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(course => {
+                res.status(200).send('La suppression a été effectuée')
+                // return course;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await course.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('course deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    getcourses,
-    postcourse,
-    getcourse,
-    updatecourse,
-    deletecourse
+    getCourses,
+    postCourse,
+    getCourse,
+    updateCourse,
+    deleteCourse
 }

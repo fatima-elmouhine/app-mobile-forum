@@ -1,102 +1,151 @@
-const qcms = require('../models/qcms')
+const sequelize  = require('../models/index');
+const {Qcm} = sequelize.models;
 
 
-async function getqcms(req, res)
+async function getQcms(req, res)
 {
-    return await qcms.findAll();
+    var qcmsReq =  await Qcm.findAll().then(qcmArray => {
+        return qcmArray;
+    });
+
+    res.json(qcmsReq);
 }
 
-function getqcm (req, res) 
+async function getQcm (req, res) 
 {
+    
     try 
     {
+        const qcmReq = await Qcm.findOne({ where: {id:req.params.id }})
+        .then(qcm => {
+            return qcm;
+        });
 
-        if(qcms.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(qcmReq);
 
-        res.json(qcms.findOne({ where: {id: req.body.id }}));
-         
+        if(qcmReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(qcmReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-async function postqcm (req, res) 
+async function postQcm (req, res) 
+{
+    const newQcm = {            
+        title: req.body.title,
+        isGenerated: req.body.isGenerated,
+        id_type: req.body.id_type,
+        id_user: req.body.id_user
+    }
+
+    await Qcm.create(newQcm)
+    .then(qcm => {
+        res.status(201).json(qcm)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
+}
+
+async function updateQcm (req, res) 
 {
     try 
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newqcm = {            
-            title: req.body.title,
-            isGenerated: req.body.isGenerated,
-            id_type: req.body.id_type,
-            id_user: req.body.id_user
+        const qcm = await Qcm.findOne({ where: {id: req.params.id }})
+        .then(qcm => {
+            return qcm;
+        })
+
+        if(qcm == null) 
+        {
+            res.status(404).send('La réponse n\'existe pas');
         }
-        const jane = await qcm.create(newqcm);
-        res.status(201).json(newqcm)
-    } catch (error) {
-        res.status(406)
-    }
-    
-}
+        else
+        {
 
-async function updateqcm (req, res) 
-{
-
-    try 
-    {
-        
-        if(qcms.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
-
-        await qcm.update(
-            { 
-                id: req.body.id,
-                title: req.body.title,
-                isGenerated: req.body.isGenerated,
-                id_type: req.body.id_type,
-                id_user: req.body.id_user
-            }, 
-            {
+            await Qcm.update(
+                { 
+                    id: req.body.id,
+                    title: req.body.title,
+                    isGenerated: req.body.isGenerated,
+                    id_type: req.body.id_type,
+                    id_user: req.body.id_user
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
-            }
-        );
+                    id: req.params.id
+                }})
+                .then(qcm => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('qcm updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deleteqcm (req, res) 
+async function deleteQcm (req, res) 
 {
     try 
     {
+       const qcm = await Qcm.findOne({ where: {id: req.params.id }})
+        .then(qcm => {
+            return qcm;
+        })
 
-        if(qcms.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(qcm != null) 
+        {
+            await Qcm.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(qcm => {
+                res.status(200).send('La suppression a été effectuée')
+                // return qcm;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await qcm.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('qcm deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    getqcms,
-    postqcm,
-    getqcm,
-    updateqcm,
-    deleteqcm
+    getQcms,
+    postQcm,
+    getQcm,
+    updateQcm,
+    deleteQcm
 }

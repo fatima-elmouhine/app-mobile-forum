@@ -1,98 +1,147 @@
-const questions = require('../models/questions')
+const sequelize  = require('../models/index');
+const {Question} = sequelize.models;
 
 
-async function getquestions(req, res)
+async function getQuestions(req, res)
 {
-    return await questions.findAll();
+    var questionsReq =  await Question.findAll().then(questionArray => {
+        return questionArray;
+    });
+
+    res.json(questionsReq);
 }
 
-function getquestion (req, res) 
+async function getQuestion (req, res) 
 {
+    
     try 
     {
+        const questionReq = await Question.findOne({ where: {id:req.params.id }})
+        .then(question => {
+            return question;
+        });
 
-        if(questions.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        console.log(questionReq);
 
-        res.json(questions.findOne({ where: {id: req.body.id }}));
-         
+        if(questionReq == null) 
+        {
+            res.status(404).send('Artefact not found');
+        }
+        else
+        {
+            res.status(200).send(questionReq);
+        }
     } 
     catch (error) 
     {
-        res.status(406)
+        res.status(500).send(error);
     }
 }
 
-async function postquestion (req, res) 
+async function postQuestion (req, res) 
+{
+    const newQuestion = {            
+        text: req.body.text,
+        id_theme: req.body.id_theme
+    }
+
+    await Question.create(newQuestion)
+    .then(question => {
+        res.status(201).json(question)
+    })
+    .catch(err => {
+        res.status(406).send('Cette adresse email est déjà utilisée');
+
+    });
+
+}
+
+async function updateQuestion (req, res) 
 {
     try 
     {
-        if(!isValidEmailForm(req.body.email)) throw new Error('Error');
-        if(emailExist(req.body.email)) throw new Error('Error');
-        const newquestion = {            
-            text: req.body.text,
-            id_theme: req.body.id_theme
+        const question = await Question.findOne({ where: {id: req.params.id }})
+        .then(question => {
+            return question;
+        })
+
+        if(question == null) 
+        {
+            res.status(404).send('La réponse n\'existe pas');
         }
-        const jane = await question.create(newquestion);
-        res.status(201).json(newquestion)
-    } catch (error) {
-        res.status(406)
-    }
-    
-}
+        else
+        {
 
-async function updatequestion (req, res) 
-{
-
-    try 
-    {
-        
-        if(questions.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
-
-        await question.update(
-            { 
-                id: req.body.id,
-                text: req.body.text,
-                id_theme: req.body.id_theme
-            }, 
-            {
+            await Question.update(
+                { 
+                    id: req.body.id,
+                    text: req.body.text,
+                    id_theme: req.body.id_theme
+                }, 
+                {
                 where: 
                 {
-                    id: req.body.id
-                }
-            }
-        );
+                    id: req.params.id
+                }})
+                .then(question => {
+                    res.status(201).send('La modification a été effectuée')
+                })
+                .catch(err => {
+                    res.status(406).send('Error');
+                })
+        }
+    } 
+    catch (error) 
+    {
+        res.status(406).send('Error');
 
-        res.status(200).json('question updated')
-    } catch (error) {
-        res.status(406)
     }
     
 }
 
-async function deletequestion (req, res) 
+async function deleteQuestion (req, res) 
 {
     try 
     {
+       const question = await Question.findOne({ where: {id: req.params.id }})
+        .then(question => {
+            return question;
+        })
 
-        if(questions.findOne({ where: {id: req.body.id }}) == null) throw new Error('Error');
+        if(question != null) 
+        {
+            await Question.destroy({
+                where: {
+                id: req.params.id
+                }
+            })
+            .then(question => {
+                res.status(200).send('La suppression a été effectuée')
+                // return question;
+            })
+            .catch(err => {
+                res.status(404).send('La suppression n\'a pas aboutie!');
+            })
 
-        await question.destroy({
-            where: {
-              id: req.body.id
-            }
-          });
 
-        res.status(200).json('question deleted')
-    } catch (error) {
-        res.status(406)
+        }
+        else
+        {
+            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
+        }
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Erreur lors de la suppression');
     }
     
 }
 
+
 module.exports = {
-    getquestions,
-    postquestion,
-    getquestion,
-    updatequestion,
-    deletequestion
+    getQuestions,
+    postQuestion,
+    getQuestion,
+    updateQuestion,
+    deleteQuestion
 }
