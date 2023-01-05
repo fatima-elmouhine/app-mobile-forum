@@ -1,4 +1,5 @@
 const { isValidEmailForm, emailExist, isUserExist } = require('../Tools/emailTools');
+const { hashPassword } = require('../Tools/hashDehashTools');
 const sequelize  = require('../models/index');
 const {User} = sequelize.models;
 const users = User
@@ -7,7 +8,6 @@ const users = User
 
 async function getUsers(req, res)
 {
-    // res.send('users');
     var usersReq =  await users.findAll().then(userArray => {
         return userArray;
     });
@@ -35,31 +35,18 @@ async function getUser (req, res)
         res.status(500).send(error);
     }
 }
-// pas encore testé
-function loginUser (req, res) 
-{
-    try 
-    {
-        if(emailExist(req.body.email)) throw new Error('Error');
-        //TODO :DEHASH PASSWORD pour la comparaison en BDD
-        if(users.findOne({ where: {password: req.body.password }}) == null) throw new Error('Error');
-        //FAIRE TON TRUC DE JWT
-    } catch (error) {
-        res.status(406)
-    }
-}
 
 async function postUser (req, res) 
 {
         if(!isValidEmailForm(req.body.email)){
             res.status(406).send('Cette adresse email n\'est pas valide');
         }else{
+            
             const newUser = {            
                 firstName: req.body.firstname,            
                 lastName: req.body.lastname,
                 email: req.body.email,
-                //TODO: HASHPASSWORD
-                password: req.body.password 
+                password: hashPassword(req.body.password)
             }
 
             await users.create(newUser)
@@ -98,13 +85,17 @@ async function updateUser (req, res)
                     firstName: req.body.firstname,
                     lastName: req.body.lastname,
                     email: req.body.email,
-                    password: req.body.password }, 
+                    password: hashPassword(req.body.password) 
+                }, 
                 {
                 where: {
                     id: req.params.id
                 }}).then(user => {
-                res.status(201).send('L\'utilisateur a bien été modifié')
-            })
+                    res.status(201).send('L\'utilisateur a bien été modifié')
+                })
+                .catch(err => {
+                    res.status(406).send('Cette adresse email est déjà utilisée');
+                })
         }
     } catch (error) {
         res.status(406).send('Cette adresse email est déjà utilisée');
@@ -146,6 +137,21 @@ async function deleteUser (req, res)
     }
     
 }
+
+// pas encore testé
+function loginUser (req, res) 
+{
+    try 
+    {
+        if(emailExist(req.body.email)) throw new Error('Error');
+        //TODO :DEHASH PASSWORD pour la comparaison en BDD
+        if(users.findOne({ where: {password: req.body.password }}) == null) throw new Error('Error');
+        //FAIRE TON TRUC DE JWT
+    } catch (error) {
+        res.status(406)
+    }
+}
+
 
 module.exports = {
     getUsers,

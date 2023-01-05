@@ -21,16 +21,8 @@ async function isUserExist(id){
         
     await users.findOne({ where: {id: id }})
     .then(user => {
-        // console.log('user = ',user);
         return user;
     })
-
-    // console.log(Object.keys(userFinded));
-    // console.log(userFinded['dataValues']);
-
-    
-    
-
 }
 
 
