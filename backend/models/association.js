@@ -17,6 +17,8 @@ function association(sequelize){
     Answer.belongsToMany(Question, { through: 'QuestionAnswered' });
     
 
+    
+
 }
 
 module.exports = {association};
