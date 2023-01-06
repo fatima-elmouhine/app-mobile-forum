@@ -27,7 +27,7 @@ export function usePagerScrollHandler(handlers, dependencies) {
   );
 }
 
-const App = () => {
+const App = ({ navigation }) => {
   // const [page, setPage] = useState(0);
 
   const handler = usePagerScrollHandler({
