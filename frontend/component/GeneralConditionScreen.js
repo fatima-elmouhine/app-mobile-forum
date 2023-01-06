@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, ScrollView, SafeAreaView } from 'react-native';
 function GeneralConditionScreen() {
   return (
     <View style={style.container}>
-      <Text style={style.title}>GENERAL CONDITION</Text>
+      <Text style={style.title}>CONDITION GENERALE</Text>
       <SafeAreaView style={style.safeare}>
         <ScrollView style={style.scrollview}>
           <Text style={style.paragraphe}>
