@@ -1,6 +1,4 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import Routes from '../routes.js';
 
 function LoginScreen({ navigation }) {
 
