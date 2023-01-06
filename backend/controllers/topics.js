@@ -158,17 +158,14 @@ async function getMessagesTopic (req, res){
 
         if(topic != null)
         {
-            
-             await Message.findAll({ where: {id_topic: req.params.id }})
-            .then(messages => {
-                if(messages.length == 0)
+            const msg =  await Message.findAll( { where: {id_topic: req.params.id } })
+
+                if(msg.length == 0)
                 {
                     res.status(404).send('Aucun message n\'a été trouvé');
                 }else{
-                    res.status(200).send(messages);
+                    res.status(200).send(msg);
                 }
-            })
-            
         }else
         {
             res.status(404).send('Ce topic n\'existe pas');
@@ -182,6 +179,32 @@ async function getMessagesTopic (req, res){
 
 }
 
+async function postMessageTopic (req, res){
+
+    // TODO : Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
+    if(!req.body.text || !req.body.id_user || !req.body.id_topic)
+    {
+        res.status(406).send('Les champs doivent être tous remplis');
+    }
+    else
+    {
+        const newMessage = {            
+            text: req.body.text,
+            id_user: req.body.id_user,
+            id_topic: req.body.id_topic
+        }
+
+        await Message.create(newMessage)
+        .then(message => {
+            res.status(201).json('Votre message a bien été envoyé')
+        })
+        .catch(err => {
+            res.status(406).send('Une erreur est survenue');
+    
+        });
+    }
+}
+
 
 module.exports = {
     getTopics,
@@ -189,5 +212,6 @@ module.exports = {
     getTopic,
     updateTopic,
     deleteTopic,
-    getMessagesTopic
+    getMessagesTopic,
+    postMessageTopic
 }

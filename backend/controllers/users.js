@@ -10,10 +10,11 @@ const {User} = sequelize.models;
 async function getUsers(req, res)
 {
     var usersReq =  await User.findAll().then(userArray => {
-        return userArray;
+        // return userArray;
+        res.json(userArray);
     });
+    // console.log(usersReq);
 
-    res.json(usersReq);
 }
 
 async function getUser (req, res) 
@@ -21,7 +22,7 @@ async function getUser (req, res)
     
     try 
     {
-        const userReq = await User.findOne({ where: {id:req.params.id }})
+        const userReq = await User.findOne({ where: {id:req.params.id_user }})
         .then(user => {
             return user;
         });
@@ -64,74 +65,77 @@ async function postUser (req, res)
                 email: req.body.email,
                 password: hashPassword(req.body.password)
             }
+            await User.create(newUser)
+            .then(user => {
+                res.status(201).json(user)
+            })
+            .catch(err => {
+                res.status(406).send('Cette adresse email est déjà utilisée');
+    
+            });
         }
 
-        await User.create(newUser)
-        .then(user => {
-            res.status(201).json(user)
-        })
-        .catch(err => {
-            res.status(406).send('Cette adresse email est déjà utilisée');
-
-        });
     }
     
 }
 
-async function updateUser (req, res) 
+async function updateUser (req, res, next) 
 {
-    try 
-    {
-        if(!isValidEmailForm(req.body.email))
-        {
-            res.status(406).send('Cette adresse email n\'est pas valide');
-        }
+    try{
 
-        const user = await User.findOne({ where: {id: req.params.id }})
-        .then(user => {
-            return user;
-        })
-
-        if(user == null) 
-        {
-            res.status(404).send('L\'utilisateur n\'existe pas');
-        }
-        else
-        {
-            if(!req.body.firstname || !req.body.lastname || !req.body.email 
-                || !req.body.password || !req.body.id)
-            {
-                res.status(406).send('Les champs doivent être tous remplis');
-            }
-            else
-            {
-                await User.update(
-                { 
-                    id: req.body.id,
-                    firstName: req.body.firstname,
-                    lastName: req.body.lastname,
-                    email: req.body.email,
-                    password: hashPassword(req.body.password) 
-                }, 
-                {
-                where: 
-                {
-                    id: req.params.id
-                }})
-                .then(user => {
-                    res.status(201).send('L\'utilisateur a bien été modifié')
-                })
-                .catch(err => {
-                    res.status(406).send('Cette adresse email est déjà utilisée');
-                })
-            }
-        }
-    } 
-    catch (error) 
-    {
-        res.status(406).send('Cette adresse email est déjà utilisée');
-
+        // res.send('updateUser');
+        const user = await User.findAll()
+        console.log(user);
+        // findOne({ where: {id: req.params.id }})
+        // console.log(user);
+        res.send(req.body);
+        
     }
+    catch(err){
+        console.log(err);
+    }
+    
+    // //     console.log(user);
+    // //     next();
+    // //    return  res.send(user);
+    //     // res.json(user);
+    //     .then(user => {
+    //         // console.log(user);
+    //         // return user;
+    //         res.send(user)
+    //     })
+
+
+        // if(user == null) 
+        // {
+        //     res.status(404).send('L\'utilisateur n\'existe pas');
+        // }
+        // else
+        // {
+
+        //         await User.update(
+        //         { 
+        //             id: req.body.id,
+        //             firstName: req.body.firstname,
+        //             lastName: req.body.lastname,
+        //             email: req.body.email,
+        //             // password:hashPassword(req.body.password) 
+        //         }, 
+        //         {
+        //         where: 
+        //         {
+        //             id: req.params.id
+        //         }})
+        //         .then(user => {
+        //             console.log('user',user);
+        //             res.status(201).send('L\'utilisateur a bien été modifié')
+        //         })
+        //         .catch(err => {
+        //             console.log(err);
+        //             res.status(406).send('Une erreur est survenue lors de la modification de l\'utilisateur');
+        //         })
+        // }
+
     
 }
 
@@ -139,7 +143,7 @@ async function deleteUser (req, res)
 {
     try 
     {
-       const user = await User.findOne({ where: {id: req.params.id }})
+       const user = await User.findOne({ where: {id: req.params.id_user }})
         .then(user => {
             return user;
         })
@@ -197,12 +201,19 @@ async function loginUser (req, res)
                     {
                         expiresIn: expireIn
                     });
-                    return res.status(200).json(token);
+
+                    // return res.status(200).json(token)
+                    res.cookie("token", token, {
+                        httpOnly: true,
+                        // secure: true,
+                    }).status(200).json({
+                        token: token,
+                    });
+        ;
                 }else{
                     return res.status(403).json(' Mot de passe incorrect');
                 }
 
-                return res.status(403).json(' Mot de passe incorrect');
             });
         } else {
             return res.status(404).json('Email / Mot de passe incorrect');
