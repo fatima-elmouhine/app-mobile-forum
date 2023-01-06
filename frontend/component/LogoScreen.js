@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text, View, Image } from 'react-native';
 
-export default function Test() {
+function LogoScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>MED EN PHARMA KINE</Text>
@@ -10,6 +10,8 @@ export default function Test() {
     </View>
   );
 }
+
+export default LogoScreen;
 
 const styles = StyleSheet.create({
   container: {

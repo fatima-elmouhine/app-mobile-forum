@@ -1,14 +1,15 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Routes from '../routes.js';
 
-export default function Login() {
+function LoginScreen({ navigation }) {
 
-  const handleLogin = () => {
-    navigator.navigate('Home');
-    console.log('login');
-  }
-
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
+  // const Index = () => {
+  //   console.log('test');
+  //   navigation.navigate('Test');
+  //   console.log('test2');
+  // }
 
   return (
     <View style={styles.container}>
@@ -16,11 +17,13 @@ export default function Login() {
       <SafeAreaView style={styles.form}>
         <TextInput style={styles.input} placeholder="Email" />
         <TextInput style={styles.input} placeholder="Password" />
-        <Button title="Connexion" style={styles.button} onPress={ () => navigation.navigate('Test')}/>
+        <Button title="Connexion" style={styles.button} onPress={() => navigation.navigate('HomeScreen')}/>
       </SafeAreaView>
     </View>
   );
 }
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
