@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import Animated, { useHandler, useEvent } from 'react-native-reanimated';
-import Home from '../component/home.js';
-import GeneralCondition from '../component/generalCondition.js';
-import Login from '../component/login.js';
-import PaginationSlider from '../component/paginationSlider.js';
+import LogoScreen from '../component/LogoScreen.js';
+import GeneralConditionScreen from '../component/GeneralConditionScreen.js';
+import LoginScreen from '../component/LoginScreen.js';
+import PaginationSliderScreen from '../component/PaginationSliderScreen.js';
 
 const AnimatedPager = Animated.createAnimatedComponent(PagerView);
 
@@ -42,16 +42,16 @@ const App = () => {
     <View style={{ flex: 1 }}>
       <AnimatedPager initialPage={0} style={{ flex: 1 }} onPageScroll={handler}>
         <View key="1" style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Home />
+          <LogoScreen />
         </View>
         <View key="2" style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <GeneralCondition />
+          <GeneralConditionScreen />
         </View>
         <View key="3" style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <Login />
+          <LoginScreen />
         </View>
       </AnimatedPager>
-      <PaginationSlider /*page={page}*/ />
+      <PaginationSliderScreen /*page={page}*/ />
     </View>
   );
 };
