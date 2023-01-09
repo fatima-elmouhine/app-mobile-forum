@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import PagerView from 'react-native-pager-view';
-import Animated, { useHandler, useEvent } from 'react-native-reanimated';
+import Animated, { useHandler, useEvent, runOnJS } from 'react-native-reanimated';
 import LogoScreen from '../component/LogoScreen.js';
 import GeneralConditionScreen from '../component/GeneralConditionScreen.js';
 import LoginScreen from '../component/LoginScreen.js';
@@ -29,13 +29,14 @@ export function usePagerScrollHandler(handlers, dependencies) {
 
 const App = ({ navigation }) => {
 
-  const page = [0];
+  const [page, setPage] = useState(0);
 
   const handler = usePagerScrollHandler({
     onPageScroll: (e) => {
       'worklet';
+      runOnJS(setPage)(e.position);
       // const { position } = e;
-      page[0] = e;
+      // page[0] = e;
       // console.log('position', position);
       // console.log('logPosition', e.position);
       console.log('page', page);

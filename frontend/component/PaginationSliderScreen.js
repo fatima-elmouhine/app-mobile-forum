@@ -5,15 +5,11 @@ import { StyleSheet, Text, View } from 'react-native';
 
 export default PaginationSlider = ({ page }) => {
 
-  useEffect(() => {
-    console.log('page', page);
-  }, [page]);
-  
   return (
     <View style={styles.pagination}>
-      <View style={page[0].position === 0 ? styles.activeDot : styles.dot} />
-      <View style={page[0].position === 1 ? styles.activeDot : styles.dot} />
-      <View style={page[0].position === 2 ? styles.activeDot : styles.dot} />
+      <View style={page === 0 ? styles.activeDot : styles.dot} />
+      <View style={page === 1 ? styles.activeDot : styles.dot} />
+      <View style={page === 2 ? styles.activeDot : styles.dot} />
     </View>
   );
 };
