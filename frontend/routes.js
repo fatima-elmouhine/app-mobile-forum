@@ -11,7 +11,7 @@ function Routes() {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName='HomeScreen'>
-                <Stack.Screen name="HomeScreen" component={HomeScreen}/>
+                <Stack.Screen options={{title: '', headerShown: false}} name="HomeScreen" component={HomeScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

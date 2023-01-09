@@ -11,8 +11,8 @@ function LogoScreen() {
         style={styles.linear}
       >
         <ImageBackground source={require('../assets/logo_fond.png')} resizeMode="cover" style={styles.image_fond}/>
-        <Image source={require('../assets/logoMed.png')} style={styles.image}/>
-        <Text style={styles.paragraphe}>Testez vos connaissances en un swipe</Text>
+          <Image source={require('../assets/logoMed.png')} style={styles.image}/>
+          <Text style={styles.paragraphe}>Testez vos connaissances en un swipe</Text>
       </LinearGradient>
     </View>
   );
@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    
   },
   image_fond: {
     display: 'flex',
