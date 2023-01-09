@@ -41,7 +41,6 @@ async function getMessage (req, res)
 async function postMessage (req, res) 
 {
     // TODO: Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
-
     if(!req.body.text || !req.body.id_topic || !req.body.id_user)
     {
         res.status(406).send('Les champs doivent être tous remplis');

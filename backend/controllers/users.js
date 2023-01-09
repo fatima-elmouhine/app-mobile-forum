@@ -46,7 +46,6 @@ async function getUser (req, res)
 
 async function postUser (req, res) 
 {
-    
     if(!isValidEmailForm(req.body.email))
     {
         res.status(406).send('Cette adresse email n\'est pas valide');
@@ -81,62 +80,32 @@ async function postUser (req, res)
 
 async function updateUser (req, res, next) 
 {
-    try{
-
-        // res.send('updateUser');
-        const user = await User.findAll()
-        console.log(user);
-        // findOne({ where: {id: req.params.id }})
-        // console.log(user);
-        res.send(req.body);
-        
+    try {
+        if (req.body.password) {
+            req.body.password = hashPassword(req.body.password);
+        }
+        if (req.body.id && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier l'id d'un autre utilisateur");
+        if (req.body.role && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier le role d'un utilisateur");
+        const id = req.user.isAdmin ? req.body.id : req.user.id;
+        const user = await User.update(req.body, {where: {id: id }});
+        const newUser = await User.findOne({where: {id: id }});
+        const expireIn = 24 * 60 * 60;
+        const token    = jwt.sign({
+            id: newUser['dataValues'].id,
+            email: newUser['dataValues'].email,
+            role: newUser['dataValues'].role.role
+        },
+        SECRET_KEY,
+        {
+            expiresIn: expireIn
+        });
+        res.cookie("token", token, {
+            httpOnly: true,
+            // secure: true,
+        }).status(200).json(newUser);
+    } catch (error) {
+        res.status(500).json(error.message);
     }
-    catch(err){
-        console.log(err);
-    }
-    
-    // //     console.log(user);
-    // //     next();
-    // //    return  res.send(user);
-    //     // res.json(user);
-    //     .then(user => {
-    //         // console.log(user);
-    //         // return user;
-    //         res.send(user)
-    //     })
-
-
-        // if(user == null) 
-        // {
-        //     res.status(404).send('L\'utilisateur n\'existe pas');
-        // }
-        // else
-        // {
-
-        //         await User.update(
-        //         { 
-        //             id: req.body.id,
-        //             firstName: req.body.firstname,
-        //             lastName: req.body.lastname,
-        //             email: req.body.email,
-        //             // password:hashPassword(req.body.password) 
-        //         }, 
-        //         {
-        //         where: 
-        //         {
-        //             id: req.params.id
-        //         }})
-        //         .then(user => {
-        //             console.log('user',user);
-        //             res.status(201).send('L\'utilisateur a bien été modifié')
-        //         })
-        //         .catch(err => {
-        //             console.log(err);
-        //             res.status(406).send('Une erreur est survenue lors de la modification de l\'utilisateur');
-        //         })
-        // }
-
-    
 }
 
 async function deleteUser (req, res) 
@@ -179,7 +148,6 @@ async function deleteUser (req, res)
 
 async function loginUser (req, res) 
 {
-
     const { email, password } = req.body;
     if (!(email && password)) {
         res.status(400).send("Tous les champs doivent etre remplis");
@@ -196,6 +164,7 @@ async function loginUser (req, res)
                     const token    = jwt.sign({
                         id: user['dataValues'].id,
                         email: user['dataValues'].email,
+                        role: user['dataValues'].role.role
                     },
                     SECRET_KEY,
                     {

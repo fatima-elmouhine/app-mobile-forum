@@ -40,8 +40,7 @@ async function getTopic (req, res)
 
 async function postTopic (req, res) 
 {
-    // TODO: Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
-    if(!req.body.title || !req.body.id_user)
+    if(!req.body.title)
     {
         res.status(406).send('Les champs doivent être tous remplis');
     }
@@ -49,7 +48,7 @@ async function postTopic (req, res)
     {
         const newTopic = {            
             title: req.body.title,
-            id_user: req.body.id_user
+            id_user: req.user.id
         }
 
         await Topic.create(newTopic)

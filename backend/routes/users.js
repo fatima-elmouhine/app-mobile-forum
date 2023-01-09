@@ -11,7 +11,7 @@ router.post('/',postUser);
 
 router.post('/login', loginUser)
 
-router.put('/:id_user' , auth, updateUser);
+router.put('/' , auth, updateUser);
 
 router.delete('/:id_user',auth ,deleteUser);
 
