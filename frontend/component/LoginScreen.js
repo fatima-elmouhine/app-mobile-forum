@@ -23,9 +23,9 @@ function LoginScreen({ navigation }) {
       >
         <Text style={styles.title}>LOGIN</Text>
         <SafeAreaView style={styles.form}>
-          <TextInput style={styles.input} placeholder="Email" textContentType='emailAddress' />
-          <TextInput style={styles.input} placeholder="Password" textContentType='password'/>
-          <TouchableOpacity style={styles.button} onPress={handleLogin} >
+          <TextInput style={styles.input} placeholder="Email" />
+          <TextInput style={styles.input} placeholder="Password" />
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('HomeLoggedScreen')}>
             <Text style={styles.button_text}>Login</Text>
           </TouchableOpacity>
         </SafeAreaView>
