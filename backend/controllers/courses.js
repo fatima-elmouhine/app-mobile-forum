@@ -1,153 +1,66 @@
 const sequelize  = require('../models/index');
-const {Course} = sequelize.models;
+const {Course, Theme} = sequelize.models;
 
 
 async function getCourses(req, res)
 {
-    var coursesReq =  await Course.findAll().then(courseArray => {
-        return courseArray;
-    });
-
-    res.json(coursesReq);
+    try {
+        const courses = await Course.findAll({include: Theme});
+        res.status(200).json(courses);
+    }
+    catch (error) {
+        res.status(500).json(error.message);
+    }
 }
 
 async function getCourse (req, res) 
 {
-    
-    try 
-    {
-        const courseReq = await Course.findOne({ where: {id:req.params.id }})
-        .then(course => {
-            return course;
-        });
-
-        console.log(courseReq);
-
-        if(courseReq == null) 
-        {
-            res.status(404).send('Artefact not found');
-        }
-        else
-        {
-            res.status(200).send(courseReq);
-        }
-    } 
-    catch (error) 
-    {
-        res.status(500).send(error);
-    }
+    try {
+        const course = await Course.findByPk(req.params.id, {include : Theme});
+        if (!course) throw new Error('Aucun cours trouvé');
+        res.status(200).json(course);
+    } catch (error) {
+        res.status(500).json(error.message);
+    }    
 }
 
 async function postCourse (req, res) 
 {
-    if(!req.body.link || !req.body.id_theme)
-    {
-        res.status(406).send('Les champs doivent être tous remplis');
-    }
-    else
-    {
-        const newCourse = {            
+    try {
+        const newCourse = {
             link: req.body.link,
             id_theme: req.body.id_theme
         }
-        await Course.create(newCourse)
-        .then(course => {
-            res.status(201).json(course)
-        })
-        .catch(err => {
-            res.status(406).send('Cette adresse email est déjà utilisée');
-    
-        });
+        const course = await Course.create(newCourse);
+        res.status(200).json(course);
+    } catch (error) {
+        res.status(500).json(error.message)
     }
-
-
 }
 
 async function updateCourse (req, res) 
 {
-    try 
-    {
-        const course = await Course.findOne({ where: {id: req.params.id }})
-        .then(course => {
-            return course;
-        })
-
-        if(course == null) 
-        {
-            res.status(404).send('L\'artefact n\'existe pas');
-        }
-        else
-        {
-            if(!req.body.link || !req.body.id_theme || !req.body.id)
-            {
-                res.status(406).send('Les champs doivent être tous remplis');
-            }
-            else
-            {
-                await Course.update(
-                { 
-                    id: req.body.id,
-                    link: req.body.link,
-                    id_theme:req.body.id_theme
-                }, 
-                {
-                where: 
-                {
-                    id: req.params.id
-                }})
-                .then(course => {
-                    res.status(201).send('La modification a été effectuée')
-                })
-                .catch(err => {
-                    res.status(406).send('Error');
-                })
-            }
-        }
-    } 
-    catch (error) 
-    {
-        res.status(406).send('Error');
-
+    try {
+        const course = await Course.update({
+            link: req.body.link,
+            id_theme: req.body.id_theme
+        }, {where: {id: req.body.id}});
+        if (!course[0]) throw new Error('Aucun cours trouvé');
+        res.status(200).json({"id":req.body.id, "link": req.body.link, "id_theme": req.body.id_theme});
+    } catch (error) {
+        res.status(500).json(error.message);
     }
-    
 }
 
 async function deleteCourse (req, res) 
 {
-    try 
-    {
-       const course = await Course.findOne({ where: {id: req.params.id }})
-        .then(course => {
-            return course;
-        })
-
-        if(course != null) 
-        {
-            await Course.destroy({
-                where: {
-                id: req.params.id
-                }
-            })
-            .then(course => {
-                res.status(200).send('La suppression a été effectuée')
-                // return course;
-            })
-            .catch(err => {
-                res.status(404).send('La suppression n\'a pas aboutie!');
-            })
-
-
-        }
-        else
-        {
-            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
-        }
-    } 
-    catch (error) 
-    {
-        res.status(500).send('Erreur lors de la suppression');
+    try {
+        const course = await Course.destroy({where: {id: req.body.id}});
+        if (!course) throw new Error('Aucun QCM trouvé');
+        res.status(200).json({message : "Le cours " + req.body.id + " a été supprimé"});
+    } catch (error) {
+        res.status(500).json(error.message);
     }
-    
 }
 
 
