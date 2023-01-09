@@ -1,154 +1,83 @@
 const sequelize  = require('../models/index');
-const {Answer} = sequelize.models;
+const {Answer, Question, QuestionAnswered} = sequelize.models;
 
 
 async function getAnswers(req, res)
 {
-    var answersReq =  await Answer.findAll().then(answerArray => {
-        return answerArray;
-    });
+    try {
+        const answers = await Answer.findAll({ include: Question});
+        res.status(200).json(answers);
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
 
-    res.json(answersReq);
 }
 
 async function getAnswer (req, res) 
 {
-    
     try 
     {
-        const answerReq = await Answer.findOne({ where: {id:req.params.id }})
-        .then(answer => {
-            return answer;
-        });
-
-        console.log(answerReq);
-
-        if(answerReq == null) 
-        {
-            res.status(404).send('Artefact not found');
-        }
-        else
-        {
-            res.status(200).send(answerReq);
-        }
-    } 
-    catch (error) 
-    {
+        const answer = await Answer.findOne({ where: {id: req.params.id }, include: Question})
+        if (answer === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(answer);
+    }
+    catch (error) {
         res.status(500).send(error);
     }
 }
 
 async function postAnswer (req, res) 
 {
-    if(!req.body.text || !req.body.isCorrect_answer)
-    {
-        res.status(406).send('Les champs doivent être tous remplis');
-    }
-    else
-    {
-        const newAnswer = {            
+    if(!req.body.text || !req.body.isCorrect_answer) return res.status(406).json('Les champs doivent être tous remplis');
+    try {
+        const question = await Question.findOne({ where: {id: req.params.id_question }});
+        if (question == null) return res.status(404).json('La question n\'existe pas');
+        const answer = await Answer.create({
             text: req.body.text,
-            isCorrect_answer: req.body.isCorrect_answer
-        }
-    }    
-
-    await Answer.create(newAnswer)
-    .then(answer => {
-        res.status(201).json(answer)
-    })
-    .catch(err => {
-        res.status(406).send('Cette adresse email est déjà utilisée');
-
-    });
-
+            isCorrect_answer: req.body.isCorrect_answer,
+        });
+        await QuestionAnswered.create({
+            QuestionId: req.params.id_question,
+            AnswerId: answer.id
+        });
+        res.status(200).json({question, answer})
+    }
+    catch (error) {
+        res.json('error');
+    }
+    
 }
 
 async function updateAnswer (req, res) 
 {
+    if(!req.body.text || req.body.isCorrect_answer === undefined ) return res.status(406).json('Les champs doivent être tous remplis');
     try 
     {
-        const answer = await Answer.findOne({ where: {id: req.params.id }})
-        .then(answer => {
-            return answer;
-        })
-
-        if(answer == null) 
-        {
-            res.status(404).send('L\'artefact n\'existe pas');
-        }
-        else
-        {
-
-            if(!req.body.text || !req.body.isCorrect_answer || !req.body.id)
-            {
-                res.status(406).send('Les champs doivent être tous remplis');
-            }
-            else
-            {
-                await Answer.update(
-                    { 
-                        id: req.body.id,
-                        text: req.body.text,
-                        isCorrect_answer: req.body.isCorrect_answer
-                    }, 
-                    {
-                    where: 
-                    {
-                        id: req.params.id
-                    }})
-                    .then(answer => {
-                        res.status(201).send('La modification a été effectuée')
-                    })
-                    .catch(err => {
-                        res.status(406).send('Error');
-                    })
-            }
-        }
-    } 
-    catch (error) 
-    {
-        res.status(406).send('Error');
-
+        let answer = await Answer.findOne({ where: {id: req.params.id }})
+        if (answer === null) return res.status(404).json('La réponse n\'existe pas');
+        await Answer.update({
+            text: req.body.text,
+            isCorrect_answer: req.body.isCorrect_answer,
+        }, {where: {id: req.params.id}})
+        res.status(200).json({id:answer.id, text: req.body.text, isCorrect_answer: req.body.isCorrect_answer});
     }
-    
+    catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function deleteAnswer (req, res) 
 {
-    try 
-    {
-       const answer = await Answer.findOne({ where: {id: req.params.id }})
-        .then(answer => {
-            return answer;
-        })
-
-        if(answer != null) 
-        {
-            await Answer.destroy({
-                where: {
-                id: req.params.id
-                }
-            })
-            .then(answer => {
-                res.status(200).send('La suppression a été effectuée')
-                // return answer;
-            })
-            .catch(err => {
-                res.status(404).send('La suppression n\'a pas aboutie!');
-            })
-
-
-        }
-        else
-        {
-            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
-        }
-    } 
-    catch (error) 
-    {
-        res.status(500).send('Erreur lors de la suppression');
+    try {
+        let answer = await Answer.findOne({ where: {id: req.params.id }})
+        if (answer === null) return res.status(404).json('La réponse n\'existe pas');
+        answer = await Answer.destroy({where: {id: req.params.id}})
+        res.status(200).json(answer);
     }
-    
+    catch (error) {
+        res.status(500).send
+    }
 }
 
 

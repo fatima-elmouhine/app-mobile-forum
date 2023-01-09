@@ -1,26 +1,16 @@
-const {getanswers, postanswer, getanswer, updateanswer, deleteanswer} = require('../controllers/answers')
+const {getAnswers, postAnswer, getAnswer, updateAnswer, deleteAnswer} = require('../controllers/answers')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/answers', (req, res) => {
-    getanswers(req, res);
-});
+router.get('/', getAnswers);
 
-router.get('/answers/:id', (req, res) => {
-    getanswer(req, res);
-});
+router.get('/:id',getAnswer)
 
-router.post('/answers', (req, res) => {
-    postanswer(req, res);
-});
+router.post('/:id_question', postAnswer);
 
-router.put('/answers/:id', (req, res) => {
-    updateanswer(req, res);
-});
+router.put('/:id', updateAnswer);
 
-router.delete('/answers/:id', (req, res) => {
-    deleteanswer(req, res);
-});
+router.delete('/:id', deleteAnswer);
 
 module.exports = router;

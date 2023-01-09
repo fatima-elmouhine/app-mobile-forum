@@ -1,26 +1,16 @@
-const {getqcms, postqcm, getqcm, loginqcm, updateqcm, deleteqcm} = require('../controllers/qcms')
+const {getQcms, postQcm, getQcm, loginqcm, updateQcm, deleteQcm} = require('../controllers/qcms')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/qcms', (req, res) => {
-    getqcms(req, res);
-});
+router.get('/',getQcms);
 
-router.get('/qcms/:id', (req, res) => {
-    getqcm(req, res);
-});
+router.get('/:id', getQcm);
 
-router.post('/qcms', (req, res) => {
-    postqcm(req, res);
-});
+router.post('/', postQcm);
 
-router.put('/qcms/:id', (req, res) => {
-    updateqcm(req, res);
-});
+router.put('/', updateQcm);
 
-router.delete('/qcms/:id', (req, res) => {
-    deleteqcm(req, res);
-});
+router.delete('/', deleteQcm);
 
 module.exports = router;

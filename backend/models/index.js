@@ -3,7 +3,6 @@ const { association } = require('./association');
 
 const { MYSQL_LOCAL_PORT, MYSQL_ROOT, MYSQL_ROOT_PASSWORD, MYSQL_DATABASE } = process.env;
 const sequelize = new Sequelize(`mysql://${MYSQL_ROOT}:${MYSQL_ROOT_PASSWORD}@localhost:${MYSQL_LOCAL_PORT}/${MYSQL_DATABASE}`);
-
 const modelDefiners = [
   require('./User'),
   require('./Qcm'),

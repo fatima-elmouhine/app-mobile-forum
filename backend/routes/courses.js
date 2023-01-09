@@ -1,26 +1,16 @@
-const {getcourses, postcourse, getcourse, updatecourse, deletecourse} = require('../controllers/courses')
+const {getCourses, postCourse, getCourse, updateCourse, deleteCourse} = require('../controllers/courses')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/courses', (req, res) => {
-    getcourses(req, res);
-});
+router.get('/', getCourses);
 
-router.get('/courses/:id', (req, res) => {
-    getcourse(req, res);
-});
+router.get('/:id',getCourse);
 
-router.post('/courses', (req, res) => {
-    postcourse(req, res);
-});
+router.post('/', postCourse);
 
-router.put('/courses/:id', (req, res) => {
-    updatecourse(req, res);
-});
+router.put('/', updateCourse);
 
-router.delete('/courses/:id', (req, res) => {
-    deletecourse(req, res);
-});
+router.delete('/', deleteCourse);
 
 module.exports = router;

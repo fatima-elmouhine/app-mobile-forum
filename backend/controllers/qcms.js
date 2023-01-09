@@ -1,158 +1,72 @@
 const sequelize  = require('../models/index');
-const {Qcm} = sequelize.models;
+const {Qcm, Type, Question} = sequelize.models;
 
 
 async function getQcms(req, res)
 {
-    var qcmsReq =  await Qcm.findAll().then(qcmArray => {
-        return qcmArray;
-    });
-
-    res.json(qcmsReq);
+    try {
+        const qcms = await Qcm.findAll({ include: Type});
+        res.status(200).json(qcms);
+    }
+    catch (error) {
+        res.status(500).json(error.message);
+    }
 }
 
 async function getQcm (req, res) 
 {
-    
-    try 
-    {
-        const qcmReq = await Qcm.findOne({ where: {id:req.params.id }})
-        .then(qcm => {
-            return qcm;
-        });
-
-        console.log(qcmReq);
-
-        if(qcmReq == null) 
-        {
-            res.status(404).send('Artefact not found');
+        try {
+            const qcm = await Qcm.findOne({ where: {id: req.params.id }, include: [Type, Question]});
+            if (!qcm) return res.status(404).json('Aucun QCM trouvé');
+            res.status(200).json(qcm);            
+        } catch (error) {
+            res.status(500).json(error.message);
         }
-        else
-        {
-            res.status(200).send(qcmReq);
-        }
-    } 
-    catch (error) 
-    {
-        res.status(500).send(error);
-    }
 }
 
 async function postQcm (req, res) 
 {
-    if(!req.body.title || !req.body.isGenerated || !req.body.id_type || !req.body.id_user)
-    {
-        res.status(406).send('Les champs doivent être tous remplis');
-    }
-    else
-    {
-        const newQcm = {            
+    try {
+        //if (!req.body.title || !req.body.isGenerated === undefined || !req.body.id_type || !req.body.id_user) return res.status(406).json('Les champs doivent être tous remplis');
+        const qcm = await Qcm.create({
             title: req.body.title,
             isGenerated: req.body.isGenerated,
             id_type: req.body.id_type,
+            // TODO : id_user to token
             id_user: req.body.id_user
-        }
+        });
+        res.status(200).json(qcm);
+    } catch (error) {
+        res.status(500).json(error.message);
     }
-
-    await Qcm.create(newQcm)
-    .then(qcm => {
-        res.status(201).json(qcm)
-    })
-    .catch(err => {
-        res.status(406).send('Cette adresse email est déjà utilisée');
-
-    });
-
 }
 
 async function updateQcm (req, res) 
 {
-    try 
-    {
-        const qcm = await Qcm.findOne({ where: {id: req.params.id }})
-        .then(qcm => {
-            return qcm;
-        })
-
-        if(qcm == null) 
-        {
-            res.status(404).send('L\'artefact n\'existe pas');
-        }
-        else
-        {
-            if(!req.body.title || !req.body.isGenerated || !req.body.id_type 
-                || !req.body.id_user || !req.body.id)
-            {
-                res.status(406).send('Les champs doivent être tous remplis');
-            }
-            else
-            {
-                await Qcm.update(
-                { 
-                    id: req.body.id,
-                    title: req.body.title,
-                    isGenerated: req.body.isGenerated,
-                    id_type: req.body.id_type,
-                    id_user: req.body.id_user
-                }, 
-                {
-                where: 
-                {
-                    id: req.params.id
-                }})
-                .then(qcm => {
-                    res.status(201).send('La modification a été effectuée')
-                })
-                .catch(err => {
-                    res.status(406).send('Error');
-                })
-            }
-        }
-    } 
-    catch (error) 
-    {
-        res.status(406).send('Error');
-
+    try {
+        const qcm = await Qcm.update({
+            title: req.body.title,
+            isGenerated: req.body.isGenerated,
+            id_type: req.body.id_type,
+            // TODO : id_user to token
+            id_user: req.body.id_user
+        }, {where: {id: req.body.id}});
+        if (!qcm[0]) throw new Error('Aucun QCM trouvé');
+        res.status(200).json({"id":req.body.id, "title": req.body.title, "isGenerated": req.body.isGenerated, "id_type":req.body.id_type , id_user: req.body.id_user});
+    } catch (error) {
+        res.status(500).json(error.message);
     }
-    
 }
 
 async function deleteQcm (req, res) 
 {
-    try 
-    {
-       const qcm = await Qcm.findOne({ where: {id: req.params.id }})
-        .then(qcm => {
-            return qcm;
-        })
-
-        if(qcm != null) 
-        {
-            await Qcm.destroy({
-                where: {
-                id: req.params.id
-                }
-            })
-            .then(qcm => {
-                res.status(200).send('La suppression a été effectuée')
-                // return qcm;
-            })
-            .catch(err => {
-                res.status(404).send('La suppression n\'a pas aboutie!');
-            })
-
-
-        }
-        else
-        {
-            res.status(404).send('Ce que vous tentez de supprimer n\'a pas été trouvé');
-        }
-    } 
-    catch (error) 
-    {
-        res.status(500).send('Erreur lors de la suppression');
+    try {
+        const qcm = await Qcm.destroy({where: {id: req.body.id}});
+        if (!qcm) throw new Error('Aucun QCM trouvé');
+        res.status(200).json({message : "Le Qcm" + req.body.id + " a été supprimé"});
+    } catch (error) {
+        res.status(500).json(error.message)
     }
-    
 }
 
 
