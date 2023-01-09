@@ -35,11 +35,6 @@ const App = ({ navigation }) => {
     onPageScroll: (e) => {
       'worklet';
       runOnJS(setPage)(e.position);
-      // const { position } = e;
-      // page[0] = e;
-      // console.log('position', position);
-      // console.log('logPosition', e.position);
-      console.log('page', page);
     },
   });
 
