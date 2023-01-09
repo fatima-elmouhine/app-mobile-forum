@@ -5,7 +5,7 @@ const {Answer, Question, QuestionAnswered} = sequelize.models;
 async function getAnswers(req, res)
 {
     try {
-        const answers = await Answer.findAll();
+        const answers = await Answer.findAll({ include: Question});
         res.status(200).json(answers);
     }
     catch (error) {
@@ -18,7 +18,7 @@ async function getAnswer (req, res)
 {
     try 
     {
-        const answer = await Answer.findOne({ where: {id: req.params.id }})
+        const answer = await Answer.findOne({ where: {id: req.params.id }, include: Question})
         if (answer === null) return res.status(404).json('La réponse n\'existe pas');
         res.status(200).json(answer);
     }
@@ -70,10 +70,10 @@ async function updateAnswer (req, res)
 async function deleteAnswer (req, res) 
 {
     try {
-        const answer = await Answer.findOne({ where: {id: req.params.id }})
+        let answer = await Answer.findOne({ where: {id: req.params.id }})
         if (answer === null) return res.status(404).json('La réponse n\'existe pas');
-        await Answer.destroy({where: {id: req.params.id}})
-        res.status(200).json('La réponse a bien été supprimée');
+        answer = await Answer.destroy({where: {id: req.params.id}})
+        res.status(200).json(answer);
     }
     catch (error) {
         res.status(500).send
