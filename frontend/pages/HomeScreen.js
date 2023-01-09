@@ -28,30 +28,34 @@ export function usePagerScrollHandler(handlers, dependencies) {
 }
 
 const App = ({ navigation }) => {
-  // const [page, setPage] = useState(0);
+
+  const page = [0];
 
   const handler = usePagerScrollHandler({
     onPageScroll: (e) => {
       'worklet';
-      // setPage(e.position);
-      console.log('logPosition', e.position);
+      // const { position } = e;
+      page[0] = e;
+      // console.log('position', position);
+      // console.log('logPosition', e.position);
+      console.log('page', page);
     },
   });
 
   return (
     <View style={{ flex: 1 }}>
       <AnimatedPager initialPage={0} style={{ flex: 1 }} onPageScroll={handler}>
-        <View key="1" style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View key="0" style={{ justifyContent: 'center', alignItems: 'center' }}>
           <LogoScreen />
         </View>
-        <View key="2" style={{ justifyContent: 'center', alignItems: 'center' }}>
+        <View key="1" style={{ justifyContent: 'center', alignItems: 'center' }}>
           <GeneralConditionScreen />
         </View>
-        <View key="3" style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <LoginScreen />
+        <View key="2" style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <LoginScreen navigation={navigation}/>
         </View>
       </AnimatedPager>
-      <PaginationSliderScreen /*page={page}*/ />
+      <PaginationSliderScreen page={page} />
     </View>
   );
 };
