@@ -1,26 +1,16 @@
-const {getthemes, posttheme, gettheme, logintheme, updatetheme, deletetheme} = require('../controllers/themes')
+const {getThemes, postTheme, getTheme, updateTheme, deleteTheme} = require('../controllers/themes')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/themes', (req, res) => {
-    getthemes(req, res);
-});
+router.get('/', getThemes);
 
-router.get('/themes/:id', (req, res) => {
-    gettheme(req, res);
-});
+router.get('/:id', getTheme);
 
-router.post('/themes', (req, res) => {
-    posttheme(req, res);
-});
+router.post('/', postTheme);
 
-router.put('/themes/:id', (req, res) => {
-    updatetheme(req, res);
-});
+router.put('/', updateTheme);
 
-router.delete('/themes/:id', (req, res) => {
-    deletetheme(req, res);
-});
+router.delete('/', deleteTheme);
 
 module.exports = router;

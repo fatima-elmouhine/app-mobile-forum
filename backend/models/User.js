@@ -21,6 +21,11 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING
     // allowNull defaults to true
   },
+  role: {
+    type: DataTypes.JSON
+    
+    // allowNull defaults to true
+  },
 }, {
   // Other model options go here
 });

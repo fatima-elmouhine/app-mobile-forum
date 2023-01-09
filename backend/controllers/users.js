@@ -10,10 +10,11 @@ const {User} = sequelize.models;
 async function getUsers(req, res)
 {
     var usersReq =  await User.findAll().then(userArray => {
-        return userArray;
+        // return userArray;
+        res.json(userArray);
     });
+    // console.log(usersReq);
 
-    res.json(usersReq);
 }
 
 async function getUser (req, res) 
@@ -21,7 +22,7 @@ async function getUser (req, res)
     
     try 
     {
-        const userReq = await User.findOne({ where: {id:req.params.id }})
+        const userReq = await User.findOne({ where: {id:req.params.id_user }})
         .then(user => {
             return user;
         });
@@ -45,7 +46,6 @@ async function getUser (req, res)
 
 async function postUser (req, res) 
 {
-    
     if(!isValidEmailForm(req.body.email))
     {
         res.status(406).send('Cette adresse email n\'est pas valide');
@@ -64,82 +64,55 @@ async function postUser (req, res)
                 email: req.body.email,
                 password: hashPassword(req.body.password)
             }
+            await User.create(newUser)
+            .then(user => {
+                res.status(201).json(user)
+            })
+            .catch(err => {
+                res.status(406).send('Cette adresse email est déjà utilisée');
+    
+            });
         }
 
-        await User.create(newUser)
-        .then(user => {
-            res.status(201).json(user)
-        })
-        .catch(err => {
-            res.status(406).send('Cette adresse email est déjà utilisée');
-
-        });
     }
     
 }
 
-async function updateUser (req, res) 
+async function updateUser (req, res, next) 
 {
-    try 
-    {
-        if(!isValidEmailForm(req.body.email))
-        {
-            res.status(406).send('Cette adresse email n\'est pas valide');
+    try {
+        if (req.body.password) {
+            req.body.password = hashPassword(req.body.password);
         }
-
-        const user = await User.findOne({ where: {id: req.params.id }})
-        .then(user => {
-            return user;
-        })
-
-        if(user == null) 
+        if (req.body.id && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier l'id d'un autre utilisateur");
+        if (req.body.role && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier le role d'un utilisateur");
+        const id = req.user.isAdmin ? req.body.id : req.user.id;
+        const user = await User.update(req.body, {where: {id: id }});
+        const newUser = await User.findOne({where: {id: id }});
+        const expireIn = 24 * 60 * 60;
+        const token    = jwt.sign({
+            id: newUser['dataValues'].id,
+            email: newUser['dataValues'].email,
+            role: newUser['dataValues'].role.role
+        },
+        SECRET_KEY,
         {
-            res.status(404).send('L\'utilisateur n\'existe pas');
-        }
-        else
-        {
-            if(!req.body.firstname || !req.body.lastname || !req.body.email 
-                || !req.body.password || !req.body.id)
-            {
-                res.status(406).send('Les champs doivent être tous remplis');
-            }
-            else
-            {
-                await User.update(
-                { 
-                    id: req.body.id,
-                    firstName: req.body.firstname,
-                    lastName: req.body.lastname,
-                    email: req.body.email,
-                    password: hashPassword(req.body.password) 
-                }, 
-                {
-                where: 
-                {
-                    id: req.params.id
-                }})
-                .then(user => {
-                    res.status(201).send('L\'utilisateur a bien été modifié')
-                })
-                .catch(err => {
-                    res.status(406).send('Cette adresse email est déjà utilisée');
-                })
-            }
-        }
-    } 
-    catch (error) 
-    {
-        res.status(406).send('Cette adresse email est déjà utilisée');
-
+            expiresIn: expireIn
+        });
+        res.cookie("token", token, {
+            httpOnly: true,
+            // secure: true,
+        }).status(200).json(newUser);
+    } catch (error) {
+        res.status(500).json(error.message);
     }
-    
 }
 
 async function deleteUser (req, res) 
 {
     try 
     {
-       const user = await User.findOne({ where: {id: req.params.id }})
+       const user = await User.findOne({ where: {id: req.params.id_user }})
         .then(user => {
             return user;
         })
@@ -175,7 +148,6 @@ async function deleteUser (req, res)
 
 async function loginUser (req, res) 
 {
-
     const { email, password } = req.body;
     if (!(email && password)) {
         res.status(400).send("Tous les champs doivent etre remplis");
@@ -192,17 +164,25 @@ async function loginUser (req, res)
                     const token    = jwt.sign({
                         id: user['dataValues'].id,
                         email: user['dataValues'].email,
+                        role: user['dataValues'].role.role
                     },
                     SECRET_KEY,
                     {
                         expiresIn: expireIn
                     });
-                    return res.status(200).json(token);
+
+                    // return res.status(200).json(token)
+                    res.cookie("token", token, {
+                        httpOnly: true,
+                        // secure: true,
+                    }).status(200).json({
+                        token: token,
+                    });
+        ;
                 }else{
                     return res.status(403).json(' Mot de passe incorrect');
                 }
 
-                return res.status(403).json(' Mot de passe incorrect');
             });
         } else {
             return res.status(404).json('Email / Mot de passe incorrect');
