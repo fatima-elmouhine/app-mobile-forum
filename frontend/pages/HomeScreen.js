@@ -52,6 +52,9 @@ const App = ({ navigation }) => {
         <View key="2" style={{ justifyContent: 'center', alignItems: 'center' }}>
           <LoginScreen navigation={navigation}/>
         </View>
+        {/* <View key="4" style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <HomeLoggedScreen />
+        </View> */}
       </AnimatedPager>
       <PaginationSliderScreen page={page} />
     </View>
