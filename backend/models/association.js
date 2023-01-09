@@ -4,6 +4,7 @@ function association(sequelize){
     // User.belongsToMany(Qcm, { through: 'UserQcm' });
     User.hasMany(Message, {foreignKey: 'id_user'});
     Topic.hasMany(Message, {foreignKey: 'id_topic'});
+    Message.belongsTo(Topic, {foreignKey: 'id_topic'});
     User.hasMany(UserQcm, {foreignKey: 'id_user'});
     Qcm.hasMany(UserQcm, {foreignKey: 'id_qcm'});
     Result.belongsTo(UserQcm, {foreignKey: 'id_user_qcm'});

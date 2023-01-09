@@ -150,31 +150,18 @@ async function deleteTopic (req, res)
 async function getMessagesTopic (req, res){
     try 
     {
-        const topic = await Topic.findOne({ where: {id: req.params.id }})
-        .then(topic => {
-            return topic;
-        }
-        )
-
-        if(topic != null)
+        const msg =  await Message.findAll( { where: {id_topic: req.params.id }, include: Topic})
+        if(msg.length == 0)
         {
-            const msg =  await Message.findAll( { where: {id_topic: req.params.id } })
-
-                if(msg.length == 0)
-                {
-                    res.status(404).send('Aucun message n\'a été trouvé');
-                }else{
-                    res.status(200).send(msg);
-                }
-        }else
-        {
-            res.status(404).send('Ce topic n\'existe pas');
+            res.status(404).send('Aucun message n\'a été trouvé');
+        }else{
+            res.status(200).send(msg);
         }
 
     }
     catch (error)
     {
-        res.status(404).send('Ce topic n\'existe pas');
+        res.status(404).send('Une erreur est survenue');
     }
 
 }
