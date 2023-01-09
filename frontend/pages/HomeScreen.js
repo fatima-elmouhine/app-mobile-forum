@@ -34,8 +34,8 @@ const App = ({ navigation }) => {
   const handler = usePagerScrollHandler({
     onPageScroll: (e) => {
       'worklet';
-      const { position } = e;
-      page[0] = position;
+      // const { position } = e;
+      page[0] = e;
       // console.log('position', position);
       // console.log('logPosition', e.position);
       console.log('page', page);
@@ -52,7 +52,7 @@ const App = ({ navigation }) => {
           <GeneralConditionScreen />
         </View>
         <View key="2" style={{ justifyContent: 'center', alignItems: 'center' }}>
-          <LoginScreen />
+          <LoginScreen navigation={navigation}/>
         </View>
       </AnimatedPager>
       <PaginationSliderScreen page={page} />
