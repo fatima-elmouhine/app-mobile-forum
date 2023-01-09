@@ -15,7 +15,13 @@ function LoginScreen({ navigation }) {
       <SafeAreaView style={styles.form}>
         <TextInput style={styles.input} placeholder="Email" />
         <TextInput style={styles.input} placeholder="Password" />
-        <Button title="Connexion" style={styles.button} onPress={() => navigation.navigate('HomeScreen')}/>
+        <Button title="Connexion" style={styles.button} 
+            onPress={() => navigation.navigate('HomeLoggedScreen')}
+            // onPress={() =>
+            //   console.log(navigation.navigate)
+            //   // navigation.navigate('HomeLoggedScreen', {name: 'Jane'})
+            // }
+          />
       </SafeAreaView>
     </View>
   );

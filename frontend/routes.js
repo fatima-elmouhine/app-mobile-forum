@@ -7,6 +7,7 @@ import LogoScreen from './component/LogoScreen';
 import GeneralConditionScreen from './component/GeneralConditionScreen';
 import LoginScreen from './component/LoginScreen';
 import PaginationSliderScreen from './component/PaginationSliderScreen';
+import HomeLoggedScreen from './pages/HomeLoggedScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ function Routes() {
         <NavigationContainer>
             <Stack.Navigator>
                 <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                <Stack.Screen name="HomeLoggedScreen" component={HomeLoggedScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
