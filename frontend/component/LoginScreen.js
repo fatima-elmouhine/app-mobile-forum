@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import login from '../api/Users/login';
+import login from '../api/Users/login';
 // import style from '../css/Background.module.css';
 
 function LoginScreen({ navigation }) {
@@ -23,9 +24,9 @@ function LoginScreen({ navigation }) {
       >
         <Text style={styles.title}>LOGIN</Text>
         <SafeAreaView style={styles.form}>
-          <TextInput style={styles.input} placeholder="Email" />
-          <TextInput style={styles.input} placeholder="Password" />
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ForumScreen')}>
+          <TextInput style={styles.input} placeholder="Email" textContentType='emailAddress' />
+          <TextInput style={styles.input} placeholder="Password" textContentType='password'/>
+          <TouchableOpacity style={styles.button} onPress={handleLogin} >
             <Text style={styles.button_text}>Login</Text>
           </TouchableOpacity>
         </SafeAreaView>
