@@ -56,8 +56,8 @@ sequelize.sync({force: true}).then(async () => {
             }
         }
     }
-    const Course1 = await sequelize.models.Course.create({link: 'https://www.tutorialspoint.com/react_native/react_native_tutorial.pdf', id_theme: Theme1.id})
-    const Course2 = await sequelize.models.Course.create({link: "https://pepa.holla.cz/wp-content/uploads/2016/12/Learning-React-Native.pdf", id_theme: Theme2.id})
+    const Course1 = await sequelize.models.Course.create({link: 'https://www.tutorialspoint.com/react_native/react_native_tutorial.pdf', title:"Chapitre 1 - La mitochondrie",id_theme: Theme1.id})
+    const Course2 = await sequelize.models.Course.create({link: "https://pepa.holla.cz/wp-content/uploads/2016/12/Learning-React-Native.pdf", title:"Chapitre 1 - Les os",id_theme: Theme2.id})
 })
 
 

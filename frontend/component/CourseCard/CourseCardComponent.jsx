@@ -1,27 +1,28 @@
 import React from 'react'
-import { StyleSheet, Text,Dimensions, View, ScrollView, ImageBackground, TouchableHighlight} from 'react-native';
-import { Button, Card, Divider } from 'react-native-paper';
+import { StyleSheet, Text,Dimensions, View, ScrollView, ImageBackground, Linking} from 'react-native';
+import {  Card, Divider, Button } from 'react-native-paper';
 
 export default function CourseCardComponent(props) {
-    const windowWidth = Dimensions. get('window')
+    // console.log('COURSEEEEE',props.course.Theme.title)
+    // const windowWidth = Dimensions. get('window')
     // console.log(windowWidth)
   return (
-    <Card style={styles(props.course.color).container}>
-        <Card.Content style={styles.containerText}>
-            <Text style={styles.title}>
-            {props.course.title}
-            </Text>
-            <Text style={styles.description}>
-                {props.course.description}
-            </Text>
-        </Card.Content>
-        <Divider style={{borderColor:'#e7e7e7' ,borderWidth:0.5, margin:10}} />
-        <Card.Actions>
+    
+    <Card style={styles().container}>
+            <Card.Content style={styles.containerText}>
+                <Text style={styles.title}>
+                    {props.course.Theme.title}
+                </Text>
+                <Text color='pink' style={styles.title}>
+                    {props.course.title}
+                </Text>
+            <Divider style={{borderColor:'#e7e7e7' ,borderWidth:0.5, margin:10}} />
+            </Card.Content>
+            <View>
 
-            <Button icon="download" mode='contained-tonal' style={styles.btn}  onPress={() => console.log('Pressed')}>
-                Télécharger
-            </Button>
-        </Card.Actions>
+                <Button icon="eye" mode='contained-tonal'    onPress={() => Linking.openURL(props.course.link)} >Voir</Button>
+            </View>
+      
 
 
     </Card>
@@ -30,40 +31,38 @@ export default function CourseCardComponent(props) {
 const styles = (bgColor) =>  StyleSheet.create({
     container: {
         display: 'flex',
-        alignItems: 'center',
-        gap:'45px',
-        backgroundColor: bgColor,
-        // padding: 20,
+        flexDirection: 'row',
         margin: 20,
-        borderRadius: 8,
-        shadowColor: "white",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        btn: {
-        flex: 1,
-
-            backgroundColor: 'white',
-            color: 'black',
-            display: 'flex',
-            alignItems: 'center',
-        },
-        // alignItems: 'center',
-
-
+        width: 332,
+        // height: 54,
+        // position: 'relative',
     },
+    btn: {
+        // position: 'absolute',
+        // right: 0,
+        // top: 40,
+        // // flex: 1,
+        // // backgroundColor: 'white',
+        // // color: 'black',
+        // display: 'flex', 
+        // alignItems: 'center',
+    },
+
     containerText: {
-        flex: 2,
-        borderWidth: 1,
-        borderColor: 'red',
+        // flex: 2,
+        // borderWidth: 1,
+        // borderColor: 'red',
         display: 'flex',
-        // flexDirection: 'column',
-        gap:'10px',
+        flexDirection: 'row',
+        marginBottom: 10,
+        justifyContent: 'space-between',
+        // flex: '50%',
+        // // flexDirection: 'column',
+        // gap:'10px',
     },
     title: {
         fontSize: 20,
-        color: '#434343',
+        color: 'pink',
         fontWeight: '600',
     },
     description: {

@@ -4,24 +4,28 @@ import {useFonts,Roboto_400Regular,Roboto_400Regular_Italic} from "@expo-google-
 import { ProgressBar, Avatar, MD3Colors, IconButton } from 'react-native-paper';
 import { LinearGradient } from "expo-linear-gradient";
 import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
+import {getCourses} from '../api/Courses/getCourses';
 export default function HomeLoggedScreen({navigation}) {
+  const [courses, setCourses] = React.useState([]);
+  React.useEffect( () => {
+    async function getCoursesInHome() {
+      const coursesReq = await getCourses();
+      setCourses(coursesReq);
+    }
+    getCoursesInHome();
+    // const coursesReq = await getCourses();
+    // setCourses(coursesReq);
 
+  }, [])
   function handlePressEdit() {
-    navigation.navigate('HomeScreen');
-    // console.log(navigation);
+    console.log(courses);
+    // navigation.navigate('HomeScreen');
   }
 
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_400Regular_Italic
   });
-
-  const props = {
-    title : 'Chapitre 1',
-    color : 'white',
-    description : 'Suspendisse pulvinar, augue ac venenatis condimentum, sem libe',
-    link : 'https://www.youtube.com/watch?v=1Q8fG0TtVAY',
-  }
 
 
   return (
@@ -46,10 +50,29 @@ export default function HomeLoggedScreen({navigation}) {
           <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
           <Text style={styles.paragraphe}>Lvl.2</Text>
         </Text>
-        <View style={styles.sectionLatestCourse}>
-          <Text style={styles.sectionTitle}>Les derniers cours</Text>
-          <CourseCardComponent course={props}/>
-        </View>
+          <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
+            <View style={styles.sectionLatestCourse}>
+              <Text style={styles.sectionTitle}>Les derniers cours</Text>
+              { courses.length !== 0 && 
+                courses.map
+                ((course,i) => {
+                  return (
+                    <CourseCardComponent key={i}  course={course}/>
+                  )
+
+                })
+                }
+                              { courses.length !== 0 && 
+                courses.map
+                ((course,i) => {
+                  return (
+                    <CourseCardComponent key={i}  course={course}/>
+                  )
+
+                })
+                }
+            </View>
+          </ScrollView>
       </LinearGradient>
     </View>
   );
