@@ -1,8 +1,19 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import login from '../api/Users/login';
 // import style from '../css/Background.module.css';
 
 function LoginScreen({ navigation }) {
+  
+  const handleLogin = async () => {
+    const response = await login();
+    console.log(response);
+    if (response) {
+      navigation.navigate('Home');
+    } else {
+      console.log('Login failed');
+    }
+  }
 
   return (
     <View style={styles.container}>

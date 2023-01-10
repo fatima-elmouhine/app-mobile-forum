@@ -8,7 +8,7 @@ import ForumScreen from './pages/ForumScreen';
 
 const Stack = createStackNavigator();
 
-function Routes() {  
+function Routes() {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName='HomeScreen'>
