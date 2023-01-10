@@ -1,15 +1,14 @@
 import axios from 'axios'
+import * as SecureStore from 'expo-secure-store';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://localhost:3000/api/', responseType: 'json',
+  baseURL: 'http://10.10.27.154:3000/api/', responseType: 'json',
 })
 
 axiosInstance.interceptors.request.use(function (request) {
-//   if (localStorage.getItem('authenticationToken')) {
-//     request.headers['Authorization'] = `Bearer ${localStorage.getItem('authenticationToken')}`
-//   }
-
-
+  if (SecureStore.getItem('authenticationToken')) {
+    request.headers['Authorization'] = `Bearer ${SecureStore.getItem('authenticationToken')}`
+  }
   return request
 }, function (error) {
   console.log(error)

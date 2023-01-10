@@ -1,15 +1,20 @@
+import React from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import login from '../api/Users/login';
+import userAuthentication from '../api/Users/login';
 // import style from '../css/Background.module.css';
 
 function LoginScreen({ navigation }) {
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
-    const response = await login();
+    const response = await userAuthentication(email, password);
     console.log(response);
     if (response) {
-      navigation.navigate('Home');
+      console.log('Login successful');
     } else {
       console.log('Login failed');
     }
@@ -23,8 +28,8 @@ function LoginScreen({ navigation }) {
       >
         <Text style={styles.title}>LOGIN</Text>
         <SafeAreaView style={styles.form}>
-          <TextInput style={styles.input} placeholder="Email" textContentType='emailAddress' />
-          <TextInput style={styles.input} placeholder="Password" textContentType='password'/>
+          <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={email => setEmail(email)} />
+          <TextInput style={styles.input} placeholder="Password" value={password} onChangeText={password => setPassword(password)} />
           <TouchableOpacity style={styles.button} onPress={handleLogin} >
             <Text style={styles.button_text}>Login</Text>
           </TouchableOpacity>
