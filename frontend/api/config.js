@@ -4,6 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 const axiosInstance = axios.create({
   baseURL: 'http://10.10.27.154:3000/api/', responseType: 'json',
 })
+// console.log(axiosInstance)
 
 axiosInstance.interceptors.request.use(function (request) {
   if (SecureStore.getItem('authenticationToken')) {

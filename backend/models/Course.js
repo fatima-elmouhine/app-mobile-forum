@@ -9,6 +9,11 @@ const Course = sequelize.define('Course', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  title: {
+    type: DataTypes.STRING,
+    allowNull: false
+    // allowNull defaults to true
+  },
   id_theme: {
     type: DataTypes.INTEGER
     // allowNull defaults to true
