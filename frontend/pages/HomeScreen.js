@@ -7,6 +7,7 @@ import LogoScreen from '../component/LogoScreen.js';
 import GeneralConditionScreen from '../component/GeneralConditionScreen.js';
 import LoginScreen from '../component/LoginScreen.js';
 import PaginationSliderScreen from '../component/PaginationSliderScreen.js';
+import HomeLoggedScreen from './HomeLoggedScreen.js';
 
 const AnimatedPager = Animated.createAnimatedComponent(PagerView);
 
@@ -39,6 +40,7 @@ const App = ({ navigation }) => {
   });
 
   return (
+
     <View style={{ flex: 1 }}>
       <AnimatedPager initialPage={0} style={{ flex: 1 }} onPageScroll={handler}>
         <View key="0" style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -50,6 +52,9 @@ const App = ({ navigation }) => {
         <View key="2" style={{ justifyContent: 'center', alignItems: 'center' }}>
           <LoginScreen navigation={navigation}/>
         </View>
+        {/* <View key="4" style={{ justifyContent: 'center', alignItems: 'center' }}>
+          <HomeLoggedScreen />
+        </View> */}
       </AnimatedPager>
       <PaginationSliderScreen page={page} />
     </View>
