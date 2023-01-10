@@ -1,17 +1,30 @@
 const sequelize  = require('../models/index');
-const {Theme} = sequelize.models;
+const {Theme, Topic, Course} = sequelize.models;
 
 
 async function getThemes(req, res)
 {   
     try {
-        const Themes = await Theme.findAll()
+        const Themes = await Theme.findAll(
+            req.query.include ? 
+            {
+                include: {
+                    model: eval(req.query.include),
+                    limit: req.query.limitInclude ? eval(req.query.limitInclude) : 0,
+                    order: [['createdAt', 'DESC']],
+                },
+                limit: req.query.limit ? eval(req.query.limit) : 100,
+            } : {
+                limit: req.query.limit ? eval(req.query.limit) : 100,
+            },
+        )
         res.status(200).json(Themes);
     } catch (error) {
         res.status(500).json(error.message);
     }
 
 }
+
 
 async function getTheme (req, res) 
 {
