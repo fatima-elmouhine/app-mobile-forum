@@ -7,7 +7,7 @@ import HomeScreen from './pages/HomeScreen';
 
 const Stack = createStackNavigator();
 
-function Routes() {  
+function Routes() {
     return (
         <NavigationContainer>
             <Stack.Navigator initialRouteName='HomeScreen'>
