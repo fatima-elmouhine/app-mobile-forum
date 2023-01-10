@@ -6,8 +6,10 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 
 const auth = async (req, res, next) => {
-
-    // const jwtPrivateKey = fs.readFileSync(path.resolve('') + process.env.JWT_SECRET_KEY, 'utf8');
+    if (req.headers.cookie === undefined){ 
+       return  res.status(401).json({message: "Vous n'êtes pas connecté"});
+    };
+    
     const tokenAllStr = req.headers.cookie;
     const tokenStr = tokenAllStr.split('=')[1];
     try {
