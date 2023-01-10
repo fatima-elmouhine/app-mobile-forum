@@ -1,21 +1,11 @@
 import axiosInstance from '../config'
 
-export const getUser = async (userID) => {
-
+export const userAuthentication = async () => {
     try {
-        return await (await axiosInstance.get(`/users/${userID}`)).data
+        const userAuthentication = await axiosInstance.post('users/login', { email, password })
+        console.log(userAuthentication)
+        return userAuthentication
     } catch (error) {
-        switch (error.response.status) {
-            case 404:
-                console.log('User not found')
-                break;
-            default:
-                console.log('Error')
-        }
+        console.log(error)
     }
-
-    // const { data } = await axiosInstance.get(
-    //     `/users/`,
-    // )
-    // return data
-}                    
+}
