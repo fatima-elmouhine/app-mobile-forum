@@ -16,8 +16,8 @@ function Routes() {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                <Stack.Screen name="HomeScreen" component={HomeScreen} />
-                <Stack.Screen name="HomeLoggedScreen" component={HomeLoggedScreen} />
+                <Stack.Screen options={{ headerShown: false}} name="HomeScreen" component={HomeScreen} />
+                <Stack.Screen options={{ headerShown: false}} name="HomeLoggedScreen" component={HomeLoggedScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
