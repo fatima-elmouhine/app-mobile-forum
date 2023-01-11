@@ -18,8 +18,8 @@ export default function HomeLoggedScreen({navigation}) {
 
   }, [])
   function handlePressEdit() {
-    console.log(courses);
-    // navigation.navigate('HomeScreen');
+    // console.log(courses);
+    navigation.navigate('ProfileScreen');
   }
 
   let [fontsLoaded] = useFonts({

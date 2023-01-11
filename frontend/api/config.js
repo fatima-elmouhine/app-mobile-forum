@@ -1,8 +1,10 @@
 import axios from 'axios'
 // import * as SecureStore from 'expo-secure-store';
+import {API_IP} from '@env'
 
 const axiosInstance = axios.create({
-  baseURL: 'http://10.10.27.154:3000/api/', responseType: 'json',
+  baseURL: `http://${API_IP}:3000/api/`, responseType: 'json',
+
 })
 
 axiosInstance.interceptors.request.use(function (request) {
