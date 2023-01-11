@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import {userAuthentication} from '../api/Users/authentication';
+import { userAuthentication } from '../api/Users/authentication';
 
 function LoginScreen({ navigation }) {
 
@@ -10,15 +10,12 @@ function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
+    console.log('email', email);
     const response = await userAuthentication(email, password);
-    console.log('front', response);
-    if (typeof response !== 'object') {
-      console.log('Login successful');
-      <Alert title="Login successful" />
+    if (response.status === 200) {
       navigation.navigate('HomeLoggedScreen');
     } else {
-      console.log('Login failed');
-      <Alert title="Login failed" />
+      Alert.alert('Error', 'Invalid email or password');
     }
   }
 
