@@ -10,16 +10,16 @@ function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
-    const response = await userAuthentication(email, password);
-    console.log('front', response);
-    if (typeof response !== 'object') {
-      console.log('Login successful');
+    // const response = await userAuthentication(email, password);
+    // console.log('front', response);
+    // if (typeof response !== 'object') {
+      // console.log('Login successful');
       <Alert title="Login successful" />
       navigation.navigate('HomeLoggedScreen');
-    } else {
-      console.log('Login failed');
-      <Alert title="Login failed" />
-    }
+    // } else {
+    //   console.log('Login failed');
+    //   <Alert title="Login failed" />
+    // }
   }
 
   return (
