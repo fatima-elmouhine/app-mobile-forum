@@ -11,6 +11,8 @@ import PaginationSliderScreen from './component/PaginationSliderScreen';
 import HomeLoggedScreen from './pages/HomeLoggedScreen.js';
 import ProfileScreen from './pages/ProfileScreen.js';
 import ForumDetailScreen from './pages/ForumDetailScreen.js';
+import ForumScreen from './pages/ForumScreen';
+
 const Stack = createStackNavigator();
 
 function Routes() {
@@ -21,6 +23,7 @@ function Routes() {
                 <Stack.Screen options={{ headerShown: false}} name="HomeLoggedScreen" component={HomeLoggedScreen} />
                 <Stack.Screen options={{ headerShown: false}} name="ProfileScreen" component={ProfileScreen} />
                 <Stack.Screen options={{ headerShown: false}} name="ForumDetailScreen" component={ForumDetailScreen} />
+                <Stack.Screen options={{title: '', headerShown: false}} name="ForumScreen" component={ForumScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

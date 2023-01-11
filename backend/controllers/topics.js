@@ -1,10 +1,10 @@
 const sequelize  = require('../models/index');
-const {Topic, Message} = sequelize.models;
+const {Topic, Message, Theme} = sequelize.models;
 
 
 async function getTopics(req, res)
 {
-    var topicsReq =  await Topic.findAll().then(topicArray => {
+    var topicsReq =  await Topic.findAll({include: Theme}).then(topicArray => {
         return topicArray;
     });
 
