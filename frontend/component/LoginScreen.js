@@ -10,9 +10,8 @@ function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
-    console.log('email', email);
     const response = await userAuthentication(email, password);
-    if (response.status === 200) {
+    if (typeof response !== 'object') {
       navigation.navigate('HomeLoggedScreen');
     } else {
       Alert.alert('Error', 'Invalid email or password');
