@@ -11,10 +11,11 @@ function LoginScreen({ navigation }) {
   
   const handleLogin = async () => {
     const response = await userAuthentication(email, password);
-    if (typeof response !== 'object') {
-      navigation.navigate('HomeLoggedScreen');
+    if (response == true) {
+      console.log(response);
+      console.log(response.data);
     } else {
-      Alert.alert('Error', 'Invalid email or password');
+      console.log(response);
     }
   }
 
