@@ -1,14 +1,17 @@
 const sequelize  = require('../models/index');
-const {Topic, Message, Theme, User} = sequelize.models;
+const {Topic, Message, User,Theme} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
+
 
 
 async function getTopics(req, res)
 {
-    var topicsReq =  await Topic.findAll({include: Theme}).then(topicArray => {
-        return topicArray;
-    });
-
-    res.status(200).json(topicsReq);
+    try {
+        const topics = await genericGetAll(Topic, req);
+        res.status(200).json(topics);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function getTopic (req, res) 

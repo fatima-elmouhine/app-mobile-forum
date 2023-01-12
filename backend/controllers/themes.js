@@ -1,28 +1,16 @@
 const sequelize  = require('../models/index');
-const {Theme, Topic, Course} = sequelize.models;
+const {Theme} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
 
 
 async function getThemes(req, res)
 {   
     try {
-        const Themes = await Theme.findAll(
-            req.query.include ? 
-            {
-                include: {
-                    model: eval(req.query.include),
-                    limit: req.query.limitInclude ? eval(req.query.limitInclude) : 0,
-                    order: [['createdAt', 'DESC']],
-                },
-                limit: req.query.limit ? eval(req.query.limit) : 100,
-            } : {
-                limit: req.query.limit ? eval(req.query.limit) : 100,
-            },
-        )
-        res.status(200).json(Themes);
+        const themes = await genericGetAll(Theme, req);
+        res.status(200).json(themes);    
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).send
     }
-
 }
 
 

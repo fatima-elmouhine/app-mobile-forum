@@ -1,25 +1,23 @@
-const {getquestions, postquestion, getquestion, loginquestion, updatequestion, deletequestion} = require('../controllers/questions')
+const {getQuestions, postquestion, getquestion, loginquestion, updatequestion, deletequestion} = require('../controllers/questions')
 
 const express = require('express');
 const router = express.Router();
 
-router.get('/questions', (req, res) => {
-    getquestions(req, res);
-});
+router.get('/', getQuestions);
 
-router.get('/questions/:id', (req, res) => {
+router.get('/:id', (req, res) => {
     getquestion(req, res);
 });
 
-router.post('/questions', (req, res) => {
+router.post('/', (req, res) => {
     postquestion(req, res);
 });
 
-router.put('/questions/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     updatequestion(req, res);
 });
 
-router.delete('/questions/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     deletequestion(req, res);
 });
 
