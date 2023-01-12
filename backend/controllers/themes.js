@@ -13,6 +13,7 @@ async function getThemes(req, res)
     }
 }
 
+
 async function getTheme (req, res) 
 {
     try 

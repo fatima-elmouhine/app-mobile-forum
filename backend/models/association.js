@@ -5,6 +5,7 @@ function association(sequelize){
     User.hasMany(Message, {foreignKey: 'id_user'});
     Topic.hasMany(Message, {foreignKey: 'id_topic'});
     Message.belongsTo(Topic, {foreignKey: 'id_topic'});
+    Message.belongsTo(User, {foreignKey: 'id_user'});
     User.hasMany(UserQcm, {foreignKey: 'id_user'});
     Qcm.hasMany(UserQcm, {foreignKey: 'id_qcm'});
     Result.belongsTo(UserQcm, {foreignKey: 'id_user_qcm'});
@@ -16,6 +17,8 @@ function association(sequelize){
     Course.belongsTo(Theme, {foreignKey: 'id_theme'})
     Type.hasMany(Qcm, {foreignKey: 'id_type'});
     Qcm.belongsTo(Type, {foreignKey: 'id_type'});
+    Topic.belongsTo(Theme, {foreignKey: 'id_theme'});
+    Theme.hasMany(Topic, {foreignKey: 'id_theme'});
     Topic.belongsTo(User, {foreignKey: 'id_user'} )
 
 

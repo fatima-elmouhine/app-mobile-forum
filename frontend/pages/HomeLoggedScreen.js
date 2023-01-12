@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet, Text,Image, View, ScrollView, ImageBackground, TouchableHighlight } from 'react-native';
 import {useFonts,Roboto_400Regular,Roboto_400Regular_Italic} from "@expo-google-fonts/roboto";
-import { ProgressBar, Avatar, MD3Colors, IconButton } from 'react-native-paper';
+import { ProgressBar, Avatar, MD3Colors, IconButton, Button } from 'react-native-paper';
 import { LinearGradient } from "expo-linear-gradient";
 import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
 import {getCourses} from '../api/Courses/getCourses';
@@ -27,7 +27,7 @@ export default function HomeLoggedScreen({navigation}) {
     Roboto_400Regular_Italic
   });
 
-
+  
   return (
     <View style={styles.container}>
       <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
@@ -52,6 +52,9 @@ export default function HomeLoggedScreen({navigation}) {
         </Text>
           <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
             <View style={styles.sectionLatestCourse}>
+              <Button mode='contained-tonal' onPress={()=>{
+                navigation.navigate('ForumDetailScreen',  {id: 1})
+              }}>Page Detail Forum 1</Button>
               <Text style={styles.sectionTitle}>Les derniers cours</Text>
               { courses.length !== 0 && 
                 courses.map
