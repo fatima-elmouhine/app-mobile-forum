@@ -1,6 +1,8 @@
 import axios from 'axios'
-import { API_IP } from '@env'
-import * as SecureStore from 'expo-secure-store'
+// import * as SecureStore from 'expo-secure-store';
+// import {API_IP} from '@env'
+import API_IP from '../env.js'
+console.log(`http://${API_IP}:3000/api/`)
 
 const axiosInstance = axios.create({
   baseURL: `http://10.10.30.205:3000/api/`, responseType: 'json',

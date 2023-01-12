@@ -48,7 +48,7 @@ export default function HomeLoggedScreen({navigation}) {
     Roboto_400Regular_Italic
   });
 
-
+  
   return (
     <View style={styles.container}>
       <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
@@ -65,6 +65,9 @@ export default function HomeLoggedScreen({navigation}) {
               size={30}
               onPress={() => {handlePressEdit()}}
             />
+            <Button icon="plus" mode="contained" color='#00FAAF' style={styles.button} onPress={() => logout}>
+                Logout
+              </Button>
           </View>
         <Text style={styles.containerText}>
           <Text style={styles.name}></Text>
@@ -73,9 +76,10 @@ export default function HomeLoggedScreen({navigation}) {
         </Text>
           <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
             <View style={styles.sectionLatestCourse}>
-              <Button icon="plus" mode="contained" color='#00FAAF' style={styles.button} onPress={() => logout}>
-                Logout
-              </Button>
+              
+              <Button mode='contained-tonal' onPress={()=>{
+                navigation.navigate('ForumDetailScreen',  {id: 1})
+              }}>Page Detail Forum 1</Button>
               <Text style={styles.sectionTitle}>Les derniers cours</Text>
               { courses.length !== 0 && 
                 courses.map

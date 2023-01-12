@@ -8,6 +8,8 @@ import UserContextProvider from './context/userContext.js';
 import HomeScreen from './pages/HomeScreen';
 import HomeLoggedScreen from './pages/HomeLoggedScreen.js';
 import ProfileScreen from './pages/ProfileScreen.js';
+import ForumDetailScreen from './pages/ForumDetailScreen.js';
+import ForumScreen from './pages/ForumScreen';
 
 
 const Stack = createStackNavigator();

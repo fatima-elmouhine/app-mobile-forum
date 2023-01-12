@@ -5,6 +5,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { userAuthentication } from '../api/Users/authentication';
 
 function LoginScreen({ navigation }) {
+  
+  // const handleLogin = async () => {
+  //   const response = await login();
+  //   console.log(response);
+  //   if (response) {
+  //     navigation.navigate('Home');
+  //   } else {
+  //     console.log('Login failed');
+  //   }
+  // }
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

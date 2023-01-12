@@ -3,16 +3,20 @@ const { hashPassword } = require('../Tools/hashDehashTools');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
-const sequelize = require('../models/index');
-const { User } = sequelize.models;
+const sequelize  = require('../models/index');
+const {User} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
 
 
-async function getUsers(req, res) {
-    var usersReq = await User.findAll().then(userArray => {
-        // return userArray;
-        res.json(userArray);
-    });
-    // console.log(usersReq);
+
+async function getUsers(req, res)
+{
+    try {
+        const users = await genericGetAll(User, req);
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json(error);
+    }
 }
 
 async function getUser (req, res) {

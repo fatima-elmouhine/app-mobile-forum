@@ -1,16 +1,17 @@
 const sequelize  = require('../models/index');
 const {Qcm, Type, Question} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
 
 
 async function getQcms(req, res)
 {
     try {
-        const qcms = await Qcm.findAll({ include: Type});
-        res.status(200).json(qcms);
+        const qcms = await genericGetAll(Qcm, req);
+        res.status(200).json(qcms);    
+    } catch (error) {
+        res.status(500).send(error);
     }
-    catch (error) {
-        res.status(500).json(error.message);
-    }
+
 }
 
 async function getQcm (req, res) 
