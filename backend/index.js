@@ -13,6 +13,7 @@ const topicsRouter  = require('./routes/topics');
 const typesRouter  = require('./routes/types');
 const usersRouter  = require('./routes/users');
 const searchRouter  = require('./routes/search');
+
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
