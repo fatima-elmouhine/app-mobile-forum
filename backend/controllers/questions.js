@@ -1,14 +1,17 @@
 const sequelize  = require('../models/index');
-const {Question} = sequelize.models;
+const {Question, Answer} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
+
 
 
 async function getQuestions(req, res)
 {
-    var questionsReq =  await Question.findAll().then(questionArray => {
-        return questionArray;
-    });
-
-    res.json(questionsReq);
+    try {
+        const questions = await genericGetAll(Question, req);
+        res.status(200).json(questions);    
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function getQuestion (req, res) 
