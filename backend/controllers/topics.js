@@ -1,5 +1,5 @@
 const sequelize  = require('../models/index');
-const {Topic, Message, User} = sequelize.models;
+const {Topic, Message, User,Theme} = sequelize.models;
 const {genericGetAll} = require('../Tools/dbTools');
 
 
