@@ -3,10 +3,11 @@ import { API_IP } from '@env'
 import * as SecureStore from 'expo-secure-store'
 
 const axiosInstance = axios.create({
-  baseURL: `http://${API_IP}:3000/api/`, responseType: 'json',
+  baseURL: `http://10.10.30.205:3000/api/`, responseType: 'json',
 })
 
 axiosInstance.interceptors.request.use(function (request) {
+  // console.log(request)
   SecureStore.getItemAsync('token').then((token) => {
     request.headers.Authorization = `Bearer ${token}`
   })

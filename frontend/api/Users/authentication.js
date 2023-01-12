@@ -2,20 +2,34 @@ import axiosInstance from '../config'
 import * as SecureStore from 'expo-secure-store'
 
 export const userAuthentication = async ( email, password ) => {
-    const response = await axiosInstance.post('users/login', {
-        email,
-        password
-    })
-    console.log('response', response);
-    console.log('response.data', response.data);
-    console.log('response.data.token', response.data.token);
+  if (SecureStore.getItemAsync('token')) {
+    SecureStore.deleteItemAsync('token')
+  }
 
-    if (response.data.token) {
-        await SecureStore.setItemAsync('token', response.data.token)
-        console.log('response', response);
-        console.log('response.data', response.data);
-        console.log('response.data.token', response.data.token);
-    } 
+  const response = await axiosInstance.post('users/login', {
+      email,
+      password
+  })
+
+  try {
+      if (response.status === 200) {
+        SecureStore.setItemAsync('token', response.data.token)
+        return response.data.token
+      } 
+  } catch (e) {
+    switch (e) {
+    case e.request:
+      console.log(e.request)
+      console.log(e.message)
+      break
+    case e.response:
+      console.log(e.response)
+      console.log(e.message)
+      break
+    default:
+      console.log(e.config)
+    }
+  }
     
-    return response.data
+    return response.data && response.data.token
 }

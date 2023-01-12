@@ -1,26 +1,47 @@
 import * as React from 'react';
-import { StyleSheet, Text,Image, View, ScrollView, ImageBackground, TouchableHighlight } from 'react-native';
-import {useFonts,Roboto_400Regular,Roboto_400Regular_Italic} from "@expo-google-fonts/roboto";
-import { ProgressBar, Avatar, MD3Colors, IconButton } from 'react-native-paper';
+import { StyleSheet, Text, Image, View, ScrollView, ImageBackground, TouchableHighlight } from 'react-native';
+import { useFonts, Roboto_400Regular, Roboto_400Regular_Italic } from "@expo-google-fonts/roboto";
+import { ProgressBar, Avatar, MD3Colors, IconButton, Button } from 'react-native-paper';
 import { LinearGradient } from "expo-linear-gradient";
 import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
-import {getCourses} from '../api/Courses/getCourses';
+import { getCourses } from '../api/Courses/getCourses';
+import { UserContext } from '../context/userContext';
+import * as SecureStore from 'expo-secure-store'
+// import { getUser } from '../api/Users/getUser';
+
 export default function HomeLoggedScreen({navigation}) {
+
   const [courses, setCourses] = React.useState([]);
+  // const [user, setUser] = React.useState([]);
+  const { userDetails } = React.useContext(UserContext);
+  console.log('userDetails', userDetails);
+
   React.useEffect( () => {
     async function getCoursesInHome() {
       const coursesReq = await getCourses();
       setCourses(coursesReq);
     }
     getCoursesInHome();
+
+    // async function getUserByID() {
+    //   const userReq = await getUser(userDetails.user.id);
+    //   setUser(userReq);
+    // }
+    // getUserByID();
     // const coursesReq = await getCourses();
     // setCourses(coursesReq);
 
   }, [])
+
   function handlePressEdit() {
     // console.log(courses);
     navigation.navigate('ProfileScreen');
   }
+
+  function logout () {
+    SecureStore.deleteItemAsync('token');
+    navigation.navigate('HomeScreen');
+  } 
 
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
@@ -46,12 +67,15 @@ export default function HomeLoggedScreen({navigation}) {
             />
           </View>
         <Text style={styles.containerText}>
-          <Text style={styles.name}>Janee Doe</Text>
+          <Text style={styles.name}></Text>
           <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
           <Text style={styles.paragraphe}>Lvl.2</Text>
         </Text>
           <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
             <View style={styles.sectionLatestCourse}>
+              <Button icon="plus" mode="contained" color='#00FAAF' style={styles.button} onPress={() => logout}>
+                Logout
+              </Button>
               <Text style={styles.sectionTitle}>Les derniers cours</Text>
               { courses.length !== 0 && 
                 courses.map

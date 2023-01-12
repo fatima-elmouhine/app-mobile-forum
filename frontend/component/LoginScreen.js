@@ -10,12 +10,20 @@ function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
-    const response = await userAuthentication(email, password);
-    if (response == true) {
-      console.log(response);
-      console.log(response.data);
-    } else {
-      console.log(response);
+    try {
+      const response = await userAuthentication(email, password);
+      Alert.alert('Success', 'You are connected');
+      navigation.navigate('HomeLoggedScreen');
+    } catch (error) {
+      if (error.response.status === 403) {
+        Alert.alert('Oops', 'Mot de passe incorrect');
+      } else if (error.response.status === 404) {
+        Alert.alert('Oops', 'L\'utilisateur n\'a pas été trouvé');
+      } else if (error.response.status === 400) {
+        Alert.alert('Oops', 'Tous les champs doivent etre remplis');
+      } else {
+        Alert.alert('Oops', 'Erreur lors de la connexion de l\'utilisateur');
+      }
     }
   }
 
