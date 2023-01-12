@@ -1,5 +1,5 @@
 const sequelize  = require('../models/index');
-const {Question} = sequelize.models;
+const {Question, Answer} = sequelize.models;
 const {genericGetAll} = require('../Tools/dbTools');
 
 
