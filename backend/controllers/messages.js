@@ -1,14 +1,17 @@
 const sequelize  = require('../models/index');
 const {Message} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
+
 
 
 async function getMessages(req, res)
 {
-    var messagesReq =  await Message.findAll().then(messageArray => {
-        return messageArray;
-    });
-
-    res.json(messagesReq);
+    try {
+        const messages = await genericGetAll(Message, req);
+        res.status(200).json(messages);    
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function getMessage (req, res) 

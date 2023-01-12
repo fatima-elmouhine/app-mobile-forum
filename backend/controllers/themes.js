@@ -1,16 +1,16 @@
 const sequelize  = require('../models/index');
 const {Theme} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
 
 
 async function getThemes(req, res)
 {   
     try {
-        const Themes = await Theme.findAll()
-        res.status(200).json(Themes);
+        const themes = await genericGetAll(Theme, req);
+        res.status(200).json(themes);    
     } catch (error) {
-        res.status(500).json(error.message);
+        res.status(500).send
     }
-
 }
 
 async function getTheme (req, res) 
