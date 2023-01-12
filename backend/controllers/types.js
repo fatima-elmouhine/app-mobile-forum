@@ -1,16 +1,17 @@
 const sequelize  = require('../models/index');
 const {Type} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
 
 
 
 async function getTypes(req, res)
 {
-    var typesReq =  await Type.findAll().then(typesArray => {
-    
-        return typesArray;
-    });
-
-    res.json(typesReq);
+    try {
+        const types = await genericGetAll(Type, req);
+        res.status(200).json(types);    
+    } catch (error) {
+        res.status(500).send
+    }
 }
 
 async function getType (req, res) 

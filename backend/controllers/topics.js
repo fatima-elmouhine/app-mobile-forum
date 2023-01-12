@@ -1,14 +1,17 @@
 const sequelize  = require('../models/index');
-const {Topic, Message, Theme} = sequelize.models;
+const {Topic, Message, User,Theme} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
+
 
 
 async function getTopics(req, res)
 {
-    var topicsReq =  await Topic.findAll({include: Theme}).then(topicArray => {
-        return topicArray;
-    });
-
-    res.status(200).json(topicsReq);
+    try {
+        const topics = await genericGetAll(Topic, req);
+        res.status(200).json(topics);
+    } catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function getTopic (req, res) 
@@ -149,7 +152,7 @@ async function deleteTopic (req, res)
 async function getMessagesTopic (req, res){
     try 
     {
-        const msg =  await Message.findAll( { where: {id_topic: req.params.id }, include: Topic})
+        const msg =  await Message.findAll( { where: {id_topic: req.params.id }, include: [Topic, User]})
         if(msg.length == 0)
         {
             res.status(404).send('Aucun message n\'a été trouvé');
@@ -160,6 +163,7 @@ async function getMessagesTopic (req, res){
     }
     catch (error)
     {
+        console.log(error);
         res.status(404).send('Une erreur est survenue');
     }
 

@@ -1,19 +1,35 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { useState } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import login from '../api/Users/login';
-import login from '../api/Users/login';
-// import style from '../css/Background.module.css';
+import {userAuthentication} from '../api/Users/authentication';
 
 function LoginScreen({ navigation }) {
   
+  // const handleLogin = async () => {
+  //   const response = await login();
+  //   console.log(response);
+  //   if (response) {
+  //     navigation.navigate('Home');
+  //   } else {
+  //     console.log('Login failed');
+  //   }
+  // }
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
   const handleLogin = async () => {
-    const response = await login();
-    console.log(response);
-    if (response) {
-      navigation.navigate('Home');
-    } else {
-      console.log('Login failed');
-    }
+    // const response = await userAuthentication(email, password);
+    // console.log('front', response);
+    // if (typeof response !== 'object') {
+      // console.log('Login successful');
+      <Alert title="Login successful" />
+      navigation.navigate('HomeLoggedScreen');
+    // } else {
+    //   console.log('Login failed');
+    //   <Alert title="Login failed" />
+    // }
   }
 
   return (
@@ -22,11 +38,23 @@ function LoginScreen({ navigation }) {
         colors={['#000000', '#0075FF']}
         style={styles.linear}
       >
-        <Text style={styles.title}>LOGIN</Text>
+        <Image source={require('../assets/logo_fond.png')} style={styles.bgTop} />
+        <Text style={styles.title}>Login</Text>
         <SafeAreaView style={styles.form}>
-          <TextInput style={styles.input} placeholder="Email" textContentType='emailAddress' />
-          <TextInput style={styles.input} placeholder="Password" textContentType='password'/>
-          <TouchableOpacity style={styles.button} onPress={handleLogin} >
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={text => setPassword(text)}
+            secureTextEntry={true}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.button_text}>Login</Text>
           </TouchableOpacity>
         </SafeAreaView>
@@ -45,6 +73,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     height: '100%',
+  },
+  bgTop: {
+    backgroundSize: 'cover',
+    borderWidth: 1,
+    position: 'absolute',
+    top: 10,
+    height:150,
+    zIndex: 1,
+    width: '100%',
   },
   linear: {
     flex: 1,

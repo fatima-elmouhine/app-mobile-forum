@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, Text, View, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, SafeAreaView, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-// import style from '../css/Background.module.css';
 
 function GeneralConditionScreen() {
   return (
@@ -10,9 +9,10 @@ function GeneralConditionScreen() {
         colors={['#000000', '#0075FF']}
         style={styles.linear}
       >
-        <Text style={styles.title}>CONDITION GENERALE</Text>
+        <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
         <SafeAreaView style={styles.safeare}>
           <ScrollView style={styles.scrollview}>
+            <Text style={styles.title}>Condition Générale</Text>
             <Text style={styles.paragraphe}>
             Donec orci lectus, aliquam ut, faucibus non, euismod id, nulla. 
             Etiam iaculis nunc ac metus. Ut id nisl quis enim dignissim sagittis.
@@ -37,6 +37,17 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  bgTop: {
+    backgroundSize: 'cover',
+    borderWidth: 1,
+    // borderColor: 'red',
+    position: 'absolute',
+    top: 10,
+    height:150,
+    zIndex: 1,
+    width: '100%',
+    // backgroundPosition: 'bottom',
+  },
   linear: {
     flex: 1,
     width: '100%',
@@ -46,19 +57,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+    textTransform: 'capitalize',
     color: '#fff',
-    marginTop: 100,
+    marginBottom: 42,
   },
   safeare: {
     flex: 1,
     marginHorizontal: 50,
     marginVertical: 100,
-    marginTop: 5,
+    marginTop: 42,
   },
   scrollview: {
     flex: 1,
-    marginTop: 20,
+    marginTop: 150,
+
   },
   paragraphe: {
     fontSize: 20,

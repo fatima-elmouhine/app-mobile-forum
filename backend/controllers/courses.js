@@ -1,15 +1,16 @@
 const sequelize  = require('../models/index');
 const {Course, Theme} = sequelize.models;
+const {genericGetAll} = require('../Tools/dbTools');
+
 
 
 async function getCourses(req, res)
 {
     try {
-        const courses = await Course.findAll({include: Theme});
-        res.status(200).json(courses);
-    }
-    catch (error) {
-        res.status(500).json(error.message);
+        const courses = await genericGetAll(Course, req);
+        res.status(200).json(courses);    
+    } catch (error) {
+        res.status(500).send(error);
     }
 }
 
