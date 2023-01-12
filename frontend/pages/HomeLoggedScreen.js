@@ -5,7 +5,7 @@ import { ProgressBar, Avatar, MD3Colors, IconButton, Button } from 'react-native
 import { LinearGradient } from "expo-linear-gradient";
 import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
 import { getCourses } from '../api/Courses/getCourses';
-import { UserContext } from '../context/userContext';
+// import { UserContext } from '../context/userContext';
 import * as SecureStore from 'expo-secure-store'
 // import { getUser } from '../api/Users/getUser';
 
@@ -13,8 +13,8 @@ export default function HomeLoggedScreen({navigation}) {
 
   const [courses, setCourses] = React.useState([]);
   // const [user, setUser] = React.useState([]);
-  const { userDetails } = React.useContext(UserContext);
-  console.log('userDetails', userDetails);
+  // const { userDetails } = React.useContext(UserContext);
+  // console.log('userDetails', userDetails);
 
   React.useEffect( () => {
     async function getCoursesInHome() {
@@ -65,18 +65,17 @@ export default function HomeLoggedScreen({navigation}) {
               size={30}
               onPress={() => {handlePressEdit()}}
             />
-            <Button icon="plus" mode="contained" color='#00FAAF' style={styles.button} onPress={() => logout}>
-                Logout
-              </Button>
           </View>
         <Text style={styles.containerText}>
-          <Text style={styles.name}></Text>
+          <Text style={styles.name}>Fatima Dono</Text>
           <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
           <Text style={styles.paragraphe}>Lvl.2</Text>
         </Text>
           <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
             <View style={styles.sectionLatestCourse}>
-              
+              <Button icon="plus" mode="contained" color='#00FAAF' style={styles.button} onPress={() => logout}>
+                Logout
+              </Button>
               <Button mode='contained-tonal' onPress={()=>{
                 navigation.navigate('ForumDetailScreen',  {id: 1})
               }}>Page Detail Forum 1</Button>
