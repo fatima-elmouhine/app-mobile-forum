@@ -1,20 +1,19 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { userAuthentication } from '../api/Users/authentication';
+import * as SecureStore from 'expo-secure-store'
 
 function LoginScreen({ navigation }) {
-  
-  // const handleLogin = async () => {
-  //   const response = await login();
-  //   console.log(response);
-  //   if (response) {
-  //     navigation.navigate('Home');
-  //   } else {
-  //     console.log('Login failed');
-  //   }
-  // }
+
+  useEffect(() => {
+    SecureStore.getItemAsync('token').then((token) => {
+      if (token) {
+        navigation.navigate('HomeLoggedScreen');
+      }
+    });   
+  }, []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

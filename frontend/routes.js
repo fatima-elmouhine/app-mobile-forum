@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import * as SecureStore from 'expo-secure-store'
-import { useState } from 'react';
-// import UserContextProvider from './context/userContext.js';
+import UserContextProvider from './context/UserContext.js';
 
 import HomeScreen from './pages/HomeScreen';
 import HomeLoggedScreen from './pages/HomeLoggedScreen.js';
@@ -14,52 +12,19 @@ import ForumScreen from './pages/ForumScreen';
 const Stack = createStackNavigator();
 
 function Routes() {
-
-    // SecureStore.deleteItemAsync('token');
-    const [jwt, setJwt] = useState(null);
-
-    SecureStore.getItemAsync('token').then((token) => {
-        setJwt(token)
-    })
-
-    console.log('jwt', jwt);
-
-    // return (
-    //     <UserContextProvider>
-    //         <NavigationContainer>
-    //             <Stack.Navigator>
-    //                 <Stack.Screen options={{ headerShown: false}} name="HomeScreen" component={HomeScreen} />
-    //                 <Stack.Screen options={{ headerShown: false}} name="HomeLoggedScreen" component={HomeLoggedScreen} />
-    //                 <Stack.Screen options={{ headerShown: false}} name="ProfileScreen" component={ProfileScreen} />
-    //                 <Stack.Screen options={{ headerShown: false}} name="ForumDetailScreen" component={ForumDetailScreen} />
-    //                 <Stack.Screen options={{ headerShown: false}} name="ForumScreen" component={ForumScreen} />
-    //             </Stack.Navigator>
-    //         </NavigationContainer>
-    //     </UserContextProvider>
-    // );
-
-    if (!jwt) {
-        return (
+    return (
+        <UserContextProvider>
             <NavigationContainer>
                 <Stack.Navigator>
                     <Stack.Screen options={{ headerShown: false}} name="HomeScreen" component={HomeScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="HomeLoggedScreen" component={HomeLoggedScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="ProfileScreen" component={ProfileScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="ForumDetailScreen" component={ForumDetailScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="ForumScreen" component={ForumScreen} />
                 </Stack.Navigator>
             </NavigationContainer>
-        );
-    } else {
-        return (
-            // <UserContextProvider>
-                <NavigationContainer>
-                    <Stack.Navigator>
-                        <Stack.Screen options={{ headerShown: false}} name="HomeLoggedScreen" component={HomeLoggedScreen} />
-                        <Stack.Screen options={{ headerShown: false}} name="ProfileScreen" component={ProfileScreen} />
-                        <Stack.Screen options={{ headerShown: false}} name="ForumDetailScreen" component={ForumDetailScreen} />
-                        <Stack.Screen options={{ headerShown: false}} name="ForumScreen" component={ForumScreen} />
-                    </Stack.Navigator>
-                </NavigationContainer>
-            // </UserContextProvider>
-        );
-    }
+        </UserContextProvider>
+    );
 }
 
 export default Routes;

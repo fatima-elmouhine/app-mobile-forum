@@ -2,20 +2,20 @@ import axiosInstance from '../config'
 import * as SecureStore from 'expo-secure-store'
 
 export const userAuthentication = async ( email, password ) => {
-  if (SecureStore.getItemAsync('token')) {
+  if (SecureStore.getItemAsync('token') !== null) {
     SecureStore.deleteItemAsync('token')
   }
 
   const response = await axiosInstance.post('users/login', {
-      email,
-      password
+    email,
+    password
   })
 
   try {
-      if (response.status === 200) {
-        SecureStore.setItemAsync('token', response.data.token)
-        return response.data.token
-      } 
+    if (response.status === 200) {
+      SecureStore.setItemAsync('token', response.data.token)
+      return response.data.token
+    } 
   } catch (e) {
     switch (e) {
     case e.request:
@@ -30,6 +30,5 @@ export const userAuthentication = async ( email, password ) => {
       console.log(e.config)
     }
   }
-    
     return response.data && response.data.token
 }
