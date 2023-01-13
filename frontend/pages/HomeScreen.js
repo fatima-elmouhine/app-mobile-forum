@@ -7,7 +7,7 @@ import LogoScreen from '../component/LogoScreen.js';
 import GeneralConditionScreen from '../component/GeneralConditionScreen.js';
 import LoginScreen from '../component/LoginScreen.js';
 import PaginationSliderScreen from '../component/PaginationSliderScreen.js';
-import HomeLoggedScreen from './HomeLoggedScreen.js';
+import * as SecureStore from 'expo-secure-store'
 
 const AnimatedPager = Animated.createAnimatedComponent(PagerView);
 
@@ -29,6 +29,14 @@ export function usePagerScrollHandler(handlers, dependencies) {
 }
 
 const App = ({ navigation }) => {
+
+  useEffect(() => {
+    SecureStore.getItemAsync('token').then((token) => {
+      if (token) {
+        navigation.navigate('HomeLoggedScreen');
+      }
+    });
+  }, []);
 
   const [page, setPage] = useState(0);
 

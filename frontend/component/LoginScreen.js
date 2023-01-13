@@ -1,35 +1,39 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import {userAuthentication} from '../api/Users/authentication';
+import { userAuthentication } from '../api/Users/authentication';
+import * as SecureStore from 'expo-secure-store'
 
 function LoginScreen({ navigation }) {
-  
-  // const handleLogin = async () => {
-  //   const response = await login();
-  //   console.log(response);
-  //   if (response) {
-  //     navigation.navigate('Home');
-  //   } else {
-  //     console.log('Login failed');
-  //   }
-  // }
+
+  useEffect(() => {
+    SecureStore.getItemAsync('token').then((token) => {
+      if (token) {
+        navigation.navigate('HomeLoggedScreen');
+      }
+    });   
+  }, []);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
-    // const response = await userAuthentication(email, password);
-    // console.log('front', response);
-    // if (typeof response !== 'object') {
-      // console.log('Login successful');
-      <Alert title="Login successful" />
+    try {
+      const response = await userAuthentication(email, password);
+      Alert.alert('Success', 'You are connected');
       navigation.navigate('HomeLoggedScreen');
-    // } else {
-    //   console.log('Login failed');
-    //   <Alert title="Login failed" />
-    // }
+    } catch (error) {
+      if (error.response.status === 403) {
+        Alert.alert('Oops', 'Mot de passe incorrect');
+      } else if (error.response.status === 404) {
+        Alert.alert('Oops', 'L\'utilisateur n\'a pas été trouvé');
+      } else if (error.response.status === 400) {
+        Alert.alert('Oops', 'Tous les champs doivent etre remplis');
+      } else {
+        Alert.alert('Oops', 'Erreur lors de la connexion de l\'utilisateur');
+      }
+    }
   }
 
   return (
