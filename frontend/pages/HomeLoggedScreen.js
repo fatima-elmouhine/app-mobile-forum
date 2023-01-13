@@ -32,7 +32,7 @@ export default function HomeLoggedScreen({navigation}) {
     <View style={styles.container}>
       <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
       <LinearGradient
-        colors={['#000000', '#02254F','#2D84EA']}
+        colors={['purple', '#02254F','#2D84EA']}
         style={styles.containerGradient}
         >
           <View style={[styles.profileImgContainer]}>
@@ -52,9 +52,14 @@ export default function HomeLoggedScreen({navigation}) {
         </Text>
           <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
             <View style={styles.sectionLatestCourse}>
-              <Button mode='contained-tonal' onPress={()=>{
+              <Button mode='contained-tonal' style={{marginBottom:30}} onPress={()=>{
                 navigation.navigate('ForumDetailScreen',  {id: 1})
-              }}>Page Detail Forum 1</Button>
+              }}>Page Detail Forum 1
+              </Button>
+              <Button mode='contained-tonal' onPress={()=>{
+                navigation.navigate('ForumScreen')
+              }}>Forum
+              </Button>
               <Text style={styles.sectionTitle}>Les derniers cours</Text>
               { courses.length !== 0 && 
                 courses.map
