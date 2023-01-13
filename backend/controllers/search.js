@@ -3,48 +3,32 @@ const { Op } = require("sequelize");
 
 async function getSearchForum(req, res)
 {
-    const {search} = req.query;
-    if (search.length < 3) return res.status(400).send('Votre recherche doit contenir au moins 3 caractères');
-    const Topics = await sequelize.models.Theme.findAndCountAll({
-        where: {
-            title: {
-                [Op.like]: `%${search}%`
-            }
-        },
-        include: {model : sequelize.models.Topic, include: sequelize.models.User}
-    });
-    const Themes = await sequelize.models.Theme.findAndCountAll({
-        where: {
-            title: {
-                [Op.like]: `%${search}%`
-            }
-        },
-        include: {model : sequelize.models.Topic}
-    });
-    const Messages = await sequelize.models.Message.findAndCountAll({
-        where: {
-            text: {
-                [Op.like]: `%${search}%`
-            }
-        },
-        include: {model : sequelize.models.Topic, include: sequelize.models.User}
-    });
-    res.json({Topics, Themes, Messages});
+    const {search, item} = req.query;
+    const searchItem = item?.split(',');
+    if (!search || search?.length < 3 ) return res.status(400).send('Votre recherche doit contenir au moins 3 caractères');
+    const Topics = searchItem?.includes('Topics') || searchItem === undefined ? await getSearch(sequelize.models.Topic, search, [{model : sequelize.models.User}, {model : sequelize.models.Theme}], 'title') : null;
+    const Themes = searchItem?.includes('Themes') || searchItem === undefined ? await getSearch(sequelize.models.Theme, search, {model : sequelize.models.Topic}, 'title') : null;
+    const Messages = searchItem?.includes('Messages') || searchItem === undefined ? await getSearch(sequelize.models.Message, search, {model : sequelize.models.Topic, include: sequelize.models.User, include : sequelize.models.Theme},'text') : null;
+    return res.json({Topics, Themes, Messages});
 }
 
 async function getSearchCourses (req,res) 
 {
     const {search} = req.query;
-    if (search.length < 3) return res.status(400).send('Votre recherche doit contenir au moins 3 caractères');
-    const Courses = await sequelize.models.Course.findAndCountAll({
+    if (search?.length < 3 || !search ) return res.status(400).send('Votre recherche doit contenir au moins 3 caractères');
+    const Courses = await getSearch(sequelize.models.Course, search, {model : sequelize.models.Theme}, 'title');
+    return res.json({Courses});
+}
+
+async function getSearch (model, search, include = null, field) {
+    return await model.findAndCountAll({
         where: {
-            title: {
+            [field] : {
                 [Op.like]: `%${search}%`
             }
         },
-        include: {model : sequelize.models.Theme}
+        include: include
     });
-    res.json({Courses});
 }
 
 module.exports = {getSearchForum, getSearchCourses}
