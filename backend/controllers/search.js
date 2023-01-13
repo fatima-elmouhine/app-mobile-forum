@@ -8,7 +8,7 @@ async function getSearchForum(req, res)
     if (!search || search?.length < 3 ) return res.status(400).send('Votre recherche doit contenir au moins 3 caractères');
     const Topics = searchItem?.includes('Topics') || searchItem === undefined ? await getSearch(sequelize.models.Topic, search, [{model : sequelize.models.User}, {model : sequelize.models.Theme}], 'title') : null;
     const Themes = searchItem?.includes('Themes') || searchItem === undefined ? await getSearch(sequelize.models.Theme, search, {model : sequelize.models.Topic}, 'title') : null;
-    const Messages = searchItem?.includes('Messages') || searchItem === undefined ? await getSearch(sequelize.models.Message, search, {model : sequelize.models.Topic, include: sequelize.models.User},'text') : null;
+    const Messages = searchItem?.includes('Messages') || searchItem === undefined ? await getSearch(sequelize.models.Message, search, {model : sequelize.models.Topic, include: sequelize.models.User, include : sequelize.models.Theme},'text') : null;
     return res.json({Topics, Themes, Messages});
 }
 
