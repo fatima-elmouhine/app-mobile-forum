@@ -24,10 +24,10 @@ import {
   Button,
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
-import { getCourses } from "../api/Courses/getCourses";
-import { UserContext } from "../context/UserContext";
-import * as SecureStore from "expo-secure-store";
+import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
+import { getCourses } from '../api/Courses/getCourses';
+import { UserContext } from '../context/UserContext';
+import * as SecureStore from 'expo-secure-store'
 // import { getUser } from '../api/Users/getUser';
 
 export default function HomeLoggedScreen({ navigation }) {
@@ -53,7 +53,8 @@ export default function HomeLoggedScreen({ navigation }) {
   });
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
         style={styles.containerGradient}
@@ -63,61 +64,49 @@ export default function HomeLoggedScreen({ navigation }) {
           style={styles.bgTop}
         />
         <View style={[styles.profileImgContainer]}>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                handlePressEdit();
-              }}
-            >
-              <Avatar.Image
-                size={120}
-                source={require("../assets/img-test/image1.png")}
-                style={styles.image}
-                onPress={() => {
-                  handlePressEdit();
-                }}
-              />
-            </TouchableOpacity>
-            <View
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                width: "60%",
-              }}
-            >
-              <Text style={styles.name}>Zak Lucien</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  position: "absolute",
-                  bottom: 0,
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <ProgressBar
-                  progress={0.5}
-                  color="#00FAAF"
-                  style={styles.progress}
-                />
-                <Text style={styles.paragraphe}>Lvl.2</Text>
-              </View>
-            </View>
-          </View>
+          <Avatar.Image size={150} source={require('../assets/img-test/image1.png')}   style={styles.image}/>
+          <IconButton
+            icon={require('../assets/logo/edit.png')}
+            iconColor='#00FAAF'
+            style={styles.icon}
+            size={30}
+            onPress={() => {handlePressEdit()}}
+          />
         </View>
-        <Text style={styles.sectionTitle}>Mes derniers cours</Text>
-        <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+        <Text style={styles.containerText}>
+          <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
+          <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
+          <Text style={styles.paragraphe}>Lvl.2</Text>
+        </Text>
+        <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
           <View style={styles.sectionLatestCourse}>
-            {courses.length !== 0 &&
-              courses.map((course, i) => {
-                return <CourseCardComponent key={i} course={course} />;
-              })}
+          <Button mode='contained-tonal' style={{marginBottom:30}} onPress={()=>{
+                navigation.navigate('ForumDetailScreen',  {id: 1})
+              }}>Page Detail Forum 1
+              </Button>
+              <Button mode='contained-tonal' onPress={()=>{
+                navigation.navigate('ForumScreen')
+              }}>Forum
+              </Button>
+            <Button icon="plus" mode="contained" color='#00FAAF' style={styles.button} onPress={()=>{ 
+              SecureStore.deleteItemAsync('token');
+              navigation.navigate('HomeScreen');
+            }}>Logout</Button>
+            <Text style={styles.sectionTitle}>Les derniers cours</Text>
+            { courses.length !== 0 && 
+              courses.map((course,i) => {
+                return (
+                  <CourseCardComponent key={i}  course={course}/>
+                )
+              })
+            }
+            { courses.length !== 0 && 
+              courses.map((course,i) => {
+                return (
+                  <CourseCardComponent key={i}  course={course}/>
+                )
+              })
+            }
           </View>
         </ScrollView>
       </LinearGradient>
@@ -137,6 +126,10 @@ const styles = StyleSheet.create({
   },
 
   linearGradient: {
+    flex: 1,
+    paddingLeft: 15,
+    paddingRight: 15,
+    borderRadius: 5,
     backgroundImage: "url(../assets/img-test/image1.png)",
   },
 
@@ -158,32 +151,46 @@ const styles = StyleSheet.create({
   },
 
   profileImgContainer: {
-    marginHorizontal: 16,
-    marginTop: 50,
-    justifyContent: "space-between",
-    marginBottom: 64,
+    zIndex: 4,
+    top: 50,
+    left: 28,
+    position: 'relative',
   },
 
   image: {
     overflow: "hidden",
     borderWidth: 1,
+    zIndex: 1,
+    position: 'absolute',
     borderStyle: "dashed",
     borderColor: "#50F4E1",
   },
 
-  containerText: {},
+  icon: {
+    zIndex: 2,
+    position: 'absolute',
+    top: 100,
+    left: 110,
+  },
+
+  containerText: {
+    display: 'flex',
+    fontSize: 20,
+    color: '#fff',
+    marginTop: 200,
+    marginLeft: 28,
+  },
 
   name: {
-    fontSize: 20,
-    color: "#fff",
+    paddingLeft: 58,
   },
 
   paragraphe: {
-    fontSize: 15,
-    color: "#fff",
+    paddingLeft: 28,
   },
 
   progress: {
+    marginTop: 10,
     width: 150,
     height: 20,
     borderRadius: 10,

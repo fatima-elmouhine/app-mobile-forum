@@ -9,6 +9,7 @@ import ProfileScreen from './pages/ProfileScreen.js';
 import ForumDetailScreen from './pages/ForumDetailScreen.js';
 import ForumScreen from './pages/ForumScreen';
 import MenuButton from './component/MenuButton.js';
+import MenuButton from './component/MenuButton.js';
 
 const Stack = createStackNavigator();
 
