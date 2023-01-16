@@ -1,6 +1,7 @@
 const express  = require('express');
 // const dotenv  = require('dotenv');
 const dotenv = require('dotenv');
+const cors = require('cors');
 dotenv.config();
 const answersRouter  = require('./routes/answers');
 const coursesRouter  = require('./routes/courses');
@@ -15,6 +16,7 @@ const usersRouter  = require('./routes/users');
 const searchRouter  = require('./routes/search');
 
 const app = express();
+app.use(cors())
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 

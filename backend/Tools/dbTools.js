@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 
-async function genericGetAll(model,req) {
+async function genericGetAll(model, req) {
     
     const include = req.query?.include?.split(',');
     const limit = req.query?.limit ?? 100;

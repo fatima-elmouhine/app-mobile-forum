@@ -8,7 +8,9 @@ async function getMessages(req, res)
 {
     try {
         const messages = await genericGetAll(Message, req);
-        res.status(200).json(messages);    
+        res.append('X-Total-Count',messages.count);
+        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.status(200).json(messages.rows);    
     } catch (error) {
         res.status(500).send(error);
     }

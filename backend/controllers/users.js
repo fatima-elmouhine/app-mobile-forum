@@ -13,7 +13,9 @@ async function getUsers(req, res)
 {
     try {
         const users = await genericGetAll(User, req);
-        res.status(200).json(users);
+        res.append('X-Total-Count',users.count);
+        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.status(200).json(users.rows);
     } catch (error) {
         res.status(500).json(error);
     }
