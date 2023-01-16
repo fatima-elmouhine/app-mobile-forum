@@ -8,6 +8,7 @@ import HomeLoggedScreen from './pages/HomeLoggedScreen.js';
 import ProfileScreen from './pages/ProfileScreen.js';
 import ForumDetailScreen from './pages/ForumDetailScreen.js';
 import ForumScreen from './pages/ForumScreen';
+import MenuButton from './component/MenuButton.js';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="ForumDetailScreen" component={ForumDetailScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ForumScreen" component={ForumScreen} />
                 </Stack.Navigator>
+            <MenuButton></MenuButton>
             </NavigationContainer>
         </UserContextProvider>
     );

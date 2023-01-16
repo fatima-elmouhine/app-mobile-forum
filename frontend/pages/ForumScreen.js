@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 
-import { StyleSheet, Text, View, Dimensions, Pressable , Image} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Pressable , Image, ImageBackground} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Searchbar, IconButton, Card , Avatar, Checkbox} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -129,14 +129,13 @@ for (const [key, value] of Object.entries(checked)) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
+      {/* <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/> */}
       <LinearGradient
         colors={['purple', '#02254F','#2D84EA']}
         style={styles.containerGradient}
         >
         <Searchbar
-        style= {{borderRadius:30, width: "100%", top: 50, marginRight: 40, right: 8,
-        marginBottom: 30, marginTop: 30}}
+        style= {{borderRadius:30, width: "90%", marginTop: 30, marginHorizontal:'5%', zIndex:1000}}
         onChangeText={(query)=>{
           handleSearch(query)
         }}
@@ -149,7 +148,7 @@ for (const [key, value] of Object.entries(checked)) {
         // value={searchQuery}
         />
         {filterVisible &&
-          <View style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', width:'100%', top: 50, marginBottom:50}}>
+          <View style={{display:'flex', flexDirection:'row',alignItems:'center', justifyContent:'space-evenly', width:'100%', top: 10}}>
             <Text style={{color:'white', fontWeight:'bold', fontSize:16, marginLeft:20}}>Thèmes</Text>
                 <Checkbox
                 status={checked.Themes ? 'checked' : 'unchecked'}
@@ -179,7 +178,7 @@ for (const [key, value] of Object.entries(checked)) {
           </View>
         }
         {activeSearch == false &&
-        <View style={{ display:'flex',width:'100%',top: 50}}>
+        <View style={{ display:'flex',width:'100%'}}>
               <ScrollView horizontal={true}>
                   {cardThemes.map((item) => {
                     return <CardTheme key={item.id} title={item.title} description={item.description} />
@@ -293,12 +292,11 @@ for (const [key, value] of Object.entries(checked)) {
     bgTop: {
       backgroundSize: 'cover',
       borderWidth: 1,
-      borderColor: 'red',
       position: 'absolute',
       top: 10,
       height:150,
-      zIndex: -1,
       width: '100%',
+      zIndex:1,
       // backgroundPosition: 'bottom',
     },
     linearGradient: {
@@ -316,9 +314,7 @@ for (const [key, value] of Object.entries(checked)) {
       // flex: 6,
       width: '100%',
       height: '100%',
-      display: 'flex',
       fontFamily: "Roboto_400Regular",
-      paddingLeft: 28,
       margin: 0,
     },
     checkbox: {
