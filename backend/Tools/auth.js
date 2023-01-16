@@ -1,9 +1,8 @@
 const jwt = require("jsonwebtoken");
 const path = require('path');
 const sequelize  = require('../models/index');
-const {User} = sequelize.models;
+const { User } = sequelize.models;
 const SECRET_KEY = process.env.SECRET_KEY;
-
 
 const auth = async (req, res, next) => {
     if (req.headers.cookie === undefined){ 
@@ -29,7 +28,5 @@ const isAdmin = (user) => {
     })
     return isAdmin === undefined ? false : isAdmin;
 };
-
-
 
 module.exports = auth;
