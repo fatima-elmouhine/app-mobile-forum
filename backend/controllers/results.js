@@ -13,29 +13,15 @@ async function getResults(req, res)
 
 async function getResult (req, res) 
 {
-    
     try 
     {
-        const resultReq = await Result.findOne({ where: {id:req.params.id }})
-        .then(result => {
-            return result;
-        });
-
-        console.log(resultReq);
-
-        if(resultReq == null) 
-        {
-            res.status(404).send('Artefact not found');
-        }
-        else
-        {
-            res.status(200).send(resultReq);
-        }
-    } 
-    catch (error) 
-    {
-        res.status(500).send(error);
+        const result = await genericGetOne(Result, req);
+        if (result === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(result);
     }
+    catch (error) {
+        res.status(500).send(error);
+    }   
 }
 
 async function postResult (req, res) 
