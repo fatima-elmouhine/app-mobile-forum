@@ -7,7 +7,9 @@ async function getAnswers(req, res)
 {
     try {
         const answers = await genericGetAll(Answer, req);
-        res.status(200).json(answers);    
+        res.append('X-Total-Count',answers.count);
+        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.status(200).json(answers.rows);    
     } catch (error) {
         res.status(500).send(error);
     }

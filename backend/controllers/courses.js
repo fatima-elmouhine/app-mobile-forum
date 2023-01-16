@@ -8,7 +8,9 @@ async function getCourses(req, res)
 {
     try {
         const courses = await genericGetAll(Course, req);
-        res.status(200).json(courses);    
+        res.append('X-Total-Count',courses.count);
+        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.status(200).json(courses.rows);    
     } catch (error) {
         res.status(500).send(error);
     }

@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 
-async function genericGetAll(model,req) {
+async function genericGetAll(model, req) {
     
     const include = req.query?.include?.split(',');
         const limit = req.query?.limit ?? 100;
@@ -11,7 +11,7 @@ async function genericGetAll(model,req) {
             let option = name.split(':');
             options.push({ 'model': sequelize.models[option[0]], required : option[1] === 'true' ? true : false, limit: parseInt(option[2])})
         }); 
-        return await model.findAll({ include: options, limit: parseInt(limit), offset: parseInt(offset), order: [order] });
+        return await model.findAndCountAll({ include: options, limit: parseInt(limit), offset: parseInt(offset), order: [order] });
 
 }
 

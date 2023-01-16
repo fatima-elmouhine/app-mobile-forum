@@ -8,7 +8,9 @@ async function getTopics(req, res)
 {
     try {
         const topics = await genericGetAll(Topic, req);
-        res.status(200).json(topics);
+        res.append('X-Total-Count',topics.count);
+        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
+        res.status(200).json(topics.rows);
     } catch (error) {
         res.status(500).send(error);
     }
