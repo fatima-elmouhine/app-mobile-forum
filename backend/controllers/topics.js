@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Topic, Message, User,Theme} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 
@@ -16,27 +16,13 @@ async function getTopics(req, res)
 
 async function getTopic (req, res) 
 {
-    
     try 
     {
-        const topicReq = await Topic.findOne({ where: {id:req.params.id }})
-        .then(topic => {
-            return topic;
-        });
-
-        console.log(topicReq);
-
-        if(topicReq == null) 
-        {
-            res.status(404).send('Ce topic n\'existe pas');
-        }
-        else
-        {
-            res.status(200).send(topicReq);
-        }
-    } 
-    catch (error) 
-    {
+        const topic = await genericGetOne(Topic, req);
+        if (topic === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(topic);
+    }
+    catch (error) {
         res.status(500).send(error);
     }
 }
@@ -163,7 +149,6 @@ async function getMessagesTopic (req, res){
     }
     catch (error)
     {
-        console.log(error);
         res.status(404).send('Une erreur est survenue');
     }
 
