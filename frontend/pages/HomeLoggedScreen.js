@@ -55,7 +55,7 @@ export default function HomeLoggedScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/> */}
+      <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
         style={styles.containerGradient}
@@ -65,14 +65,21 @@ export default function HomeLoggedScreen({ navigation }) {
           style={styles.bgTop}
         />
         <View style={[styles.profileImgContainer]}>
-          <TouchableOpacity onPress={() => {handlePressEdit()}}>
-            <Avatar.Image size={100} source={require('../assets/img-test/image1.png')} style={styles.image} onPress={() => {handlePressEdit()}}/>
-          </TouchableOpacity>
+          <Avatar.Image size={150} source={require('../assets/img-test/image1.png')}   style={styles.image}/>
+          <IconButton
+            icon={require('../assets/logo/edit.png')}
+            iconColor='#00FAAF'
+            style={styles.icon}
+            size={20}
+            onPress={() => {handlePressEdit()}}
+          />
         </View>
         <Text style={styles.containerText}>
-          <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
-          <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
-          <Text style={styles.paragraphe}>Lvl.2</Text>
+          <Text style={{flexDirection: 'column'}}>
+            <Text style={styles.name}>{userDetails.email}</Text>
+            <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
+            <Text style={styles.paragraphe}>Lvl.2</Text>
+          </Text>
         </Text>
         <ScrollView  style={{display:'flex', flexDirection:'column'}}>
           <View style={styles.sectionLatestCourse}>
@@ -111,9 +118,6 @@ const styles = StyleSheet.create({
 
   linearGradient: {
     flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5,
     backgroundImage: "url(../assets/img-test/image1.png)",
   },
 
@@ -135,10 +139,9 @@ const styles = StyleSheet.create({
   },
 
   profileImgContainer: {
-    position: 'relative',
-    marginHorizontal: 16,
-    marginTop: 50,
-    width: 120,
+    zIndex: 4,
+    top: 50,
+    alignItems: 'flex-start',
   },
 
   image: {
@@ -150,16 +153,13 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    zIndex: 2,    
     position: 'absolute',
-    right: 0,
-    bottom: 0,   
+    zIndex: 2,
+    
   },
 
   containerText: {
     color: '#fff',
-    marginHorizontal: 16,
-    marginBottom: 16,
   },
 
   name: {
