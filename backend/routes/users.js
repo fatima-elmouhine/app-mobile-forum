@@ -5,7 +5,7 @@ const {getUsers, postUser, getUser, loginUser, updateUser, deleteUser} = require
 
 router.get('/', getUsers);
 
-router.get('/:id_user', getUser);
+router.get('/:id', getUser);
 
 router.post('/',postUser);
 

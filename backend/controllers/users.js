@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
 const sequelize  = require('../models/index');
 const {User} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 
@@ -19,21 +19,16 @@ async function getUsers(req, res)
     }
 }
 
-async function getUser (req, res) {
-    try {
-        const userReq = await User.findOne({ where: {id:req.params.id_user }})
-        .then(user => {
-            return user;
-        });
-
-        console.log(userReq);
-
-        if(userReq == null) {
-            res.status(404).send('User not found');
-        } else {
-            res.status(200).send(userReq);
-        }
-    } catch (error) {
+async function getUser (req, res) 
+{
+    try 
+    {
+        const user = await genericGetOne(User, req);
+        if (user === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(user);
+    }
+    catch (error) {
+        console.log(error)
         res.status(500).send(error);
     }
 }
