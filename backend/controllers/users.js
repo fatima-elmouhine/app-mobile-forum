@@ -19,11 +19,8 @@ async function getUsers(req, res)
     }
 }
 
-async function getUser (req, res) 
-{
-    
-    try 
-    {
+async function getUser (req, res) {
+    try {
         const userReq = await User.findOne({ where: {id:req.params.id_user }})
         .then(user => {
             return user;
@@ -31,40 +28,28 @@ async function getUser (req, res)
 
         console.log(userReq);
 
-        if(userReq == null) 
-        {
+        if(userReq == null) {
             res.status(404).send('User not found');
-        }
-        else
-        {
+        } else {
             res.status(200).send(userReq);
         }
-    } 
-    catch (error) 
-    {
+    } catch (error) {
         res.status(500).send(error);
     }
 }
 
-async function postUser (req, res) 
-{
-    if(!isValidEmailForm(req.body.email))
-    {
+async function postUser (req, res) {
+    if(!isValidEmailForm(req.body.email)) {
         res.status(406).send('Cette adresse email n\'est pas valide');
-    }
-    else
-    {
-        if(!req.body.firstname || !req.body.lastname || !req.body.email || !req.body.password)
-        {
+    } else {
+        if(!req.body.firstname || !req.body.lastname || !req.body.email || !req.body.password) {
             res.status(406).send('Les champs doivent être tous remplis');
-        }
-        else
-        {
+        } else {
             const newUser = {            
                 firstName: req.body.firstname,            
-                lastName: req.body.lastname,
-                email: req.body.email,
-                password: hashPassword(req.body.password)
+                lastName:  req.body.lastname,
+                email:     req.body.email,
+                password:  hashPassword(req.body.password)
             }
             await User.create(newUser)
             .then(user => {
@@ -72,25 +57,22 @@ async function postUser (req, res)
             })
             .catch(err => {
                 res.status(406).send('Cette adresse email est déjà utilisée');
-    
             });
         }
-
     }
-    
 }
 
-async function updateUser (req, res, next) 
-{
+async function updateUser (req, res, next) {
     try {
         if (req.body.password) {
             req.body.password = hashPassword(req.body.password);
         }
         if (req.body.id && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier l'id d'un autre utilisateur");
         if (req.body.role && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier le role d'un utilisateur");
-        const id = req.user.isAdmin ? req.body.id : req.user.id;
-        const user = await User.update(req.body, {where: {id: id }});
-        const newUser = await User.findOne({where: {id: id }});
+
+        const id       = req.user.isAdmin ? req.body.id : req.user.id;
+        const user     = await User.update(req.body, {where: {id: id }});
+        const newUser  = await User.findOne({where: {id: id }});
         const expireIn = 24 * 60 * 60;
         const token    = jwt.sign({
             id: newUser['dataValues'].id,
@@ -110,20 +92,16 @@ async function updateUser (req, res, next)
     }
 }
 
-async function deleteUser (req, res) 
-{
-    try 
-    {
-       const user = await User.findOne({ where: {id: req.params.id_user }})
+async function deleteUser (req, res) {
+    try {
+        const user = await User.findOne({ where: {id: req.params.id_user }})
         .then(user => {
             return user;
         })
-
-        if(user != null) 
-        {
+        if(user != null) {
             await User.destroy({
                 where: {
-                id: req.params.id
+                    id: req.params.id
                 }
             })
             .then(user => {
@@ -133,29 +111,22 @@ async function deleteUser (req, res)
             .catch(err => {
                 res.status(404).send('L\'utilisateur n\'a pas été trouvé');
             })
-
-
-        }
-        else
-        {
+        } else {
             res.status(404).send('L\'utilisateur n\'a pas été trouvé');
         }
-    } 
-    catch (error) 
-    {
+    } catch (error) {
         res.status(500).send('Erreur lors de la suppression de l\'utilisateur');
     }
-    
 }
 
-async function loginUser (req, res) 
-{
+async function loginUser (req, res) {
     const { email, password } = req.body;
     if (!(email && password)) {
-        res.status(400).send("Tous les champs doivent etre remplis");
-      }
+       return res.status(400).json("Tous les champs doivent etre remplis");
+    }
     try {
         let user = await User.findOne({ where: {email: email }});
+        console.log(user);
         if (user != null) {
             bcrypt.compare(password, user['dataValues'].password, function(err, response) {
                 if (err) {
@@ -164,9 +135,9 @@ async function loginUser (req, res)
                 if (response) {
                     const expireIn = 24 * 60 * 60;
                     const token    = jwt.sign({
-                        id: user['dataValues'].id,
+                        id:    user['dataValues'].id,
                         email: user['dataValues'].email,
-                        role: user['dataValues'].role.role
+                        role:  user['dataValues'].role.role
                     },
                     SECRET_KEY,
                     {
@@ -180,20 +151,18 @@ async function loginUser (req, res)
                     }).status(200).json({
                         token: token,
                     });
-        ;
-                }else{
-                    return res.status(403).json(' Mot de passe incorrect');
+                } else {
+                    return res.status(403).json('Mot de passe incorrect');
                 }
-
             });
         } else {
             return res.status(404).json('Email / Mot de passe incorrect');
         }
     } catch (error) {
+        // console.log(error);
         return res.status(501).json(error);
     }
 }
-
 
 module.exports = {
     getUsers,

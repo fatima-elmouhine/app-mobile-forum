@@ -61,30 +61,6 @@ const App = ({ navigation }) => {
     fetchTopics();
   }, [])
 
-  // const SearchHeaderCard = (table, count ) => {
-  //   return (
-  //     <View style={{ 
-  //       display: 'flex',
-  //       flexDirection: 'row',
-  //       alignContent: 'baseline',
-  //       justifyContent: 'space-around',
-  //       }}>
-  //     <Text style={styles.searchInfo}>
-  //       #{table} : {count} correspondance{count>0 && 's'}
-  //     </Text>
-  //     <IconButton
-  //         style={{
-  //           bottom: 5, right: 0, transition: 'all 0.1s ease-in-out',
-  //           transform: [{ rotate: expanded.theme === false? '0deg' : '180deg' }]}
-  //         }
-  //         icon="triangle"
-  //         iconColor={count>0 ? 'orange' : 'transparent'}
-  //         size={17}
-  //         onPress={() => setExpanded({...expanded, theme: !expanded.theme})}
-  //       />
-  //     </View>
-  //   )
-  // }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -239,7 +215,7 @@ const App = ({ navigation }) => {
 
         {/* CONDITION SI LE MOT RECHERCHER EST TROP COURT  */}
         {(activeSearch == true && searchQuery == undefined )  &&
-          <View style={{ display:'flex',width:'100%',top: 50}}>
+          <View style={{ display:'flex',width:'100%',bottom:600}}>
             <ScrollView contentContainerStyle={{display:'flex' , flexGrow:1 }}>
               <Text style={styles.searchInfo}>Votre recherche doit contenir un minimum de 3 caracteres</Text>
             </ScrollView>
