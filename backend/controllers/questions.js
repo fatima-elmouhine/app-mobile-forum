@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Question, Answer} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 
@@ -16,29 +16,15 @@ async function getQuestions(req, res)
 
 async function getQuestion (req, res) 
 {
-    
     try 
     {
-        const questionReq = await Question.findOne({ where: {id:req.params.id }})
-        .then(question => {
-            return question;
-        });
-
-        console.log(questionReq);
-
-        if(questionReq == null) 
-        {
-            res.status(404).send('Artefact not found');
-        }
-        else
-        {
-            res.status(200).send(questionReq);
-        }
-    } 
-    catch (error) 
-    {
-        res.status(500).send(error);
+        const question = await genericGetOne(Question, req);
+        if (question === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(question);
     }
+    catch (error) {
+        res.status(500).send(error);
+    }   
 }
 
 async function postQuestion (req, res) 

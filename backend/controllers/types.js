@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Type} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 
@@ -16,28 +16,11 @@ async function getTypes(req, res)
 
 async function getType (req, res) 
 {
-    
-    try 
-    {
-        const typesReq = await Type.findOne({ where: {id:req.params.id }})
-        .then(types => {
-            return types;
-        });
-
-        console.log(typesReq);
-
-        if(typesReq == null) 
-        {
-            // res.status(404).send('Artefact not found');
-            res.status(404).send('Ce type n\'existe pas');
-        }
-        else
-        {
-            res.status(200).send(typesReq);
-        }
-    } 
-    catch (error) 
-    {
+    try {
+        const type = await genericGetOne(Type, req);
+        if (type === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(type);
+    } catch (error) {
         res.status(500).send(error);
     }
 }
