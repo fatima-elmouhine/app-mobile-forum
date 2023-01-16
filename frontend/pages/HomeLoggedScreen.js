@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, Image, View, ScrollView, ImageBackground, TouchableHighlight, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, Image, View, ScrollView, ImageBackground, TouchableHighlight, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useEffect, useContext, useState } from 'react';
 import { useFonts, Roboto_400Regular, Roboto_400Regular_Italic } from "@expo-google-fonts/roboto";
 import { ProgressBar, Avatar, MD3Colors, IconButton, Button } from 'react-native-paper';
@@ -35,29 +35,22 @@ export default function HomeLoggedScreen({navigation}) {
   
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
+      {/* <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/> */}
       <LinearGradient
         colors={['purple', '#02254F','#2D84EA']}
         style={styles.containerGradient}
       >
         <View style={[styles.profileImgContainer]}>
-          <Avatar.Image size={150} source={require('../assets/img-test/image1.png')}   style={styles.image}/>
-          <IconButton
-            icon={require('../assets/logo/edit.png')}
-            iconColor='#00FAAF'
-            style={styles.icon}
-            size={20}
-            onPress={() => {handlePressEdit()}}
-          />
+          <TouchableOpacity onPress={() => {handlePressEdit()}}>
+            <Avatar.Image size={100} source={require('../assets/img-test/image1.png')} style={styles.image} onPress={() => {handlePressEdit()}}/>
+          </TouchableOpacity>
         </View>
         <Text style={styles.containerText}>
-          <Text style={{flexDirection: 'column'}}>
-            <Text style={styles.name}>{userDetails.email}</Text>
+            <Text style={styles.name}>Zak Lucien</Text>
             <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
             <Text style={styles.paragraphe}>Lvl.2</Text>
-          </Text>
         </Text>
-        <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
+        <ScrollView  style={{display:'flex', flexDirection:'column'}}>
           <View style={styles.sectionLatestCourse}>
             <Text style={styles.sectionTitle}>Les derniers cours</Text>
             { courses.length !== 0 && 
@@ -87,7 +80,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     // borderColor: 'red',
     position: 'absolute',
-    top: 10,
     height:150,
     zIndex: 1,
     width: '100%',
@@ -95,7 +87,6 @@ const styles = StyleSheet.create({
   },
   
   linearGradient: {
-    flex: 1,
     backgroundImage: "url(../assets/img-test/image1.png)",
   },
 
@@ -103,11 +94,8 @@ const styles = StyleSheet.create({
     // flex: 6,
     width: '100%',
     height: '100%',
-    display: 'flex',
     fontFamily: "Roboto_400Regular",
     // paddingLeft: 28,
-    margin: 0,
-
     // alignItems: 'center',
     // justifyContent: 'center',
   },
@@ -116,14 +104,14 @@ const styles = StyleSheet.create({
     // flex: 6,
     width: '100%',
     height: '100%',
-    display: 'flex',
     fontFamily: "Roboto_400Regular",
   },
 
   profileImgContainer: {
-    zIndex: 4,
-    top: 50,
-    alignItems: 'flex-start',
+    position: 'relative',
+    marginHorizontal: 16,
+    marginTop: 50,
+    width: 120,
   },
 
   image: {
@@ -135,13 +123,16 @@ const styles = StyleSheet.create({
   },
 
   icon: {
+    zIndex: 2,    
     position: 'absolute',
-    zIndex: 2,
-    
+    right: 0,
+    bottom: 0,   
   },
 
   containerText: {
     color: '#fff',
+    marginHorizontal: 16,
+    marginBottom: 16,
   },
 
   name: {
@@ -162,6 +153,5 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     color: '#fff',
-    marginTop: 70,
   }
 });

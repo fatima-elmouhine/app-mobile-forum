@@ -32,10 +32,8 @@ const styles = (bgColor) =>  StyleSheet.create({
     container: {
         display: 'flex',
         flexDirection: 'row',
-        margin: 20,
-        width: 332,
-        // height: 54,
-        // position: 'relative',
+        marginBottom: 16,
+        marginHorizontal: 16,
     },
     btn: {
         // position: 'absolute',
@@ -49,16 +47,7 @@ const styles = (bgColor) =>  StyleSheet.create({
     },
 
     containerText: {
-        // flex: 2,
-        // borderWidth: 1,
-        // borderColor: 'red',
-        display: 'flex',
-        flexDirection: 'row',
         marginBottom: 10,
-        justifyContent: 'space-between',
-        // flex: '50%',
-        // // flexDirection: 'column',
-        // gap:'10px',
     },
     title: {
         fontSize: 20,
