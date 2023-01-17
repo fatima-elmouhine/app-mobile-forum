@@ -51,16 +51,8 @@ const UserContextProvider = (props) =>  {
                     setToken(jwt);
                 });
                 SecureStore.deleteItemAsync('token')
-            //   setUserDetails({
-            //     id: "",
-            //     email: "",
-            //     firstName: "",
-            //     lastName: "",
-            //     });
             }
 
-            
-          
             const response = await axiosInstance.post('users/login', {
               email,
               password
