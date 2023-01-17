@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Theme} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 async function getThemes(req, res)
@@ -18,13 +18,12 @@ async function getTheme (req, res)
 {
     try 
     {
-        const theme = await Theme.findOne({ where: {id:req.params.id }});
-        if (!theme) throw new Error('Aucun thème trouvé');
+        const theme = await genericGetOne(Theme, req);
+        if (theme === null) return res.status(404).json('La réponse n\'existe pas');
         res.status(200).json(theme);
-    } 
-    catch (error) 
-    {
-        res.status(500).send(error.message);
+    }
+    catch (error) {
+        res.status(500).send(error);
     }
 }
 

@@ -12,6 +12,8 @@ const themesRouter  = require('./routes/themes');
 const topicsRouter  = require('./routes/topics');
 const typesRouter  = require('./routes/types');
 const usersRouter  = require('./routes/users');
+const searchRouter  = require('./routes/search');
+
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -36,6 +38,7 @@ app.use('/api/qcms', qcmsRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/courses', coursesRouter);
 app.use('/api/answers', answersRouter);
+app.use('/api/search', searchRouter);
 
 
   app.listen(3000, () => {

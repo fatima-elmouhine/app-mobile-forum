@@ -8,7 +8,7 @@ import MessageCardComponent from '../component/TopicMessageCard/MessageCardCompo
 import {getTopic} from '../api/Forum/getTopic';
 
 export default function ForumDetailScreen({route,navigation}, ) {
-    // console.log('id = ',route.params.id);
+    console.log('id = ',route.params.id);
 
     const [topic, setTopic] = React.useState();
     const [messageModal, setMessageModal] = React.useState("");
@@ -99,18 +99,7 @@ export default function ForumDetailScreen({route,navigation}, ) {
                             // console.log('message = ',message)
                         )}
                     )}
-                    {topic && topic.map((message) => {
-                        return (
-                            <MessageCardComponent message={message}/>
-                            // console.log('message = ',message)
-                        )}
-                    )}
-                    {topic && topic.map((message) => {
-                        return (
-                            <MessageCardComponent message={message}/>
-                            // console.log('message = ',message)
-                        )}
-                    )}
+
                 </View>
 
             </ScrollView>
