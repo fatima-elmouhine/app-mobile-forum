@@ -34,6 +34,7 @@ export default function HomeLoggedScreen({ navigation }) {
   const [courses, setCourses] = useState([]);
   const { userDetails } = useContext(UserContext);
 
+  console.log('userDetails', userDetails);
 
   useEffect( () => {
     async function getCoursesInHome() {
@@ -69,9 +70,9 @@ export default function HomeLoggedScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         <Text style={styles.containerText}>
-            <Text style={styles.name}>Zak Lucien</Text>
-            <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
-            <Text style={styles.paragraphe}>Lvl.2</Text>
+          <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
+          <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
+          <Text style={styles.paragraphe}>Lvl.2</Text>
         </Text>
         <ScrollView  style={{display:'flex', flexDirection:'column'}}>
           <View style={styles.sectionLatestCourse}>
