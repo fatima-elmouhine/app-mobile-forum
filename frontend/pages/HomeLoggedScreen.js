@@ -34,7 +34,9 @@ export default function HomeLoggedScreen({ navigation }) {
   const [courses, setCourses] = useState([]);
   const { userDetails } = useContext(UserContext);
 
-  useEffect(() => {
+
+  useEffect( () => {
+
     async function getCoursesInHome() {
       const coursesReq = await getCourses();
       setCourses(coursesReq);
