@@ -1,43 +1,74 @@
 import * as React from 'react';
-import { StyleSheet, Text,Image, View, ScrollView, ImageBackground, TouchableHighlight, Pressable } from 'react-native';
+import { useEffect, useContext, useState } from 'react';
+import { StyleSheet, Text,Image, View, Pressable } from 'react-native';
 import {useFonts,Roboto_400Regular,Roboto_400Regular_Italic} from "@expo-google-fonts/roboto";
-import { TextInput, Avatar, MD3Colors, IconButton, Button } from 'react-native-paper';
+import { TextInput, Avatar, MD3Colors, IconButton, Button, Snackbar } from 'react-native-paper';
 import { LinearGradient } from "expo-linear-gradient";
-import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
 import {putUser} from '../api/Users/putUser';
+import { UserContext } from '../context/UserContext';
+
 
 export default function ProfileScreen({navigation}) {
-//   const [text, setText] = React.useState({firstname: 'Janee',lastname:'Doe', email: 'janeeDoe@gmail.com', password: ''});
-  const [firstname, setFirstname] = React.useState('Janee');
-    const [lastname, setLastname] = React.useState('Doe');
-    const [email, setEmail] = React.useState('janeeDoe@gmail.com')
-    const [password, setPassword] = React.useState('');
+  const { userDetails, setUserDetails } = useContext(UserContext);
+
+
+  const [firstname, setFirstname] = React.useState(userDetails.firstName);
+  const [lastname, setLastname] = React.useState(userDetails.lastName);
+  const [email, setEmail] = React.useState(userDetails.email)
+  const [password, setPassword] = React.useState('');
   const [pressed, setPressed] = React.useState(false);
-  React.useEffect( () => {
+  const [visible, setVisible] = React.useState(false);
+  const [message, setMessage] = React.useState('');
 
-  }, [])
+  
+  const onToggleSnackBar = () => setVisible(!visible);
+
+  const onDismissSnackBar = () => setVisible(false);
+
+  async function handlePressCamera() {
+    alert('Fonctionalité non disponible pour le moment ! Pour la V2 inshallah !');
+  }
   async function handleSaveEdit() {
-
+    var userInfo 
     if (password !== '') {
         console.log('password changed');
+        userInfo = {
+            id: userDetails.id,
+            firstName: firstname,
+            lastName: lastname,
+            email: email,
+            password: password
+
+        }
     }else {
-        console.log('password not changed');
-    }
-    const userInfo = {
-        id: 3,
+       userInfo = {
+        id: userDetails.id,
         firstName: firstname,
         lastName: lastname,
         email: email,
-        password: password
-    }
+      }
+        console.log('password not changed');
 
-    try {
-        const response = await putUser( userInfo)
-        console.log(response);
-        
-    } catch (error) {
-        console.log('ERROR DANS LE COMPONENT',error);
     }
+    const response = await putUser( userInfo)
+
+    console.log(response);
+
+    if (response === 1062) {
+      setMessage('Cet email est déjà utilisé');
+    }else{
+
+      setUserDetails({
+        id: userDetails.id,
+        email: userInfo.email,
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+      })
+
+    setMessage('Vos informations ont bien été modifiées');
+  }
+  onToggleSnackBar(); 
+    
   }
 
   let [fontsLoaded] = useFonts({
@@ -50,7 +81,7 @@ export default function ProfileScreen({navigation}) {
     <View style={styles.container}>
       <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
       <LinearGradient
-        colors={['#000000', '#02254F','#2D84EA']}
+        colors={['purple', '#02254F','#2D84EA']}
         style={styles.containerGradient}
         >
           <View style={[styles.profileImgContainer]}>
@@ -60,7 +91,7 @@ export default function ProfileScreen({navigation}) {
               iconColor='#00FAAF'
               style={styles.icon}
               size={40}
-              onPress={() => {handlePressEdit()}}
+              onPress={() => {handlePressCamera()}}
             />
             <Text style={styles.advise}>Change de photo</Text>
             <Text style={styles.title}>Profile</Text>
@@ -108,8 +139,19 @@ export default function ProfileScreen({navigation}) {
                 )}
             </Pressable>
           </View>
-
-
+          <View style={styles.containerSnackBar}>
+            <Snackbar
+              visible={visible}
+              onDismiss={onDismissSnackBar}
+              action={{
+                label: 'X',
+                onPress: () => {
+                  onDismissSnackBar()
+                },
+              }}>
+              {message}
+            </Snackbar>
+          </View>
       </LinearGradient>
     </View>
   );
@@ -119,13 +161,11 @@ export default function ProfileScreen({navigation}) {
     bgTop: {
       backgroundSize: 'cover',
       borderWidth: 1,
-      // borderColor: 'red',
       position: 'absolute',
       top: 10,
       height:150,
       zIndex: 1,
       width: '100%',
-      // backgroundPosition: 'bottom',
     },
     linearGradient: {
       flex: 1,
@@ -227,6 +267,10 @@ export default function ProfileScreen({navigation}) {
     btnText: {
         fontSize: 20,
         textAlign: 'center',
-    }
+    },
+    containerSnackBar: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
 
   });
