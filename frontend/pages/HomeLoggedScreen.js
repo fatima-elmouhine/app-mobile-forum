@@ -27,7 +27,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
 import { getCourses } from '../api/Courses/getCourses';
 import { UserContext } from '../context/UserContext';
-import * as SecureStore from 'expo-secure-store'
+import * as SecureStore from 'expo-secure-store';
 // import { getUser } from '../api/Users/getUser';
 
 export default function HomeLoggedScreen({ navigation }) {
@@ -35,7 +35,7 @@ export default function HomeLoggedScreen({ navigation }) {
   const { userDetails } = useContext(UserContext);
 
 
-  useEffect(() => {
+  useEffect( () => {
     async function getCoursesInHome() {
       const coursesReq = await getCourses();
       setCourses(coursesReq);
@@ -53,8 +53,8 @@ export default function HomeLoggedScreen({ navigation }) {
   });
 
   return (
-    <View style={styles.container}>
-      <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
+    <SafeAreaView style={styles.container}>
+      {/* <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/> */}
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
         style={styles.containerGradient}
@@ -64,34 +64,17 @@ export default function HomeLoggedScreen({ navigation }) {
           style={styles.bgTop}
         />
         <View style={[styles.profileImgContainer]}>
-          <Avatar.Image size={150} source={require('../assets/img-test/image1.png')}   style={styles.image}/>
-          <IconButton
-            icon={require('../assets/logo/edit.png')}
-            iconColor='#00FAAF'
-            style={styles.icon}
-            size={30}
-            onPress={() => {handlePressEdit()}}
-          />
+          <TouchableOpacity onPress={() => {handlePressEdit()}}>
+            <Avatar.Image size={100} source={require('../assets/img-test/image1.png')} style={styles.image} onPress={() => {handlePressEdit()}}/>
+          </TouchableOpacity>
         </View>
         <Text style={styles.containerText}>
-          <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
-          <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
-          <Text style={styles.paragraphe}>Lvl.2</Text>
+            <Text style={styles.name}>Zak Lucien</Text>
+            <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
+            <Text style={styles.paragraphe}>Lvl.2</Text>
         </Text>
-        <ScrollView  style={{display:'flex', flexDirection:'column', margin:10, marginTop:40}}>
+        <ScrollView  style={{display:'flex', flexDirection:'column'}}>
           <View style={styles.sectionLatestCourse}>
-          <Button mode='contained-tonal' style={{marginBottom:30}} onPress={()=>{
-                navigation.navigate('ForumDetailScreen',  {id: 1})
-              }}>Page Detail Forum 1
-              </Button>
-              <Button mode='contained-tonal' onPress={()=>{
-                navigation.navigate('ForumScreen')
-              }}>Forum
-              </Button>
-            <Button icon="plus" mode="contained" color='#00FAAF' style={styles.button} onPress={()=>{ 
-              SecureStore.deleteItemAsync('token');
-              navigation.navigate('HomeScreen');
-            }}>Logout</Button>
             <Text style={styles.sectionTitle}>Les derniers cours</Text>
             { courses.length !== 0 && 
               courses.map((course,i) => {
@@ -151,46 +134,43 @@ const styles = StyleSheet.create({
   },
 
   profileImgContainer: {
-    zIndex: 4,
-    top: 50,
-    left: 28,
     position: 'relative',
+    marginHorizontal: 16,
+    marginTop: 50,
+    width: 120,
   },
 
   image: {
     overflow: "hidden",
     borderWidth: 1,
     zIndex: 1,
-    position: 'absolute',
     borderStyle: "dashed",
     borderColor: "#50F4E1",
   },
 
   icon: {
-    zIndex: 2,
+    zIndex: 2,    
     position: 'absolute',
-    top: 100,
-    left: 110,
+    right: 0,
+    bottom: 0,   
   },
 
   containerText: {
-    display: 'flex',
-    fontSize: 20,
     color: '#fff',
-    marginTop: 200,
-    marginLeft: 28,
+    marginHorizontal: 16,
+    marginBottom: 16,
   },
 
   name: {
-    paddingLeft: 58,
+    
   },
 
   paragraphe: {
-    paddingLeft: 28,
+    
   },
 
   progress: {
-    marginTop: 10,
+    
     width: 150,
     height: 20,
     borderRadius: 10,
