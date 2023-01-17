@@ -34,7 +34,6 @@ export default function HomeLoggedScreen({ navigation }) {
   const [courses, setCourses] = useState([]);
   const { userDetails } = useContext(UserContext);
 
-
   useEffect( () => {
 
     async function getCoursesInHome() {
@@ -92,7 +91,7 @@ export default function HomeLoggedScreen({ navigation }) {
                 width: "60%",
               }}
             >
-              <Text style={styles.name}>Zak Lucien</Text>
+              <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
               <View
                 style={{
                   flexDirection: "row",
