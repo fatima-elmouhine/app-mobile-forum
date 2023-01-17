@@ -24,19 +24,17 @@ import {
   Button,
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
-import { getCourses } from '../api/Courses/getCourses';
-import { UserContext } from '../context/UserContext';
-import * as SecureStore from 'expo-secure-store';
+import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
+import { getCourses } from "../api/Courses/getCourses";
+import { UserContext } from "../context/UserContext";
+import * as SecureStore from "expo-secure-store";
 // import { getUser } from '../api/Users/getUser';
 
 export default function HomeLoggedScreen({ navigation }) {
   const [courses, setCourses] = useState([]);
   const { userDetails } = useContext(UserContext);
 
-  console.log('userDetails', userDetails);
-
-  useEffect( () => {
+  useEffect(() => {
     async function getCoursesInHome() {
       const coursesReq = await getCourses();
       setCourses(coursesReq);
@@ -55,7 +53,6 @@ export default function HomeLoggedScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
         style={styles.containerGradient}
@@ -65,39 +62,61 @@ export default function HomeLoggedScreen({ navigation }) {
           style={styles.bgTop}
         />
         <View style={[styles.profileImgContainer]}>
-          <Avatar.Image size={150} source={require('../assets/img-test/image1.png')}   style={styles.image}/>
-          <IconButton
-            icon={require('../assets/logo/edit.png')}
-            iconColor='#00FAAF'
-            style={styles.icon}
-            size={20}
-            onPress={() => {handlePressEdit()}}
-          />
+          <View
+            style={{
+              flexDirection: "row",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                handlePressEdit();
+              }}
+            >
+              <Avatar.Image
+                size={120}
+                source={require("../assets/img-test/image1.png")}
+                style={styles.image}
+                onPress={() => {
+                  handlePressEdit();
+                }}
+              />
+            </TouchableOpacity>
+            <View
+              style={{
+                flexDirection: "column",
+                justifyContent: "center",
+                width: "60%",
+              }}
+            >
+              <Text style={styles.name}>Zak Lucien</Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  position: "absolute",
+                  bottom: 0,
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <ProgressBar
+                  progress={0.5}
+                  color="#00FAAF"
+                  style={styles.progress}
+                />
+                <Text style={styles.paragraphe}>Lvl.2</Text>
+              </View>
+            </View>
+          </View>
         </View>
-        <Text style={styles.containerText}>
-          <Text style={{flexDirection: 'column'}}>
-            <Text style={styles.name}>{userDetails.email}</Text>
-            <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
-            <Text style={styles.paragraphe}>Lvl.2</Text>
-          </Text>
-        </Text>
-        <ScrollView  style={{display:'flex', flexDirection:'column'}}>
+        <Text style={styles.sectionTitle}>Mes derniers cours</Text>
+        <ScrollView style={{ display: "flex", flexDirection: "column" }}>
           <View style={styles.sectionLatestCourse}>
-            <Text style={styles.sectionTitle}>Les derniers cours</Text>
-            { courses.length !== 0 && 
-              courses.map((course,i) => {
-                return (
-                  <CourseCardComponent key={i}  course={course}/>
-                )
-              })
-            }
-            { courses.length !== 0 && 
-              courses.map((course,i) => {
-                return (
-                  <CourseCardComponent key={i}  course={course}/>
-                )
-              })
-            }
+            {courses.length !== 0 &&
+              courses.map((course, i) => {
+                return <CourseCardComponent key={i} course={course} />;
+              })}
           </View>
         </ScrollView>
       </LinearGradient>
@@ -139,39 +158,32 @@ const styles = StyleSheet.create({
   },
 
   profileImgContainer: {
-    zIndex: 4,
-    top: 50,
-    alignItems: 'flex-start',
+    marginHorizontal: 16,
+    marginTop: 50,
+    justifyContent: "space-between",
+    marginBottom: 64,
   },
 
   image: {
     overflow: "hidden",
     borderWidth: 1,
-    zIndex: 1,
     borderStyle: "dashed",
     borderColor: "#50F4E1",
   },
 
-  icon: {
-    position: 'absolute',
-    zIndex: 2,
-    
-  },
-
-  containerText: {
-    color: '#fff',
-  },
+  containerText: {},
 
   name: {
-    
+    fontSize: 20,
+    color: "#fff",
   },
 
   paragraphe: {
-    
+    fontSize: 15,
+    color: "#fff",
   },
 
   progress: {
-    
     width: 150,
     height: 20,
     borderRadius: 10,

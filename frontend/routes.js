@@ -23,7 +23,7 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="ForumDetailScreen" component={ForumDetailScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ForumScreen" component={ForumScreen} />
                 </Stack.Navigator>
-            <MenuButton></MenuButton>
+            <MenuButton/>
             </NavigationContainer>
         </UserContextProvider>
     );
