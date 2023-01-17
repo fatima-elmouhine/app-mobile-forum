@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Answer, Question, QuestionAnswered} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 async function getAnswers(req, res)
@@ -19,7 +19,7 @@ async function getAnswer (req, res)
 {
     try 
     {
-        const answer = await Answer.findOne({ where: {id: req.params.id }, include: Question})
+        const answer = await genericGetOne(Answer, req);
         if (answer === null) return res.status(404).json('La réponse n\'existe pas');
         res.status(200).json(answer);
     }

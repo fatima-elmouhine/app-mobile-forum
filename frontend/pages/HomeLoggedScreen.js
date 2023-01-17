@@ -15,6 +15,7 @@ export default function HomeLoggedScreen({navigation}) {
   const [courses, setCourses] = useState([]);
   const { userDetails } = useContext(UserContext);
 
+
   useEffect( () => {
     async function getCoursesInHome() {
       const coursesReq = await getCourses();
@@ -51,7 +52,7 @@ export default function HomeLoggedScreen({navigation}) {
           />
         </View>
         <Text style={styles.containerText}>
-          <Text style={styles.name}>{userDetails.email}</Text>
+          <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
           <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
           <Text style={styles.paragraphe}>Lvl.2</Text>
         </Text>

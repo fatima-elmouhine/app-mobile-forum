@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Course, Theme} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 
@@ -18,13 +18,15 @@ async function getCourses(req, res)
 
 async function getCourse (req, res) 
 {
-    try {
-        const course = await Course.findByPk(req.params.id, {include : Theme});
-        if (!course) throw new Error('Aucun cours trouvé');
+    try 
+    {
+        const course = await genericGetOne(Course, req);
+        if (course === null) return res.status(404).json('La réponse n\'existe pas');
         res.status(200).json(course);
-    } catch (error) {
-        res.status(500).json(error.message);
-    }    
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function postCourse (req, res) 
