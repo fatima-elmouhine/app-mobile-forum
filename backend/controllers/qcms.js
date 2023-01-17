@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Qcm, Type, Question} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 async function getQcms(req, res)
@@ -16,13 +16,15 @@ async function getQcms(req, res)
 
 async function getQcm (req, res) 
 {
-        try {
-            const qcm = await Qcm.findOne({ where: {id: req.params.id }, include: [Type, Question]});
-            if (!qcm) return res.status(404).json('Aucun QCM trouvé');
-            res.status(200).json(qcm);            
-        } catch (error) {
-            res.status(500).json(error.message);
-        }
+    try 
+    {
+        const qcm = await genericGetOne(Qcm, req);
+        if (qcm === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(qcm);
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
 }
 
 async function postQcm (req, res) 

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const SECRET_KEY = process.env.SECRET_KEY;
 const sequelize  = require('../models/index');
 const {User} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 
@@ -19,21 +19,16 @@ async function getUsers(req, res)
     }
 }
 
-async function getUser (req, res) {
-    try {
-        const userReq = await User.findOne({ where: {id:req.params.id_user }})
-        .then(user => {
-            return user;
-        });
-
-        console.log(userReq);
-
-        if(userReq == null) {
-            res.status(404).send('User not found');
-        } else {
-            res.status(200).send(userReq);
-        }
-    } catch (error) {
+async function getUser (req, res) 
+{
+    try 
+    {
+        const user = await genericGetOne(User, req);
+        if (user === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(user);
+    }
+    catch (error) {
+        console.log(error)
         res.status(500).send(error);
     }
 }
@@ -69,7 +64,11 @@ async function updateUser (req, res, next) {
         }
         if (req.body.id && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier l'id d'un autre utilisateur");
         if (req.body.role && req.user.isAdmin === false) throw new Error("Vous ne pouvez pas modifier le role d'un utilisateur");
-
+        // check if email is already used
+        // if (req.body.email) {
+        //     const emailExist = await User.findOne({where: {email: req.body.email}});
+        //     if (emailExist) throw new Error("Cette adresse email est déjà utilisée");
+        // }
         const id       = req.user.isAdmin ? req.body.id : req.user.id;
         const user     = await User.update(req.body, {where: {id: id }});
         const newUser  = await User.findOne({where: {id: id }});
@@ -77,17 +76,24 @@ async function updateUser (req, res, next) {
         const token    = jwt.sign({
             id: newUser['dataValues'].id,
             email: newUser['dataValues'].email,
+            firstName: newUser['dataValues'].firstName,
+            lastName: newUser['dataValues'].lastName,
             role: newUser['dataValues'].role.role
         },
         SECRET_KEY,
         {
             expiresIn: expireIn
         });
+        console.log('L. token', token);
         res.cookie("token", token, {
             httpOnly: true,
             // secure: true,
-        }).status(200).json(newUser);
+        }).status(200).json({user: newUser, token: token});
     } catch (error) {
+        if(error.parent?.errno){
+            return res.status(500).json(error.parent.errno);
+        }
+        // console.log('L. erreurrrr',error.parent.errno);
         res.status(500).json(error.message);
     }
 }
@@ -134,9 +140,12 @@ async function loginUser (req, res) {
                 }
                 if (response) {
                     const expireIn = 24 * 60 * 60;
+                    console.log(user['dataValues']);
                     const token    = jwt.sign({
                         id:    user['dataValues'].id,
                         email: user['dataValues'].email,
+                        firstName: user['dataValues'].firstName,
+                        lastName: user['dataValues'].lastName,
                         role:  user['dataValues'].role.role
                     },
                     SECRET_KEY,

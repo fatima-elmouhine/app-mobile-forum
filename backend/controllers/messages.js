@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 const {Message} = sequelize.models;
-const {genericGetAll} = require('../Tools/dbTools');
+const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
 
@@ -16,27 +16,13 @@ async function getMessages(req, res)
 
 async function getMessage (req, res) 
 {
-    
     try 
     {
-        const messageReq = await Message.findOne({ where: {id:req.params.id }})
-        .then(message => {
-            return message;
-        });
-
-        console.log(messageReq);
-
-        if(messageReq == null) 
-        {
-            res.status(404).send('Ce message n\'existe pas');
-        }
-        else
-        {
-            res.status(200).send(messageReq);
-        }
-    } 
-    catch (error) 
-    {
+        const message = await genericGetOne(Message, req);
+        if (message === null) return res.status(404).json('La réponse n\'existe pas');
+        res.status(200).json(message);
+    }
+    catch (error) {
         res.status(500).send(error);
     }
 }
