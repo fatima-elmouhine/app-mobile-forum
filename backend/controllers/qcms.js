@@ -7,9 +7,7 @@ async function getQcms(req, res)
 {
     try {
         const qcms = await genericGetAll(Qcm, req);
-        res.append('X-Total-Count',qcms.count);
-        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.status(200).json(qcms.rows);    
+        res.status(200).json(qcms);    
     } catch (error) {
         res.status(500).send(error);
     }

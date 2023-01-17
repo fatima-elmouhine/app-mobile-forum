@@ -7,9 +7,7 @@ async function getThemes(req, res)
 {   
     try {
         const themes = await genericGetAll(Theme, req);
-        res.append('X-Total-Count',themes.count);
-        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.status(200).json(themes.rows);    
+        res.status(200).json(themes);    
     } catch (error) {
         res.status(500).send
     }

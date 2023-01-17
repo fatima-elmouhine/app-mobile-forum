@@ -8,9 +8,7 @@ async function getTypes(req, res)
 {
     try {
         const types = await genericGetAll(Type, req);
-        res.append('X-Total-Count',types.count);
-        res.append('Access-Control-Expose-Headers', 'X-Total-Count');
-        res.status(200).json(types.rows);    
+        res.status(200).json(types);    
     } catch (error) {
         res.status(500).send
     }
