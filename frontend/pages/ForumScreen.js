@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { LinearGradient } from "expo-linear-gradient";
 
-import { StyleSheet, Text, View, Dimensions, Pressable , Image} from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Pressable , Image, ImageBackground} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Searchbar, IconButton, Card , Avatar, Checkbox} from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,14 +20,16 @@ const App = ({ navigation }) => {
   const [topics, setTopics] = useState([]);
   const [filterVisible, setFilterVisible] = useState(false);
   const [activeSearch , setActiveSearch] = useState(false);
-  const [] = useState();
+  const [querySearched, setQuerySearched] = useState("");
+
   // console.log('activeSearch out = ',activeSearch);
   const [checked, setChecked] = useState({
-    theme: false,
-    topic: false,
-    messages: false,
+    Themes: false,
+    Topics: false,
+    Messages: false,
   });
   const [searchQuery, setSearchQuery] = useState();
+  const [searchQueryFiltered, setSearchQueryFiltered] = useState();
   const [expanded, setExpanded] = React.useState({
     theme: true,
     topic: true,
@@ -36,20 +38,83 @@ const App = ({ navigation }) => {
 
 
   async function handleSearch(query){
+    setQuerySearched(query);
+
     if (query.length !== 0){
       setActiveSearch(true);
     }else{
       setActiveSearch(false);
     }
-    const data = await searchAll(query);
-    console.log('DATAAAA = ',data);
-    setSearchQuery(data);
+
+    console.log('checked theme, topic, message = ',checked.Themes, checked.Topics, checked.Messages);
+    // checked.map((item)=>{
+    //   console.log(`item = `,item);
+    // })
+    console.log('query length = ',query.length);
+
+    // var stringQuery = query.length === 0 ? `` : `search=${query}` ;
+    var stringQuery =`search=${query}` ;
+    console.log('query = ',query)
+    // if(query.length !== 0){
+for (const [key, value] of Object.entries(checked)) {
+  console.log(`${key}: ${value}`);
+  if(value === true){
+    stringQuery += `&item=${key}`;
+    
+    }
   }
+  console.log('queryFiltered =',stringQuery);
+// }
+    const data = await searchAll(stringQuery);
+    if(stringQuery.includes('item')){
+      setSearchQueryFiltered(data);
+      console.log('data = ',data);
+      console.log('queryFiltered =',stringQuery);
+
+    }else{
+      setSearchQuery(data);
+    }
+  }
+
+  async function handleSearchFiltered(){
+    
+    var stringQuery =`search=${querySearched}` ;
+    // console.log('query = ',querySearched)
+    if(querySearched.length === 0){
+      setSearchQuery(undefined);
+    }else{
+    for (const [key, value] of Object.entries(checked)) {
+      console.log(`${key}: ${value}`);
+      if(value === true){
+        stringQuery += `&item=${key}`;
+        
+        }
+    }
+  }
+
+  console.log('query = ',querySearched)
+
+
+      // if(stringQuery.includes('item')){
+    //     const data = await searchAll(stringQuery);
+    //     console.log('data = ',data);
+    //     console.log('queryFiltered =',stringQuery);
+    //     setSearchQueryFiltered(data);
+    //   }else{
+    //     setSearchQuery(undefined);
+    //   }
+    //   // console.log('queryFiltered =',stringQuery);
+    //   // setSearchQuery(data);
+    // }
+    
+  }
+
 
   useEffect(() => {
     const fetchThemes = async () => {
       const data = await getTheme();
-      setCardThemes(data);
+      
+      data && setCardThemes(data);
     }
 
     const fetchTopics = async () => {
@@ -64,14 +129,13 @@ const App = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/>
+      {/* <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/> */}
       <LinearGradient
         colors={['purple', '#02254F','#2D84EA']}
         style={styles.containerGradient}
         >
         <Searchbar
-        style= {{borderRadius:30, width: "100%", top: 50, marginRight: 40, right: 8,
-        marginBottom: 30, marginTop: 30}}
+        style= {{borderRadius:30, width: "90%", marginTop: 30, marginHorizontal:'5%', zIndex:1000}}
         onChangeText={(query)=>{
           handleSearch(query)
         }}
@@ -84,42 +148,37 @@ const App = ({ navigation }) => {
         // value={searchQuery}
         />
         {filterVisible &&
-          <View style={{display:'flex', flexDirection:'row', justifyContent:'space-evenly', width:'100%', top: 50, marginBottom:50}}>
+          <View style={{display:'flex', flexDirection:'row',alignItems:'center', justifyContent:'space-evenly', width:'100%', top: 10}}>
             <Text style={{color:'white', fontWeight:'bold', fontSize:16, marginLeft:20}}>Thèmes</Text>
                 <Checkbox
-                status={checked.theme ? 'checked' : 'unchecked'}
+                status={checked.Themes ? 'checked' : 'unchecked'}
                 color='orange'
                 style={styles.checkbox}
                 onPress={() => {
-                  setChecked({...checked, theme: !checked.theme});
-                  console.log('checked theme', checked.theme)
-                  console.log('checked theme')
+                  setChecked({...checked, Themes: !checked.Themes});
+                  handleSearchFiltered()
                 }}
               />
             <Text style={{color:'white', fontWeight:'bold', fontSize:16, marginRight:20}}>Sujets</Text>
             <Checkbox
-                status={checked.topic ? 'checked' : 'unchecked'}
+                status={checked.Topics ? 'checked' : 'unchecked'}
                 color='orange'
                 onPress={() => {
-                  setChecked({...checked, topic: !checked.topic});
-                  console.log('checked sujet', checked.topic)
-                  console.log('checked sujet')
+                  setChecked({...checked, Topics: !checked.Topics});
                 }}
               />
             <Text style={{color:'white', fontWeight:'bold', fontSize:16, marginRight:20}}>Message</Text>
             <Checkbox
-                status={checked.messages ? 'checked' : 'unchecked'}
+                status={checked.Messages ? 'checked' : 'unchecked'}
                 color='orange'
                 onPress={() => {
-                  setChecked({...checked, messages: !checked.messages});
-                  console.log('checked messages', checked.messages)
-                  console.log('checked messages')
+                  setChecked({...checked, Messages: !checked.Messages});
                 }}
               />
           </View>
         }
         {activeSearch == false &&
-        <View style={{ display:'flex',width:'100%',top: 50}}>
+        <View style={{ display:'flex',width:'100%'}}>
               <ScrollView horizontal={true}>
                   {cardThemes.map((item) => {
                     return <CardTheme key={item.id} title={item.title} description={item.description} />
@@ -215,7 +274,7 @@ const App = ({ navigation }) => {
 
         {/* CONDITION SI LE MOT RECHERCHER EST TROP COURT  */}
         {(activeSearch == true && searchQuery == undefined )  &&
-          <View style={{ display:'flex',width:'100%',bottom:600}}>
+          <View style={{ display:'flex',width:'100%',bottom:550}}>
             <ScrollView contentContainerStyle={{display:'flex' , flexGrow:1 }}>
               <Text style={styles.searchInfo}>Votre recherche doit contenir un minimum de 3 caracteres</Text>
             </ScrollView>
@@ -233,12 +292,11 @@ const App = ({ navigation }) => {
     bgTop: {
       backgroundSize: 'cover',
       borderWidth: 1,
-      borderColor: 'red',
       position: 'absolute',
       top: 10,
       height:150,
-      zIndex: -1,
       width: '100%',
+      zIndex:1,
       // backgroundPosition: 'bottom',
     },
     linearGradient: {
@@ -256,9 +314,7 @@ const App = ({ navigation }) => {
       // flex: 6,
       width: '100%',
       height: '100%',
-      display: 'flex',
       fontFamily: "Roboto_400Regular",
-      paddingLeft: 28,
       margin: 0,
     },
     checkbox: {

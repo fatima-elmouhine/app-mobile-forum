@@ -6,9 +6,9 @@ async function getSearchForum(req, res)
     const {search, item, order} = req.query;
     const searchItem = item?.split(',');
     if (!search || search?.length < 3 ) return res.status(400).send('Votre recherche doit contenir au moins 3 caractères');
-    const Topics = searchItem?.includes('Topics') || searchItem === undefined ? await getSearch(sequelize.models.Topic, search, [{model : sequelize.models.User}, {model : sequelize.models.Theme}, {model : sequelize.models.Message}], 'title') : null;
-    const Themes = searchItem?.includes('Themes') || searchItem === undefined ? await getSearch(sequelize.models.Theme, search, {model : sequelize.models.Topic, separate:true}, 'title') : null;
-    const Messages = searchItem?.includes('Messages') || searchItem === undefined ? await getSearch(sequelize.models.Message, search, {model : sequelize.models.Topic, include: sequelize.models.User, include : sequelize.models.Theme},'text') : null;
+    const Topics = searchItem?.includes('Topics') || searchItem === undefined ? await getSearch(sequelize.models.Topic, search, [{model : sequelize.models.User}, {model : sequelize.models.Theme}, {model : sequelize.models.Message}], 'title', order) : null;
+    const Themes = searchItem?.includes('Themes') || searchItem === undefined ? await getSearch(sequelize.models.Theme, search, {model : sequelize.models.Topic, separate: true}, 'title', order) : null;
+    const Messages = searchItem?.includes('Messages') || searchItem === undefined ? await getSearch(sequelize.models.Message, search, {model : sequelize.models.Topic, include: sequelize.models.User, include : sequelize.models.Theme},'text', order) : null;
     return res.json({Topics, Themes, Messages});
 }
 
