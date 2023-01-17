@@ -9,13 +9,11 @@ const UserContextProvider = (props) =>  {
     const [token, setToken] = useState(null);
 
     SecureStore.getItemAsync('token').then((jwt) => {
-        console.log('token', jwt);
         setToken(jwt);
     });
 
 
     const decodedToken = token ? jwtDecode(token) : null;
-    // console.log('decodedToken', decodedToken);
     
         const [userDetails, setUserDetails] = useState({
             id: "",
@@ -23,7 +21,7 @@ const UserContextProvider = (props) =>  {
             firstName: "",
             lastName: "",
         });
-        // console.log('userDetails', userDetails);
+
         useEffect(() => {
             SecureStore.getItemAsync('token')
             setUserDetails({
