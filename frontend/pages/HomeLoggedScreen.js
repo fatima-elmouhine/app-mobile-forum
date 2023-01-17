@@ -24,10 +24,10 @@ import {
   Button,
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
-import { getCourses } from "../api/Courses/getCourses";
-import { UserContext } from "../context/UserContext";
-import * as SecureStore from "expo-secure-store";
+import CourseCardComponent from '../component/CourseCard/CourseCardComponent';
+import { getCourses } from '../api/Courses/getCourses';
+import { UserContext } from '../context/UserContext';
+import * as SecureStore from 'expo-secure-store';
 // import { getUser } from '../api/Users/getUser';
 
 export default function HomeLoggedScreen({ navigation }) {
@@ -36,7 +36,7 @@ export default function HomeLoggedScreen({ navigation }) {
 
   console.log('userDetails', userDetails);
 
-  useEffect(() => {
+  useEffect( () => {
     async function getCoursesInHome() {
       const coursesReq = await getCourses();
       setCourses(coursesReq);
@@ -64,61 +64,32 @@ export default function HomeLoggedScreen({ navigation }) {
           style={styles.bgTop}
         />
         <View style={[styles.profileImgContainer]}>
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              justifyContent: "space-between",
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                handlePressEdit();
-              }}
-            >
-              <Avatar.Image
-                size={120}
-                source={require("../assets/img-test/image1.png")}
-                style={styles.image}
-                onPress={() => {
-                  handlePressEdit();
-                }}
-              />
-            </TouchableOpacity>
-            <View
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                width: "60%",
-              }}
-            >
-              <Text style={styles.name}>Zak Lucien</Text>
-              <View
-                style={{
-                  flexDirection: "row",
-                  position: "absolute",
-                  bottom: 0,
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <ProgressBar
-                  progress={0.5}
-                  color="#00FAAF"
-                  style={styles.progress}
-                />
-                <Text style={styles.paragraphe}>Lvl.2</Text>
-              </View>
-            </View>
-          </View>
+          <TouchableOpacity onPress={() => {handlePressEdit()}}>
+            <Avatar.Image size={100} source={require('../assets/img-test/image1.png')} style={styles.image} onPress={() => {handlePressEdit()}}/>
+          </TouchableOpacity>
         </View>
-        <Text style={styles.sectionTitle}>Mes derniers cours</Text>
-        <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+        <Text style={styles.containerText}>
+            <Text style={styles.name}>Zak Lucien</Text>
+            <ProgressBar progress={0.35} color='#00FAAF' style={styles.progress} />
+            <Text style={styles.paragraphe}>Lvl.2</Text>
+        </Text>
+        <ScrollView  style={{display:'flex', flexDirection:'column'}}>
           <View style={styles.sectionLatestCourse}>
-            {courses.length !== 0 &&
-              courses.map((course, i) => {
-                return <CourseCardComponent key={i} course={course} />;
-              })}
+            <Text style={styles.sectionTitle}>Les derniers cours</Text>
+            { courses.length !== 0 && 
+              courses.map((course,i) => {
+                return (
+                  <CourseCardComponent key={i}  course={course}/>
+                )
+              })
+            }
+            { courses.length !== 0 && 
+              courses.map((course,i) => {
+                return (
+                  <CourseCardComponent key={i}  course={course}/>
+                )
+              })
+            }
           </View>
         </ScrollView>
       </LinearGradient>
@@ -160,32 +131,43 @@ const styles = StyleSheet.create({
   },
 
   profileImgContainer: {
+    position: 'relative',
     marginHorizontal: 16,
     marginTop: 50,
-    justifyContent: "space-between",
-    marginBottom: 64,
+    width: 120,
   },
 
   image: {
     overflow: "hidden",
     borderWidth: 1,
+    zIndex: 1,
     borderStyle: "dashed",
     borderColor: "#50F4E1",
   },
 
-  containerText: {},
+  icon: {
+    zIndex: 2,    
+    position: 'absolute',
+    right: 0,
+    bottom: 0,   
+  },
+
+  containerText: {
+    color: '#fff',
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
 
   name: {
-    fontSize: 20,
-    color: "#fff",
+    
   },
 
   paragraphe: {
-    fontSize: 15,
-    color: "#fff",
+    
   },
 
   progress: {
+    
     width: 150,
     height: 20,
     borderRadius: 10,
