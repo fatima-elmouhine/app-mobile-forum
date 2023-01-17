@@ -1,22 +1,31 @@
 import axiosInstance from '../config'
+import * as SecureStore from 'expo-secure-store'
 
 export const putUser = async (userInformations) => {
 
 
   try {
-    return (await axiosInstance.put(`/users`,
+     
+      const userResponse = await axiosInstance.put(`/users`,
       {
         ...userInformations,
-      })).data
+      })
+      SecureStore.setItemAsync('token', userResponse.data.token)
+
+      return userResponse.data.user
+      
   } catch (e) {
-    console.log('LE E',e)
+    // console.log('ERROR',e)
+    return e.response.data
+    // console.log('LE E',e)
+
     // switch (e) {
     //   case e.request:
-    //     console.log(e.request)
-    //     console.log(e.message)
+        // console.log('REQUEST',e.request)
+        // console.log('MESSAGE',e.message)
     //     break
     //   case e.response:
-    //     console.log(e.response)
+        // console.log('RESPONSE',e.response.data)
     //     console.log(e.message)
     //     break
     //   default:
