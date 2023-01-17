@@ -1,8 +1,9 @@
 import axiosInstance from '../config'
 
  export const searchAll= async (query) => {
+  console.log('QUERY',query)
     try {
-      const { data } = await axiosInstance.get(`search/forum?search=${query}`)
+      const { data } = await axiosInstance.get(`search/forum?${query}`)
     //   console.log('DATA',data)
       return data
     }
