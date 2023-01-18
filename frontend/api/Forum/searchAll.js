@@ -4,7 +4,6 @@ import axiosInstance from '../config'
   console.log('QUERY',query)
     try {
       const { data } = await axiosInstance.get(`search/forum?${query}`)
-    //   console.log('DATA',data)
       return data
     }
     catch (e) {
