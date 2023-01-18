@@ -11,14 +11,19 @@ import {
 import { useEffect, useState } from "react";
 import SideBar from "../component/SideBar";
 
+export async function getServerSideProps() {
+    return {
+        props: {},
+    };
+}
+
 const Home = () => {
-    // useEffect(() => {
-    //     // window.localStorage.removeItem('token');
-    //     window.localStorage.getItem('token');
-    //     if (window.localStorage.getItem('token') === null) {
-    //         window.location.href = '/Login';
-    //     }
-    // }, []);
+    useEffect(() => {
+        window.localStorage.getItem('token');
+        if (window.localStorage.getItem('token') === null) {
+            window.location.href = '/Login';
+        }
+    }, []);
 
     return (
         <Container maxWidth="sm">

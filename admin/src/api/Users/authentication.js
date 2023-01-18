@@ -13,6 +13,7 @@ export const userAuthentication = async ( email, password ) => {
   try {
     if (response.status === 200) {
       window.localStorage.setItem('token', response.data.token)
+      console.log(response.data.token);
       return response.data.token
     } 
   } catch (e) {

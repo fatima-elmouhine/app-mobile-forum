@@ -5,6 +5,7 @@ const { User } = sequelize.models;
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const auth = async (req, res, next) => {
+    console.log('cookie', req.headers.cookie);
     if (req.headers.cookie === undefined){ 
        return  res.status(401).json({message: "Vous n'êtes pas connecté"});
     };

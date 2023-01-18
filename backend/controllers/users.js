@@ -37,21 +37,22 @@ async function postUser (req, res) {
     if(!isValidEmailForm(req.body.email)) {
         res.status(406).send('Cette adresse email n\'est pas valide');
     } else {
-        if(!req.body.firstname || !req.body.lastname || !req.body.email || !req.body.password) {
-            res.status(406).send('Les champs doivent être tous remplis');
+        if(!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.role) {
+            res.status(400).send('Les champs doivent être tous remplis');
         } else {
             const newUser = {            
-                firstName: req.body.firstname,            
-                lastName:  req.body.lastname,
+                firstName: req.body.firstName,
+                lastName:  req.body.firstName,
                 email:     req.body.email,
-                password:  hashPassword(req.body.password)
+                password:  hashPassword(req.body.password),
+                role:      {role: req.body.role}
             }
             await User.create(newUser)
             .then(user => {
                 res.status(201).json(user)
             })
             .catch(err => {
-                res.status(406).send('Cette adresse email est déjà utilisée');
+                res.status(404).send('Cette adresse email est déjà utilisée');
             });
         }
     }

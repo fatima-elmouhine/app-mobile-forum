@@ -1,39 +1,37 @@
 import React, { useEffect, useState } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
-// import LayoutTemplate from './components/layout/LayoutTemplate'
-import { useNavigate, useParams } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
+import SideBar from '../component/SideBar'
 import Home from './Home'
 import Login from './Login'
+import Users from './Users'
 
-function Routes() {
-
-    const [isUserAuthenticated, setIsUserAuthenticated] = useState(false)
-    useEffect(() => {
-        if (window.localStorage.getItem('token') !== null) {
-            console.log('token', window.localStorage.getItem('token'));
-            const currentUser = jwtDecode(window.localStorage.getItem('token'))
-            if (currentUser.role.role === 'ROLE_ADMIN') {
-                setIsUserAuthenticated(true)
-            } else {
-                setIsUserAuthenticated(false)
-            }
-        }
-    }, [])
-
-    const params = useParams()
-    const { pathname } = useLocation();
+const AppRouter = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (window.localStorage.getItem('token') !== null) {
+      const token = jwtDecode(window.localStorage.getItem('token'))
+      if (token.role.role === 'ROLE_ADMIN') {
+        setIsAuthenticated(true)
+      }
+    }
+  }, [])
 
   return (
-    <Routes>
-        {isUserAuthenticated==false && <Route path='/login' element={<Login />} />}
-        <Route path='/' element={<Home />} />
-    </Routes>
+    <BrowserRouter>
+      {isAuthenticated === true ? (
+        <Routes >
+          <Route path="/" element={<SideBar />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/users" element={<Users />} />
+        </Routes>
+      ) : (
+        <Route path="/" element={<Login />} />
+      )
+      }
+    </BrowserRouter>
   )
 }
 
-export default Routes
+export default AppRouter

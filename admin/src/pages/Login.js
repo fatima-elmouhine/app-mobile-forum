@@ -1,20 +1,20 @@
-import { useState } from 'react'
 import * as React from 'react';
+import { useState, useEffect } from 'react'
 import { Card, Typography, Container ,Slide,
 	Input, InputLabel, InputAdornment,
     FormControl, TextField,TextareaAutosize,
 	Box, Snackbar, Alert, Button
 } from '@mui/material';
-import { useEffect } from 'react';
+
 import { userAuthentication } from '../api/Users/authentication';
 
 const Login = () => {
-    // useEffect(() => {
-    //     window.localStorage.getItem('token');
-    //     if (window.localStorage.getItem('token') !== null) {
-    //         window.location.href = '/Home';
-    //     }
-    // }, []);
+    useEffect(() => {
+        window.localStorage.getItem('token');
+        if (window.localStorage.getItem('token') !== null) {
+            window.location.href = '/Home';
+        }
+    }, []);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
