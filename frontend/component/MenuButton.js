@@ -9,8 +9,13 @@ import * as SecureStore from 'expo-secure-store';
 function MenuButton() {
 
     const navigation = useNavigation();
-    const { userDetails } = useContext(UserContext);
-    console.log(userDetails.mail)
+    const {isLogged, userLogout} = useContext(UserContext);
+    console.log('isLogged', isLogged);
+
+    if (isLogged === false) {
+         return navigation.navigate('HomeScreen');;
+    }
+
     const actions = [
         {
           text: "Forum",
@@ -35,16 +40,19 @@ function MenuButton() {
       ];
   return (
     <View style={{}}>
+    {isLogged === true &&
         <FloatingAction
             actions={actions}
             onPressItem={name => {
                 if ( name === 'Logout' ) {
-                    SecureStore.deleteItemAsync('token');
+                    userLogout();
                     return navigation.navigate('HomeScreen');
+
                 };
                 return navigation.navigate(`${name}`);
             }}
         />
+      }
     </View>
   )
 }

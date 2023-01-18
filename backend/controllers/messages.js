@@ -28,29 +28,42 @@ async function getMessage (req, res)
 }
 
 async function postMessage (req, res) 
-{
-    // TODO: Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
-    if(!req.body.text || !req.body.id_topic || !req.body.id_user)
-    {
-        res.status(406).send('Les champs doivent être tous remplis');
-    }
-    else
-    {
-        const newMessage = {            
-            text: req.body.text,
-            id_topic: req.body.id_topic,
-            id_user: req.body.id_user
-        }
-        await Message.create(newMessage)
-        .then(message => {
-            if(message == null) 
-            {
-                res.status(406).send('Error');
-            }else{
-                res.status(201).json(message)
-            }
-        })
 
+{
+    console.log(req.body);
+    console.log(req.user.id);
+    // return
+    // TODO: Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
+    try {
+        if (!req.body.data.id_topic) throw new Error("Une erreur est survenue lors de la création du message");
+    
+        if(!req.body.data.text || !req.body.data.id_topic)
+        {
+           return res.status(406).send('Les champs doivent être tous remplis');
+        }
+        // else
+        // {
+            const newMessage = {            
+                text: req.body.data.text,
+                id_topic: req.body.data.id_topic,
+                id_user: req.user.id
+            }
+            await Message.create(newMessage)
+            .then(message => {
+                console.log('Ceci est un message',message);
+                if(message == null) 
+                {
+                    res.status(406).send('Error');
+                }else{
+                    res.status(201).json(message)
+                }
+            })
+    
+        // }
+        
+    } catch (error) {
+        res.status.json(error);
+        
     }
 
 

@@ -2,16 +2,18 @@ import * as React from 'react';
 import { useEffect, useContext, useState } from 'react';
 import { StyleSheet, Text,Image, View, Pressable } from 'react-native';
 import {useFonts,Roboto_400Regular,Roboto_400Regular_Italic} from "@expo-google-fonts/roboto";
-import { TextInput, Avatar, MD3Colors, IconButton, Button, Snackbar } from 'react-native-paper';
+import { TextInput, Avatar, IconButton, Snackbar } from 'react-native-paper';
 import { LinearGradient } from "expo-linear-gradient";
 import {putUser} from '../api/Users/putUser';
 import { UserContext } from '../context/UserContext';
 
 
 export default function ProfileScreen({navigation}) {
-  const { userDetails, setUserDetails } = useContext(UserContext);
+  const { userDetails, setUserDetails, isLogged } = useContext(UserContext);
 
-
+  if (isLogged === false) {
+    return navigation.navigate('HomeScreen');;
+}
   const [firstname, setFirstname] = React.useState(userDetails.firstName);
   const [lastname, setLastname] = React.useState(userDetails.lastName);
   const [email, setEmail] = React.useState(userDetails.email)
@@ -19,6 +21,7 @@ export default function ProfileScreen({navigation}) {
   const [pressed, setPressed] = React.useState(false);
   const [visible, setVisible] = React.useState(false);
   const [message, setMessage] = React.useState('');
+  const [colorMessage, setColorMessage] = React.useState('');
 
   
   const onToggleSnackBar = () => setVisible(!visible);
@@ -30,46 +33,61 @@ export default function ProfileScreen({navigation}) {
   }
   async function handleSaveEdit() {
     var userInfo 
-    if (password !== '') {
-        console.log('password changed');
+
+    if (firstname !== '' && lastname !== '' && email !== ''){
+      if (password !== '') {
+          userInfo = {
+              id: userDetails.id,
+              firstName: firstname,
+              lastName: lastname,
+              email: email,
+              password: password
+
+          }
+      }else {
         userInfo = {
-            id: userDetails.id,
-            firstName: firstname,
-            lastName: lastname,
-            email: email,
-            password: password
-
+          id: userDetails.id,
+          firstName: firstname,
+          lastName: lastname,
+          email: email,
         }
-    }else {
-       userInfo = {
-        id: userDetails.id,
-        firstName: firstname,
-        lastName: lastname,
-        email: email,
+
       }
-        console.log('password not changed');
+      const response = await putUser( userInfo)
 
+
+      if (response === 1062) {
+        setMessage('Cet email est déjà utilisé');
+        setColorMessage('rgb(186, 26, 26)');
+      }else{
+
+        setUserDetails({
+          id: userDetails.id,
+          email: userInfo.email,
+          firstName: userInfo.firstName,
+          lastName: userInfo.lastName,
+        })
+        setColorMessage('purple');
+      setMessage('Vos informations ont bien été modifiées');
     }
-    const response = await putUser( userInfo)
-
-    console.log(response);
-
-    if (response === 1062) {
-      setMessage('Cet email est déjà utilisé');
-    }else{
-
-      setUserDetails({
-        id: userDetails.id,
-        email: userInfo.email,
-        firstName: userInfo.firstName,
-        lastName: userInfo.lastName,
-      })
-
-    setMessage('Vos informations ont bien été modifiées');
-  }
-  onToggleSnackBar(); 
+    onToggleSnackBar(); 
+  }else{
+    var emptyField = [];
+    if (firstname === '') {
+      emptyField.push('Prénom');
+    }
+    if (lastname === '') {
+      emptyField.push('Nom');
+    }
+    if (email === '') {
+      emptyField.push('Email');
+    }
     
+    setMessage(`Veuillez remplir le${emptyField.length > 1 ? 's' : ''} champ${emptyField.length > 1 ? 's' : ''} suivant${emptyField.length > 1 ? 's' : ''} : ${emptyField.join(', ')}`);
+    setColorMessage('rgb(186, 26, 26)');
+    onToggleSnackBar();
   }
+}
 
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
@@ -122,7 +140,6 @@ export default function ProfileScreen({navigation}) {
                 // value={text}
                 onChangeText={text => setPassword(text)}
                 />
-            {/* </View> */}
             <Pressable
                 style={({ pressed }) => [{ backgroundColor: pressed ? '#50F4E1' : '#0160D0' }, styles.button ]}
   
@@ -130,8 +147,6 @@ export default function ProfileScreen({navigation}) {
                     handleSaveEdit();
                 }}
             >
-                
-            {/* </Button> */}
                 {({ pressed }) => (
                     <Text style={[{ color: pressed? 'black' :'white'}, styles.btnText]}>
                         Modifier
@@ -143,6 +158,10 @@ export default function ProfileScreen({navigation}) {
             <Snackbar
               visible={visible}
               onDismiss={onDismissSnackBar}
+              style={{
+                backgroundColor:colorMessage,
+                fontSize: 130
+              }}
               action={{
                 label: 'X',
                 onPress: () => {
@@ -271,6 +290,7 @@ export default function ProfileScreen({navigation}) {
     containerSnackBar: {
       flex: 1,
       justifyContent: 'space-between',
+      marginBottom: 100,
     },
 
   });

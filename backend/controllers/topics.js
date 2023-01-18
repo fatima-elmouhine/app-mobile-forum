@@ -156,6 +156,7 @@ async function getMessagesTopic (req, res){
 
 async function postMessageTopic (req, res){
 
+
     // TODO : Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
     if(!req.body.text || !req.body.id_user || !req.body.id_topic)
     {

@@ -7,7 +7,7 @@ router.get('/', getMessages);
 
 router.get('/:id', getMessage);
 
-router.post('/', postMessage);
+router.post('/', auth, postMessage);
 
 router.put('/:id', updateMessage);
 
