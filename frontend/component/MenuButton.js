@@ -10,6 +10,11 @@ function MenuButton() {
 
     const navigation = useNavigation();
     const {isLogged, userLogout} = useContext(UserContext);
+    console.log('isLogged', isLogged);
+
+    if (isLogged === false) {
+         return navigation.navigate('HomeScreen');;
+    }
 
     const actions = [
         {

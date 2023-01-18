@@ -1,20 +1,17 @@
 import React from 'react'
 import { StyleSheet, Text,Dimensions, View, ScrollView, ImageBackground, Linking} from 'react-native';
 import { List, Card, Divider, Button, Avatar, TouchableRipple } from 'react-native-paper';
-import { set } from 'react-native-reanimated';
+import {  formatDistance } from 'date-fns'
+import { fr } from 'date-fns/locale'
 
 export default function MessageCardComponent(props) {
+    const date = props.message.createdAt
     const [isLiked, setIsLiked] = React.useState(false);
     function handlePress(){
         setIsLiked(!isLiked)
-        console.log(isLiked)
-        // console.log('handlePress')
     }
     var colorThumb = isLiked ? 'black' : 'white'
 
-    // console.log('COURSEEEEE',props.message.User.firstName)
-    // const windowWidth = Dimensions. get('window')
-    // console.log(windowWidth)
   return (
     <View style={styles.card}>
           <List.Item
@@ -25,13 +22,11 @@ export default function MessageCardComponent(props) {
             descriptionNumberOfLines={1000}
             right={ props => 
                 <View style={{display:'flex', flexDirection:'column', alignItems:'flex-end'}}>
-                    <Text style={{fontSize:12, color:'#9E9E9E'}}>
-                        IL YA 20 JRS
+                    <Text style={{fontSize:10,marginBottom:10, color:'#9E9E9E'}}>
+                    {formatDistance(new Date(date), Date.now(), { addSuffix: true , locale: fr })}
                     </Text>
                     <View style={{display:'flex'}}>
-                        {/* <Button icon={
-                            <Avatar.Icon size={40} color='white' icon={require('../../assets/logo/thumb_black.png')}/>
-                        }></Button> */}
+
                           <TouchableRipple
                             onPress={() =>
                                 handlePress()
@@ -51,26 +46,6 @@ export default function MessageCardComponent(props) {
             }
             left={props => <Avatar.Image size={70} source={require('../../assets/img-test/image1.png')}  />}
   />
-        {/* <Card style={styles().container}>
-                <Card.Content style={styles.containerText}>
-                    <View style={styles.headerCard}>
-                        <Avatar.Image size={70} source={require('../../assets/img-test/image1.png')}  />
-                        <Text style={styles.headerCardTitle}>
-                            <Text>
-                                {props.message.User.firstName}
-                            </Text>
-                            <Text  style={styles.title}>
-                            IL YA 20 JRS
-                            </Text>
-                        </Text>
-                    </View>
-                    <Text style={styles.title}>
-                        {props.message.text}
-                        
-                    </Text>
-            
-                </Card.Content>
-        </Card> */}
     </View>
   )
 }

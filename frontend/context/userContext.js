@@ -3,6 +3,7 @@ import * as SecureStore from 'expo-secure-store'
 import jwtDecode from 'jwt-decode';
 import axiosInstance from  '../api/config';
 import { userAuthentication } from '../api/Users/authentication';
+import { set } from 'date-fns';
 
 export const UserContext = createContext();
 
@@ -26,6 +27,12 @@ const UserContextProvider = (props) =>  {
         });
 
         SecureStore.getItemAsync('token').then((jwt) => {
+          console.log('jwt Context', jwt);
+          console.log('isLogged Context', isLogged);
+          if (jwt === null) {
+            return;
+          }
+          setIsLogged(true);
           setToken(jwt);
       });
   
@@ -46,10 +53,7 @@ const UserContextProvider = (props) =>  {
         const userAuthentication = async ( email, password ) => {
             if (SecureStore.getItemAsync('token') !== null) {
 
-                SecureStore.getItemAsync('token').then((jwt) => {
-                    console.log('before  delete jwt',jwt)
-                    setToken(jwt);
-                });
+              setIsLogged(false)
                 SecureStore.deleteItemAsync('token')
             }
 

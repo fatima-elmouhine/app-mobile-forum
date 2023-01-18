@@ -23,7 +23,7 @@ export default function CourseCardComponent(props) {
     6: "#C71585",
     7: "#DA70D6",
   };
-  console.log(themeColor[props.course.Theme.id]);
+  // console.log(themeColor[props.course.Theme.id]);
   return (
     <Surface
     elevation={3}

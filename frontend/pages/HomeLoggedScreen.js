@@ -32,8 +32,10 @@ import * as SecureStore from "expo-secure-store";
 
 export default function HomeLoggedScreen({ navigation }) {
   const [courses, setCourses] = useState([]);
-  const { userDetails } = useContext(UserContext);
-
+  const { userDetails,isLogged } = useContext(UserContext);
+//   if (isLogged === false) {
+//     return navigation.navigate('HomeScreen');;
+// }
   useEffect( () => {
 
     async function getCoursesInHome() {

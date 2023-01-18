@@ -46,24 +46,24 @@ const App = ({ navigation }) => {
       setActiveSearch(false);
     }
 
-    console.log('checked theme, topic, message = ',checked.Themes, checked.Topics, checked.Messages);
+    // console.log('checked theme, topic, message = ',checked.Themes, checked.Topics, checked.Messages);
     // checked.map((item)=>{
     //   console.log(`item = `,item);
     // })
-    console.log('query length = ',query.length);
+    // console.log('query length = ',query.length);
 
     // var stringQuery = query.length === 0 ? `` : `search=${query}` ;
     var stringQuery =`search=${query}` ;
-    console.log('query = ',query)
+    // console.log('query = ',query)
     // if(query.length !== 0){
 for (const [key, value] of Object.entries(checked)) {
-  console.log(`${key}: ${value}`);
+  // console.log(`${key}: ${value}`);
   if(value === true){
     stringQuery += `&item=${key}`;
     
     }
   }
-  console.log('queryFiltered =',stringQuery);
+  // console.log('queryFiltered =',stringQuery);
 // }
     const data = await searchAll(stringQuery);
     if(stringQuery.includes('item')){
@@ -191,13 +191,17 @@ for (const [key, value] of Object.entries(checked)) {
             <ScrollView contentContainerStyle={{display:'flex' , flexGrow:1 }}>
               
             {topics.map((item) => {
-              return <CardTopic key={item.id} title={item.title} theme={item.Theme.title} messages={item.Messages} />
+              return <CardTopic key={item.id} idTopic={item.id} title={item.title} theme={item.Theme.title} messages={item.Messages} navigation={navigation}/>
             })}
               {topics.map((item) => {
-              return <CardTopic key={item.id} id={item.id} title={item.title} theme={item.Theme.title} messages={item.Messages} />
+              // console.log('item2 = ',item.id)
+
+              return <CardTopic key={item.id} idTopic={item.id} title={item.title} theme={item.Theme.title} messages={item.Messages}  navigation={navigation}/>
             })}
             {topics.map((item) => {
-            return <CardTopic key={item.id} id={item.id} title={item.title} theme={item.Theme.title} messages={item.Messages} />
+              // console.log('item3 = ',item.id)
+
+            return <CardTopic key={item.id} idTopic={item.id} title={item.title} theme={item.Theme.title} messages={item.Messages}  navigation={navigation}/>
             })}
           </ScrollView>
         </View>

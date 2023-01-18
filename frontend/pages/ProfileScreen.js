@@ -9,9 +9,11 @@ import { UserContext } from '../context/UserContext';
 
 
 export default function ProfileScreen({navigation}) {
-  const { userDetails, setUserDetails } = useContext(UserContext);
+  const { userDetails, setUserDetails, isLogged } = useContext(UserContext);
 
-
+  if (isLogged === false) {
+    return navigation.navigate('HomeScreen');;
+}
   const [firstname, setFirstname] = React.useState(userDetails.firstName);
   const [lastname, setLastname] = React.useState(userDetails.lastName);
   const [email, setEmail] = React.useState(userDetails.email)
