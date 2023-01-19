@@ -18,6 +18,11 @@ function MenuButton() {
 
     const actions = [
         {
+          text: "Themes",
+          name: "ThemeScreen",
+          position: 0
+        },
+        {
           text: "Forum",
           name: "ForumScreen",
           position: 2
