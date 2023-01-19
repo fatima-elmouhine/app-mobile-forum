@@ -67,6 +67,11 @@ const App = ({ navigation }) => {
       const Topic = await getTopics();
       setCards({ ...cards, topic: Topic, themeMenu: Theme });
       setActiveSearch(false);
+      setExpanded({
+        theme: false,
+        topic: false,
+        messages: false,
+      })
     }
   };
 
@@ -77,9 +82,6 @@ const App = ({ navigation }) => {
         return true;
       }
       array.push(checked[key]);
-      if (array.every((element) => element === true)) {
-        return false;
-      }
     }
     if (array.every((element) => element === false)) {
       return true;
@@ -250,7 +252,7 @@ const App = ({ navigation }) => {
           </View>
         )}
         {activeSearch === true && (
-          <ScrollView style={{ display: "flex", width: "100%", top: 50 }}>
+          <ScrollView style={{marginTop:16}}>
             {checkFilterIsTrue("Themes") && (
               <SearchHeaderCard
                 table="Themes"
@@ -298,6 +300,18 @@ const App = ({ navigation }) => {
                       />
                     );
                   })}
+                  {cards.topic.count > 0 &&
+                  cards.topic.rows.map((item) => {
+                    return (
+                      <CardTopic
+                        key={item.id}
+                        id={item.id}
+                        title={item.title}
+                        theme={item.Theme.title}
+                        messages={item.Messages}
+                      />
+                    );
+                  })}
               </ScrollView>
             )}
             {checkFilterIsTrue("Messages") && (
@@ -310,7 +324,7 @@ const App = ({ navigation }) => {
               />
             )}
             {expanded.messages === true && (
-                    <ScrollView style={{backgroundColor: "red", height: '50%'
+                    <ScrollView style={{
                     }}>
                       {cards.message.count > 0 &&
                         cards.message.rows.map((item) => {
