@@ -15,6 +15,6 @@ router.put('/:id',updateTopic);
 router.delete('/:id', deleteTopic);
 
 router.get('/:id/messages', getMessagesTopic);
-router.post('/:id/messages',auth, postMessageTopic);
+router.post('messages',auth, postMessageTopic);
 
 module.exports = router;

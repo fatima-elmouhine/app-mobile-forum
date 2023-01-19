@@ -7,6 +7,7 @@ import { fr } from 'date-fns/locale'
 
 export default function CardMessage({ text, topic, theme, createdAt}) {
     // const CardMessage = () => {
+      console.log(new Date(createdAt))
         return (
           <View style={{display:'flex'}} >
           <List.Item

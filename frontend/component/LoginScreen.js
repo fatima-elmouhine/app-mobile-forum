@@ -1,11 +1,15 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { userAuthentication } from '../api/Users/authentication';
+// import { userAuthentication } from '../api/Users/authentication';
+import { UserContext } from '../context/UserContext';
+
 import * as SecureStore from 'expo-secure-store'
 
 function LoginScreen({ navigation }) {
+
+  const { userAuthentication } = useContext(UserContext);
 
   useEffect(() => {
     SecureStore.getItemAsync('token').then((token) => {
