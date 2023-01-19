@@ -1,33 +1,29 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, Modal, Container, Box } from '@mui/material';
+import { Button, Modal, Container, Box, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 
-import CreateUser from '../component/CreateUser';
-import UpdateUser from '../component/UpdateUser';
-import SideBar from '../component/SideBar';
+import SideBar from '../component/layout/SideBar';
+import CreateUser from '../component/users/CreateUser';
+import UpdateUser from '../component/users/UpdateUser';
+import DeleteUser from '../component/users/DeleteUser';
 import style from '@/styles/Global.module.css';
 
 import { getUsers } from '../api/Users/getUsers';
-import { getUser } from '../api/Users/getUser';
-import { deleteUser } from '../api/Users/deleteUser';
 
 const Users = () => {
     const [openCreate, setOpenCreate] = useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
 
+    const [item, setItem] = useState();
     const [openUpdate, setOpenUpdate] = useState(false);
     const handleOpenUpdate = () => setOpenUpdate(true);
 
-    const handleClose = () => setOpenCreate(false) || setOpenUpdate(false);
+    const [openDelete, setOpenDelete] = useState(false);
+    const handleOpenDelete = () => setOpenDelete(true);
 
-    useEffect(() => {
-        window.localStorage.getItem('token');
-        if (window.localStorage.getItem('token') == null) {
-            window.location.href = '/Login';
-        }
-    }, []);
+    const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
 
     const [users, setusers] = useState([]);
 
@@ -35,19 +31,8 @@ const Users = () => {
         getUsers().then((data) => {
             setusers(data);
         });
-    }, [openCreate, openUpdate]);
+    }, [openCreate, openUpdate, openDelete]);
 
-    const handleUpdate = (id) => {
-        getUser(id).then((data) => {
-            console.log(data);
-        });
-    };
-
-    const handleDelete = (id) => {
-        deleteUser(id).then((data) => {
-            console.log(data);
-        });
-    };
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -63,7 +48,7 @@ const Users = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleOpenUpdate}
+                        onClick={()=>{setItem(params.row), handleOpenUpdate()}}
                     >
                         Modifier
                     </Button>
@@ -71,7 +56,7 @@ const Users = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateUser id={params.row.id} />
+                        <UpdateUser data={item} />
                     </Modal>
                 </strong>
             ),
@@ -82,10 +67,16 @@ const Users = () => {
                     <Button
                         variant="contained"
                         color="error"
-                        onClick={() => handleDelete(params.row.id)}
+                        onClick={()=>{setItem(params.row), handleOpenDelete()}}
                     >
                         Supprimer
                     </Button>
+                    <Modal
+                        open={openDelete}
+                        onClose={handleClose}
+                    >
+                        <DeleteUser data={item} />
+                    </Modal>
                 </strong>
             ),
         },

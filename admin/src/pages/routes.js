@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import jwtDecode from 'jwt-decode'
-import SideBar from '../component/SideBar'
+import SideBar from '../component/layout/SideBar'
 import Home from './Home'
 import Login from './Login'
 import Users from './Users'

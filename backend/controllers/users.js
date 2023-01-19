@@ -79,7 +79,8 @@ async function updateUser (req, res, next) {
             email: newUser['dataValues'].email,
             firstName: newUser['dataValues'].firstName,
             lastName: newUser['dataValues'].lastName,
-            role: newUser['dataValues'].role.role
+            role: newUser['dataValues'].role.role,
+            password: newUser['dataValues'].password
         },
         SECRET_KEY,
         {

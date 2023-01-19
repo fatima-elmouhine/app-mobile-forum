@@ -1,20 +1,14 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
-import { Card, Typography, Container , Select,
-	Input, InputLabel, MenuItem,
-    FormControl, OutlinedInput,
-	Box, Chip, Alert, Button
+import { 
+    Card, Typography, Container , Select,
+	Input, InputLabel, MenuItem, FormControl,
+	Box, Chip, Button, Snackbar
 } from '@mui/material';
 
-import { postUser } from '../api/Users/postUser';
+import { postUser } from '../../api/Users/postUser';
 
 const CreateUser = () => {
-    useEffect(() => {
-        window.localStorage.getItem('token');
-        if (window.localStorage.getItem('token') == null) {
-            window.location.href = '/Login';
-        }
-    }, []);
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -27,6 +21,15 @@ const CreateUser = () => {
         'ROLE_TUTOR',
         'ROLE_STUDENT'
     ];
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+    };
 
     const handleFirstNameChange = (event) => {  
         setFirstName(event.target.value);
@@ -54,24 +57,33 @@ const CreateUser = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (password !== confirmepassword) {
-            console.log('Oops', 'Les mots de passe ne correspondent pas');
+            console.log('Les mots de passe ne correspondent pas');
+            setMessage('Les mots de passe ne correspondent pas');
+            setOpen(true);
+            return;
         }
         try {
-            
             const response = await postUser(firstName, lastName, email, password, role);
             console.log(response);
+            console.log('Utilisateur créé avec succès');
+            setMessage('Utilisateur créé avec succès');
         } catch (error) {
             console.log(error);
              if (error.response.status === 404) {
-                console.log('Oops', 'Cette adresse email est déjà utilisée');
+                console.log('Cette adresse email est déjà utilisée');
+                setMessage('Cette adresse email est déjà utilisée');
             } else if (error.response.status=== 406) {
-                console.log('Oops', 'Cette adresse email n\'est pas valide');
+                console.log('Cette adresse email n\'est pas valide');
+                setMessage('Cette adresse email n\'est pas valide');
             } else if (error.response.status === 400) {
-                console.log('Oops', 'Tous les champs doivent etre remplis');
+                console.log('Tous les champs doivent etre remplis');
+                setMessage('Tous les champs doivent etre remplis');
             } else {
-                console.log('Oops', 'Erreur lors de la création de l\'utilisateur');
+                console.log('Erreur lors de la création de l\'utilisateur');
+                setMessage('Erreur lors de la création de l\'utilisateur');
             }
         }
+        setOpen(true);
     };
     
     return (
@@ -118,7 +130,7 @@ const CreateUser = () => {
                         />
                     </FormControl>
                     <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel htmlFor="password">Confimer</InputLabel>
+                        <InputLabel htmlFor="password">Confirmer le mot de passe</InputLabel>
                         <Input
                             id="confirmepassword"
                             type="password"
@@ -134,7 +146,6 @@ const CreateUser = () => {
                             multiple
                             value={role}
                             onChange={handleRoleChange}
-                            // input={<OutlinedInput id="role" label="Chip" />}
                             renderValue={(selected) => (
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                     {selected.map((value) => (
@@ -158,9 +169,21 @@ const CreateUser = () => {
                         sx={{ m: 1 }}
                         type="submit"
                     >
-                        Submit
+                        Enregistrer
                     </Button>
                 </form>
+                <Snackbar
+                    open={open}
+                    autoHideDuration={3000}
+                    onClose={handleClose}
+                    message={message}
+                    aaction={{
+                        label: 'X',
+                        onPress: () => {
+                          handleClose();
+                        },
+                    }}
+                />
             </Card>
         </Container>
     );

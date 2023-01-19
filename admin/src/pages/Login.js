@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
-import { Card, Typography, Container ,Slide,
-	Input, InputLabel, InputAdornment,
-    FormControl, TextField,TextareaAutosize,
-	Box, Snackbar, Alert, Button
+import { Card, Typography, Container,
+	Input, InputLabel, FormControl,
+	Snackbar, Button
 } from '@mui/material';
 
 import { userAuthentication } from '../api/Users/authentication';
@@ -12,12 +11,21 @@ const Login = () => {
     useEffect(() => {
         window.localStorage.getItem('token');
         if (window.localStorage.getItem('token') !== null) {
-            window.location.href = '/Home';
+            window.location.href = '/Users';
         }
     }, []);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+    };
     
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
@@ -29,18 +37,24 @@ const Login = () => {
         event.preventDefault();
         try {
             const response = await userAuthentication(email, password);
-            window.location.href = '/Home';
+            setMessage('Connexion réussie');
+            window.location.href = '/Users';
         } catch (error) {
              if (error.response.status === 403) {
-                console.log('Oops', 'Mot de passe incorrect');
+                console.log('Mot de passe incorrect');
+                setMessage('Mot de passe incorrect');
             } else if (error.response.status=== 404) {
-                console.log('Oops', 'L\'utilisateur n\'a pas été trouvé');
+                console.log('L\'utilisateur n\'a pas été trouvé');
+                setMessage('L\'utilisateur n\'a pas été trouvé');
             } else if (error.response.status === 400) {
-                console.log('Oops', 'Tous les champs doivent etre remplis');
+                console.log('Tous les champs doivent etre remplis');
+                setMessage('Tous les champs doivent etre remplis');
             } else {
-                console.log('Oops', 'Erreur lors de la connexion de l\'utilisateur');
+                console.log('Erreur lors de la connexion de l\'utilisateur');
+                setMessage('Erreur lors de la connexion de l\'utilisateur');
             }
         }
+        setOpen(true);
     };
     
     return (
@@ -76,6 +90,18 @@ const Login = () => {
                         Submit
                     </Button>
                 </form>
+                <Snackbar
+                    open={open}
+                    autoHideDuration={3000}
+                    onClose={handleClose}
+                    message={message}
+                    aaction={{
+                        label: 'X',
+                        onPress: () => {
+                          handleClose();
+                        },
+                    }}
+                />
             </Card>
         </Container>
     );
