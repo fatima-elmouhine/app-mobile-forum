@@ -1,21 +1,26 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Button, Modal, Typography } from '@mui/material';
+import { Button, Modal, Container, Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 
 import CreateUser from '../component/CreateUser';
+import UpdateUser from '../component/UpdateUser';
+import SideBar from '../component/SideBar';
+import style from '@/styles/Global.module.css';
+
 import { getUsers } from '../api/Users/getUsers';
 import { getUser } from '../api/Users/getUser';
 import { deleteUser } from '../api/Users/deleteUser';
 
-export async function gerServerSideProps(ctx) {
-    console.log('ctx',ctx);
-}
 const Users = () => {
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [openCreate, setOpenCreate] = useState(false);
+    const handleOpenCreate = () => setOpenCreate(true);
+
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const handleOpenUpdate = () => setOpenUpdate(true);
+
+    const handleClose = () => setOpenCreate(false) || setOpenUpdate(false);
 
     useEffect(() => {
         window.localStorage.getItem('token');
@@ -30,21 +35,13 @@ const Users = () => {
         getUsers().then((data) => {
             setusers(data);
         });
-    }, []);
-
-    useEffect(() => {
-        getUsers().then((data) => {
-            setusers(data);
-        });
-    }, [open]);
+    }, [openCreate, openUpdate]);
 
     const handleUpdate = (id) => {
         getUser(id).then((data) => {
             console.log(data);
         });
     };
-
-
 
     const handleDelete = (id) => {
         deleteUser(id).then((data) => {
@@ -66,10 +63,16 @@ const Users = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={() => handleUpdate(params.row.id)}
+                        onClick={handleOpenUpdate}
                     >
                         Modifier
                     </Button>
+                    <Modal
+                        open={openUpdate}
+                        onClose={handleClose}
+                    >
+                        <UpdateUser id={params.row.id} />
+                    </Modal>
                 </strong>
             ),
         },
@@ -97,31 +100,37 @@ const Users = () => {
             role: user.role.role.join(', '),
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
+            update: user.id
         };
     });
 
     return (
-        <div style={{ height: 400, width: '100%', color: 'white' }}>
-            <Button
-                variant="contained"
-                color="primary"
-                startIcon={<PersonAddAlt1Icon />}
-                onClick={handleOpen}
-            />
-            <Modal
-                open={open}
-                onClose={handleClose}
-            >
-                <CreateUser />
-            </Modal>
-            <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                checkboxSelection
-            />
-        </div>
+        <Container className={style.container}>
+            <Box className={style.sideBar}>
+                <SideBar />
+            </Box>
+            <Box style={{ height: 845, width: '100%', color: 'white' }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<PersonAddAlt1Icon />}
+                    onClick={handleOpenCreate}
+                />
+                <Modal
+                    open={openCreate}
+                    onClose={handleClose}
+                >
+                    <CreateUser />
+                </Modal>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    pageSize={50}
+                    rowsPerPageOptions={[5]}
+                    checkboxSelection
+                />
+            </Box>
+        </Container>
     );
 }
 
