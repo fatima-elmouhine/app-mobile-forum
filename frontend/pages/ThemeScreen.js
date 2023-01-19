@@ -11,20 +11,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useContext, useState } from "react";
-import {
-  useFonts,
-  Roboto_400Regular,
-  Roboto_400Regular_Italic,
-} from "@expo-google-fonts/roboto";
-import {
-  ProgressBar,
-  Avatar,
-  MD3Colors,
-  IconButton,
-  Button,
-} from "react-native-paper";
+
 import { LinearGradient } from "expo-linear-gradient";
-import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
 import { getThemes } from "../api/Themes/getThemes";
 import { UserContext } from "../context/UserContext";
 import CardTheme from '../component/Forum/CardTheme';
@@ -32,9 +20,7 @@ import CardTheme from '../component/Forum/CardTheme';
 export default function ThemeScreen({ navigation }) {
   const [themes, setThemes] = useState([]);
   const { userDetails,isLogged } = useContext(UserContext);
-//   if (isLogged === false) {
-//     return navigation.navigate('HomeScreen');;
-// }
+
   useEffect( () => {
 
     async function getThemesInScreen() {
@@ -45,12 +31,6 @@ export default function ThemeScreen({ navigation }) {
 }, []);
 
 
-
-
-  let [fontsLoaded] = useFonts({
-    Roboto_400Regular,
-    Roboto_400Regular_Italic,
-  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -71,32 +51,32 @@ export default function ThemeScreen({ navigation }) {
                     <View style={{ display:'flex',  alignItems:'center', justifyContent:'center', }} >
                         <View style={{ display:'flex', flexDirection:'row', flexWrap:'wrap', width:'90%', alignItems:'center', justifyContent:'center',}} >
                                 {themes.map((theme) => {
-                                    console.log('themes', theme)
                                     return (
                                         <View style={{marginRight:25}}>
                                             <CardTheme
                                                 key={theme.id}
+                                                id={theme.id}
                                                 title={theme.title}
-                                                navigation={navigation}
+                                                description={theme.description}
                                                 num={120}
+                                                navigation={navigation}
                                             />
                                         </View>
                                 )})}
                                 {themes.map((theme) => {
-                                    console.log('themes', theme)
                                     return (
                                         <View style={{marginRight:25}}>
                                             <CardTheme
                                                 key={theme.id}
+                                                id={theme.id}
                                                 title={theme.title}
-                                                navigation={navigation}
+                                                description={theme.description}
                                                 num={120}
+                                                navigation={navigation}
                                             />
                                         </View>
                                 )})}
                                 {themes.map((theme) => {
-                                    // console.log('themes', theme)
-                                    // console.log('themes description', theme?.description)
                                     return (
                                         <View style={{marginRight:25}}>
                                             <CardTheme

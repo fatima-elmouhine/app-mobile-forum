@@ -5,40 +5,22 @@ import {
   Image,
   View,
   ScrollView,
-  ImageBackground,
-  TouchableHighlight,
   SafeAreaView,
-  TouchableOpacity,
 } from "react-native";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useState } from "react";
+
 import {
-  useFonts,
-  Roboto_400Regular,
-  Roboto_400Regular_Italic,
-} from "@expo-google-fonts/roboto";
-import {
-  ProgressBar,
-  Avatar,
-  MD3Colors,
-  IconButton,
+
   Button,
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { getThemes } from "../api/Themes/getThemes";
 import { UserContext } from "../context/UserContext";
-import { useRoute } from '@react-navigation/native';
 
 export default function SectionChoiceScreen({route, navigation }) {
-  // const { title } = route.params;
-  const routeNative = useRoute();
-  console.log('route params : ',route.params);
-  console.log('routeNative params : ',routeNative.params);
-  // console.log(description);
+  const { title, id, description } = route.params;
   const [themes, setThemes] = useState([]);
-  const { userDetails,isLogged } = useContext(UserContext);
-//   if (isLogged === false) {
-//     return navigation.navigate('HomeScreen');;
-// }
+
   useEffect( () => {
 
     async function getThemesInScreen() {
@@ -49,12 +31,6 @@ export default function SectionChoiceScreen({route, navigation }) {
 }, []);
 
 
-
-
-  let [fontsLoaded] = useFonts({
-    Roboto_400Regular,
-    Roboto_400Regular_Italic,
-  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,17 +44,93 @@ export default function SectionChoiceScreen({route, navigation }) {
         />
         <View style={styles.profileImgContainer}>
         <Text style={{fontSize:40, color:'white', marginTop:50, marginLeft:10, fontWeight:'bold'}}>
-          {/* {title} */}
+          {title}
         </Text>
-        <Text style={{fontSize:59, color:'white', marginTop:10, marginLeft:10, fontWeight:'bold'}}>
-          {/* {description} */}
+        <Text style={{fontSize:20, color:'white', marginTop:10, marginLeft:10}}>
+          {description}
         </Text>
 
                 <ScrollView>
                     <View style={{ display:'flex',  alignItems:'center', justifyContent:'center', }} >
-                        <View style={{ display:'flex', flexDirection:'row', flexWrap:'wrap', width:'90%', alignItems:'center', justifyContent:'center',}} >
+                      <View style={{ display:'flex', flexDirection:'column', flexWrap:'wrap',  alignItems:'center', justifyContent:'center'}} >
+                          <View style={{  backgroundColor:'#3AC49A', padding:60, borderRadius:8, marginTop:50, fontSize:20,
+                            shadowColor: '#000',
+                            shadowOffset: {
+                              width: 0,
+                              height: 2,
+                            },
+                            shadowOpacity: 0.25,
+                            shadowRadius: 4,
+                            elevation: 5,
+                        }} >
+                          <Button
+                              icon={require('../assets/logo/book.png')}
+                              labelStyle={{fontSize: 40}}
+                              // color="white"
+                              mode="contained"
+                              style={{backgroundColor:'#3AC49A', borderRadius:8,}}
 
-                        </View>
+                              // onPress={() => Linking.openURL(props.course.link)}
+                          >
+                              <Text style={{fontSize:21, color:'white'}}>
+                             Cours
+                              </Text>
+                          </Button>
+                          </View>
+                          <View style={{  backgroundColor:'#DC31D5', padding:60, borderRadius:8, marginTop:50,
+                              shadowColor: '#000',
+                              shadowOffset: {
+                                width: 0,
+                                height: 2,
+                              },
+                              shadowOpacity: 0.25,
+                              shadowRadius: 4,
+                              elevation: 5,
+                        }} >
+                          <Button
+                              icon={require('../assets/logo/forum.png')}
+                              labelStyle={{fontSize: 45,}}
+                              // color="white"
+                              mode="contained"
+                              style={{backgroundColor:'#DC31D5', borderRadius:8,}}
+
+                              onPress={() => {
+                                console.log('title : ',title),
+                                navigation.navigate('ForumScreen', {title:title})}}
+                          >
+                              <Text style={{fontSize:21, color:'white'}}>
+                                Forum
+                              </Text>
+
+                          </Button>
+                          </View>
+                          <View style={{  backgroundColor:'#F5C035', padding:60, borderRadius:8, marginTop:50,
+                              shadowColor: '#000',
+                              shadowOffset: {
+                                width: 0,
+                                height: 2,
+                              },
+                              shadowOpacity: 0.25,
+                              shadowRadius: 4,
+                              elevation: 5,
+                        
+                        }} >
+                          <Button
+                              icon={require('../assets/logo/question.png')}
+                              labelStyle={{fontSize: 45}}
+                              // color="white"
+                              mode="contained"
+                              style={{backgroundColor:'#F5C035', borderRadius:8,}}
+
+                              // onPress={() => Linking.openURL(props.course.link)}
+                          >
+                              <Text style={{fontSize:21, color:'white'}}>
+                                QCM
+                              </Text>
+
+                          </Button>
+                          </View>
+                      </View>
                     </View>
                 </ScrollView>
         </View>
