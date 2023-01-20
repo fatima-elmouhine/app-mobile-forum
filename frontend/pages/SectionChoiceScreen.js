@@ -70,7 +70,9 @@ export default function SectionChoiceScreen({route, navigation }) {
                               mode="contained"
                               style={{backgroundColor:'#3AC49A', borderRadius:8,}}
 
-                              // onPress={() => Linking.openURL(props.course.link)}
+                              onPress={() => 
+                                navigation.navigate('CoursesScreen', {title:title, id:id})
+                              }
                           >
                               <Text style={{fontSize:21, color:'white'}}>
                              Cours
