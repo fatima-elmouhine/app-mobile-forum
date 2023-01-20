@@ -13,6 +13,8 @@ import ThemeScreen from './pages/ThemeScreen.js';
 import SectionChoiceScreen from './pages/SectionChoiceScreen.js';
 import ForumHomeScreen from './pages/ForumHomeScreen.js';
 import NewTopicScreen from './pages/NewTopicScreen.js';
+import SearchByThemeScreen from './pages/SearchByThemeScreen.js';
+
 const Stack = createStackNavigator();
 
 function Routes() {
@@ -29,6 +31,7 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="SectionChoiceScreen" component={SectionChoiceScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ForumHomeScreen" component={ForumHomeScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="NewTopicScreen" component={NewTopicScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="SearchByThemeScreen" component={SearchByThemeScreen} />
                 </Stack.Navigator>
             <MenuButton/>
             </NavigationContainer>
