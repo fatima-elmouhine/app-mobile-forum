@@ -42,6 +42,7 @@ export default function HomeLoggedScreen({ navigation }) {
       const coursesReq = await getCourses();
       setCourses(coursesReq);
     }
+    console.log(userDetails)
     getCoursesInHome();
   }, []);
 
@@ -79,7 +80,7 @@ export default function HomeLoggedScreen({ navigation }) {
             >
               <Avatar.Image
                 size={120}
-                source={require("../assets/img-test/image1.png")}
+                source={{uri : userDetails.avatar}}
                 style={styles.image}
                 onPress={() => {
                   handlePressEdit();
@@ -93,7 +94,7 @@ export default function HomeLoggedScreen({ navigation }) {
                 width: "60%",
               }}
             >
-              <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
+              <Text style={styles.name}>{userDetails.avatar} {userDetails.lastName}</Text>
               <View
                 style={{
                   flexDirection: "row",

@@ -4,6 +4,7 @@ import jwtDecode from 'jwt-decode';
 import axiosInstance from  '../api/config';
 import { userAuthentication } from '../api/Users/authentication';
 import { set } from 'date-fns';
+import { getAvatar } from '../api/Users/getAvatar';
 
 export const UserContext = createContext();
 
@@ -24,6 +25,7 @@ const UserContextProvider = (props) =>  {
             email: "",
             firstName: "",
             lastName: "",
+            avatar: "",
         });
 
         SecureStore.getItemAsync('token').then((jwt) => {
@@ -38,14 +40,20 @@ const UserContextProvider = (props) =>  {
   
         useEffect(() => {
           SecureStore.getItemAsync('token')
-          if (isLogged == true){
-            
+          const userDetail = async () => {
+            const avatar = await getAvatar(decodedToken.id)
             setUserDetails({
               id: decodedToken.id,
               email: decodedToken.email,
               firstName: decodedToken.firstName,
               lastName: decodedToken.lastName,
+              avatar: avatar,
             });
+          }
+          if (isLogged == true){
+            
+            userDetail();
+            console.log('userDetails', userDetails)
 
           }
         }, [token]);
