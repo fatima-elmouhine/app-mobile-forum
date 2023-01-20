@@ -95,8 +95,7 @@ export default function SectionChoiceScreen({route, navigation }) {
                               style={{backgroundColor:'#DC31D5', borderRadius:8,}}
 
                               onPress={() => {
-                                console.log('title : ',title),
-                                navigation.navigate('ForumScreen', {title:title})}}
+                                navigation.navigate('SearchByThemeScreen', {title:title, id:id})}}
                           >
                               <Text style={{fontSize:21, color:'white'}}>
                                 Forum

@@ -20,7 +20,7 @@ import {
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function HomeLoggedScreen({ navigation }) {
+export default function ForumHomeScreen({ navigation }) {
 
 
 

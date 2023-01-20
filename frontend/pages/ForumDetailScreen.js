@@ -24,22 +24,19 @@ export default function ForumDetailScreen({route,navigation}, ) {
 
     React.useEffect( () => {
       
-      
-      getTopicInForumDetail();
+      if(route.params.id){
+
+        getTopicInForumDetail();
+      }
 
   }, [])
 
   React.useEffect( () => {
-    getTopicInForumDetail()
+    if(route.params.id){
+      getTopicInForumDetail()
+    }
 
   }, [visible])
-
-
-  // let [fontsLoaded] = useFonts({
-  //   Roboto_400Regular,
-  //   Roboto_400Regular_Italic
-  // });
-
 
   function handlePostMessageSnackBar(value){
     setVisible(value);
@@ -68,19 +65,19 @@ export default function ForumDetailScreen({route,navigation}, ) {
                 </View>
 
             </ScrollView>
-            <View style={{}}>
-            <Snackbar
-              visible={visible}
-              style={{backgroundColor: 'purple', marginRight:20, marginBottom:100}}
-              onDismiss={onDismissSnackBar}
-              action={{
-                label: 'X',
-                onPress: () => {
-                  // Do something
-                },
-              }}>
-              Votre message a bien été posté
-            </Snackbar>
+            <View>
+              <Snackbar
+                visible={visible}
+                style={{backgroundColor: 'purple', marginRight:20, marginBottom:100}}
+                onDismiss={onDismissSnackBar}
+                action={{
+                  label: 'X',
+                  onPress: () => {
+                    // Do something
+                  },
+                }}>
+                Votre message a bien été posté
+              </Snackbar>
           </View>
 
       </LinearGradient>
