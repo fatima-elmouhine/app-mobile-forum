@@ -29,14 +29,15 @@ async function getTopic (req, res)
 
 async function postTopic (req, res) 
 {
-    if(!req.body.title)
+    if(!req.body.data.title)
     {
         res.status(406).send('Les champs doivent être tous remplis');
     }
     else
     {
         const newTopic = {            
-            title: req.body.title,
+            title: req.body.data.title,
+            id_theme: req.body.data.id_theme,
             id_user: req.user.id
         }
 
