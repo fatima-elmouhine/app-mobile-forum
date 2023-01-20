@@ -37,7 +37,8 @@ async function postTopic (req, res)
     {
         const newTopic = {            
             title: req.body.title,
-            id_user: req.user.id
+            id_user: req.user.id,
+            id_theme: req.body.id_theme
         }
 
         await Topic.create(newTopic)

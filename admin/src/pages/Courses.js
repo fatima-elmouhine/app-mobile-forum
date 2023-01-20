@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Modal, Container, Box, Chip, Button } from '@mui/material';
+import { Modal, Container, Box, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 import SideBar from '../component/layout/SideBar';
-import CreateUser from '../component/users/CreateUser';
-import UpdateUser from '../component/users/UpdateUser';
-import DeleteUser from '../component/users/DeleteUser';
+import CreateCourse from '../component/courses/CreateCourse';
+import UpdateCourse from '../component/courses/UpdateCourse';
+import DeleteCourse from '../component/courses/DeleteCourse';
 import style from '@/styles/Global.module.css';
 
-import { getUsers } from '../api/Users/getUsers';
+import { getCourses } from '@/api/Courses/getCourses';
 
-const Users = () => {
+const Courses = () => {
     const [openCreate, setOpenCreate] = useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
 
@@ -27,36 +27,20 @@ const Users = () => {
 
     const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
 
-    const [users, setusers] = useState([]);
+    const [courses, setCourses] = useState([]);
 
     useEffect(() => {
-        getUsers().then((data) => {
-            setusers(data);
+        getCourses().then((data) => {
+            setCourses(data);
         });
     }, [openCreate, openUpdate, openDelete]);
 
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'firstName', headerName: 'Prénom', width: 130 },
-        { field: 'lastName', headerName: 'Nom', width: 130 },
-        { field: 'email', headerName: 'E-mail', width: 200 },
-        { field: 'role', headerName: 'Rôle', width: 360 ,
-            renderCell: (params) => (
-                <strong>
-                    {params.row.role.split(',').map((role) => (
-                        <Chip
-                            key={role}
-                            label={role}
-                            color="primary"
-                            variant="outlined"
-                            size="small"
-                            style={{margin: 2}}
-                        />
-                    ))}
-                </strong>
-            ),
-        },
+        { field: 'title', headerName: 'Titre', width: 250 },
+        { field: 'link', headerName: 'Lien', width: 320 },
+        { field: 'Theme', headerName: 'Thème', width: 250 },
         { field: 'createdAt', headerName: 'Date de création', width: 180 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
         { field: 'update', headerName: 'Modifier', width: 130 ,
@@ -73,7 +57,7 @@ const Users = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateUser data={item} />
+                        <UpdateCourse data={item} />
                     </Modal>
                 </strong>
             ),
@@ -92,24 +76,23 @@ const Users = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteUser data={item} />
+                        <DeleteCourse data={item} />
                     </Modal>
                 </strong>
             ),
         },
     ];
 
-    const rows = users.map((user) => {
+    const rows = courses.map((course) => {
         return {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            role: user.role.role.join(','),
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-            update: user.id,
-            delete: user.id
+            id: course.id,
+            title: course.title,
+            link: course.link,
+            Theme: course.Theme.title,
+            createdAt: course.createdAt,
+            updatedAt: course.updatedAt,
+            update: course.id,
+            delete: course.id
         };
     });
 
@@ -122,14 +105,14 @@ const Users = () => {
                 <Button
                     variant="contained"
                     color="primary"
-                    startIcon={<PersonAddAlt1Icon />}
+                    startIcon={<PostAddIcon />}
                     onClick={handleOpenCreate}
                 />
                 <Modal
                     open={openCreate}
                     onClose={handleClose}
                 >
-                    <CreateUser />
+                    <CreateCourse />
                 </Modal>
                 <DataGrid
                     rows={rows}
@@ -143,4 +126,4 @@ const Users = () => {
     );
 }
 
-export default Users
+export default Courses

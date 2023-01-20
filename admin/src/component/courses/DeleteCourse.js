@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Button, Box, Typography, Snackbar } from '@mui/material';
-import { deleteUser } from '../../api/Users/deleteUser';
+import { deleteCourse } from '../../api/Courses/deleteCourse';
 
-export const DeleteUser = (props) => {
+export const DeleteCourse = (props) => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
     const handleSubmit = async () => {
         try {
-            const response = await deleteUser(props.data.id);
+            const response = await deleteCourse(props.data.id);
             console.log(response);
-            setMessage('L\'utilisateur a bien été supprimé');
+            setMessage('Le cours a bien été supprimé');
         } catch (e) {
             console.log(e);
             setMessage('Une erreur est survenue');
@@ -29,8 +29,8 @@ export const DeleteUser = (props) => {
     return (
         <Box sx={{ background: '#f0f0f0', p: 2, m: 2, textAlign: 'center', margin: 'auto', marginTop: '16vh' }} maxWidth="sm">
             <Typography component="h1" gutterBottom>
-                Êtes-vous sûr de vouloir supprimer cet utilisateur ?<br></br>
-                ({props.data.firstName} {props.data.lastName})<br></br>
+                Êtes-vous sûr de vouloir supprimer ce cours ?<br></br>
+                ({props.data.title})<br></br>
                 Cette action est irréversible.
             </Typography>
             <Button
@@ -65,4 +65,4 @@ export const DeleteUser = (props) => {
     );
 }
 
-export default DeleteUser;
+export default DeleteCourse;

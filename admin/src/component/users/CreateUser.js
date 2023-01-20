@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { 
     Card, Typography, Container , Select,
 	Input, InputLabel, MenuItem, FormControl,
@@ -57,7 +57,6 @@ const CreateUser = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (password !== confirmepassword) {
-            console.log('Les mots de passe ne correspondent pas');
             setMessage('Les mots de passe ne correspondent pas');
             setOpen(true);
             return;
@@ -65,21 +64,16 @@ const CreateUser = () => {
         try {
             const response = await postUser(firstName, lastName, email, password, role);
             console.log(response);
-            console.log('Utilisateur créé avec succès');
             setMessage('Utilisateur créé avec succès');
         } catch (error) {
             console.log(error);
              if (error.response.status === 404) {
-                console.log('Cette adresse email est déjà utilisée');
                 setMessage('Cette adresse email est déjà utilisée');
             } else if (error.response.status=== 406) {
-                console.log('Cette adresse email n\'est pas valide');
                 setMessage('Cette adresse email n\'est pas valide');
             } else if (error.response.status === 400) {
-                console.log('Tous les champs doivent etre remplis');
                 setMessage('Tous les champs doivent etre remplis');
             } else {
-                console.log('Erreur lors de la création de l\'utilisateur');
                 setMessage('Erreur lors de la création de l\'utilisateur');
             }
         }
@@ -96,6 +90,7 @@ const CreateUser = () => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="text">Prénom</InputLabel>
                         <Input
+                            required
                             id="firstName"
                             type="text"
                             value={firstName}
@@ -105,6 +100,7 @@ const CreateUser = () => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="text">Nom</InputLabel>
                         <Input
+                            required
                             id="lastName"
                             type="text"
                             value={lastName}
@@ -114,6 +110,7 @@ const CreateUser = () => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="email">E-mail</InputLabel>
                         <Input
+                            required
                             id="email"
                             type="email"
                             value={email}
@@ -123,6 +120,7 @@ const CreateUser = () => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="password">Mot de passe</InputLabel>
                         <Input
+                            required
                             id="password"
                             type="password"
                             value={password}
@@ -132,6 +130,7 @@ const CreateUser = () => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="password">Confirmer le mot de passe</InputLabel>
                         <Input
+                            required
                             id="confirmepassword"
                             type="password"
                             value={confirmepassword}
@@ -141,6 +140,7 @@ const CreateUser = () => {
                     <FormControl variant='standard' fullWidth sx={{ m: 1 }}>
                         <InputLabel id='role'>Rôle</InputLabel>
                         <Select
+                            required
                             id="role"
                             labelId="role"
                             multiple

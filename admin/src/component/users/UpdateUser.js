@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Card, Typography, Container , Select,
 	Snackbar, InputLabel, MenuItem,
     FormControl, Box, Chip, Button, Input
@@ -8,16 +8,17 @@ import { Card, Typography, Container , Select,
 import { putUser } from '../../api/Users/putUser';
 
 const UpdateUser = (props) => {
-
+    
     const userID = props.data.id;
     const [firstName, setFirstName] = useState(props.data.firstName);
     const [lastName, setLastName] = useState(props.data.lastName);
     const [email, setEmail] = useState(props.data.email);
-    const [role, setRole] = useState([]);
+   
+    const rolesArray= props.data.role.split(',');
+    const [role, setRole] = useState(rolesArray);
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    console.log('password', password);
-    console.log('passwordConfirm', passwordConfirm);
+
     const roles = [
         'ROLE_ADMIN',
         'ROLE_TUTOR',
@@ -85,7 +86,6 @@ const UpdateUser = (props) => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="text">Prénom</InputLabel>
                         <Input
-                            id="firstName"
                             type="text"
                             value={firstName}
                             onChange={text => setFirstName(text.target.value)}
@@ -94,7 +94,6 @@ const UpdateUser = (props) => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="text">Nom</InputLabel>
                         <Input
-                            id="lastName"
                             type="text"
                             value={lastName}
                             onChange={text => setLastName(text.target.value)}
@@ -103,7 +102,6 @@ const UpdateUser = (props) => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="email">E-mail</InputLabel>
                         <Input
-                            id="email"
                             type="email"
                             value={email}
                             onChange={text => setEmail(text.target.value)}
@@ -112,8 +110,6 @@ const UpdateUser = (props) => {
                     <FormControl variant='standard' fullWidth sx={{ m: 1 }}>
                         <InputLabel id="role">Rôle</InputLabel>
                         <Select
-                            required
-                            id="role"
                             labelId="role"
                             multiple
                             value={role}
@@ -126,12 +122,12 @@ const UpdateUser = (props) => {
                                 </Box>
                             )}
                         >
-                            {roles.map((role) => (
+                            {roles.map((roleItem, i) => (
                                 <MenuItem
-                                  key={role}
-                                  value={role}
+                                  key={i}
+                                  value={roleItem}
                                 >
-                                  {role}
+                                  {roleItem}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -139,8 +135,6 @@ const UpdateUser = (props) => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="password">Mot de passe</InputLabel>
                         <Input
-                            id="password"
-                            type="password"
                             value={password}
                             onChange={text => setPassword(text.target.value)}
                             label="Mot de passe"
@@ -149,7 +143,6 @@ const UpdateUser = (props) => {
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="password">Confirmer le mot de passe</InputLabel>
                         <Input
-                            id="confirmepassword"
                             type="password"
                             value={passwordConfirm}
                             onChange={text => setPasswordConfirm(text.target.value)}

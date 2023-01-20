@@ -9,8 +9,8 @@ import { userAuthentication } from '../api/Users/authentication';
 
 const Login = () => {
     useEffect(() => {
-        window.localStorage.getItem('token');
-        if (window.localStorage.getItem('token') !== null) {
+        window.localStorage.getItem('jsonwebtoken');
+        if (window.localStorage.getItem('jsonwebtoken') !== null) {
             window.location.href = '/Users';
         }
     }, []);
@@ -38,20 +38,29 @@ const Login = () => {
         try {
             const response = await userAuthentication(email, password);
             setMessage('Connexion réussie');
+            // return;
             window.location.href = '/Users';
         } catch (error) {
              if (error.response.status === 403) {
                 console.log('Mot de passe incorrect');
                 setMessage('Mot de passe incorrect');
+                return;
             } else if (error.response.status=== 404) {
                 console.log('L\'utilisateur n\'a pas été trouvé');
                 setMessage('L\'utilisateur n\'a pas été trouvé');
+                return;
             } else if (error.response.status === 400) {
                 console.log('Tous les champs doivent etre remplis');
                 setMessage('Tous les champs doivent etre remplis');
+                return;
+            } else if (error.response.status === 401) {
+                console.log('Vous n\'avez pas les droits d\'accès');
+                setMessage('Vous n\'avez pas les droits d\'accès');
+                return;
             } else {
                 console.log('Erreur lors de la connexion de l\'utilisateur');
                 setMessage('Erreur lors de la connexion de l\'utilisateur');
+                return;
             }
         }
         setOpen(true);

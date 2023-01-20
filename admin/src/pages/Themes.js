@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Modal, Container, Box, Chip, Button } from '@mui/material';
+import { Modal, Container, Box, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 
 import SideBar from '../component/layout/SideBar';
-import CreateUser from '../component/users/CreateUser';
-import UpdateUser from '../component/users/UpdateUser';
-import DeleteUser from '../component/users/DeleteUser';
+import CreateTheme from '../component/themes/CreateTheme';
+import UpdateTheme from '../component/themes/UpdateTheme';
+import DeleteTheme from '../component/themes/DeleteTheme';
 import style from '@/styles/Global.module.css';
 
-import { getUsers } from '../api/Users/getUsers';
+import { getThemes } from '@/api/Themes/getThemes';
 
-const Users = () => {
+const Themes = () => {
     const [openCreate, setOpenCreate] = useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
 
@@ -27,39 +27,21 @@ const Users = () => {
 
     const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
 
-    const [users, setusers] = useState([]);
+    const [themes, setThemes] = useState([]);
 
     useEffect(() => {
-        getUsers().then((data) => {
-            setusers(data);
+        getThemes().then((data) => {
+            setThemes(data);
         });
     }, [openCreate, openUpdate, openDelete]);
 
-
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'firstName', headerName: 'Prénom', width: 130 },
-        { field: 'lastName', headerName: 'Nom', width: 130 },
-        { field: 'email', headerName: 'E-mail', width: 200 },
-        { field: 'role', headerName: 'Rôle', width: 360 ,
-            renderCell: (params) => (
-                <strong>
-                    {params.row.role.split(',').map((role) => (
-                        <Chip
-                            key={role}
-                            label={role}
-                            color="primary"
-                            variant="outlined"
-                            size="small"
-                            style={{margin: 2}}
-                        />
-                    ))}
-                </strong>
-            ),
-        },
+        { field: 'title', headerName: 'Titre', width: 350 },
+        { field: 'description', headerName: 'Description', width: 470 },
         { field: 'createdAt', headerName: 'Date de création', width: 180 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
-        { field: 'update', headerName: 'Modifier', width: 130 ,
+        { field: 'update', headerName: 'Modifier', width: 150 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -73,12 +55,12 @@ const Users = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateUser data={item} />
+                        <UpdateTheme data={item} />
                     </Modal>
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 130 ,
+        { field: 'delete', headerName: 'Supprimer', width: 150 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -92,24 +74,22 @@ const Users = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteUser data={item} />
+                        <DeleteTheme data={item} />
                     </Modal>
                 </strong>
             ),
         },
     ];
 
-    const rows = users.map((user) => {
+    const rows = themes.map((theme) => {
         return {
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            role: user.role.role.join(','),
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
-            update: user.id,
-            delete: user.id
+            id: theme.id,
+            title: theme.title,
+            description: theme.description,
+            createdAt: theme.createdAt,
+            updatedAt: theme.updatedAt,
+            update: theme.id,
+            delete: theme.id,
         };
     });
 
@@ -122,14 +102,14 @@ const Users = () => {
                 <Button
                     variant="contained"
                     color="primary"
-                    startIcon={<PersonAddAlt1Icon />}
+                    startIcon={<BookmarkAddIcon />}
                     onClick={handleOpenCreate}
                 />
                 <Modal
                     open={openCreate}
                     onClose={handleClose}
                 >
-                    <CreateUser />
+                    <CreateTheme />
                 </Modal>
                 <DataGrid
                     rows={rows}
@@ -143,4 +123,4 @@ const Users = () => {
     );
 }
 
-export default Users
+export default Themes
