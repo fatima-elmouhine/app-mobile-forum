@@ -24,7 +24,7 @@ function MenuButton() {
         },
         {
           text: "Forum",
-          name: "ForumScreen",
+          name: "ForumHomeScreen",
           position: 2
         },
         {
