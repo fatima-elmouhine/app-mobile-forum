@@ -15,8 +15,8 @@ export default function CourseCardComponent(props) {
   // const windowWidth = Dimensions. get('window')
   // console.log(windowWidth)
   const themeColor = {
-    1: "red",
-    2: "yellow",
+    1: "#EEA923",
+    2: "#3AC49A",
     3: "#FF69B4",
     4: "#FF1493",
     5: "#DB7093",
