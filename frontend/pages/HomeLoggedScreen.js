@@ -39,7 +39,7 @@ export default function HomeLoggedScreen({ navigation }) {
   useEffect( () => {
 
     async function getCoursesInHome() {
-      const coursesReq = await getCourses();
+      const coursesReq = await getCourses('limit=3&order=createdAt:DESC');
       setCourses(coursesReq);
     }
     console.log(userDetails)

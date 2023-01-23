@@ -6,17 +6,10 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
-  Pressable,
-  Image,
-  ImageBackground,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   Searchbar,
-  IconButton,
-  Card,
-  Avatar,
   Checkbox,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -28,7 +21,7 @@ import CardTopic from "../component/Forum/CardTopic";
 import CardTheme from "../component/Forum/CardTheme";
 import SearchHeaderCard from "../component/Forum/SearchHeaderCard";
 
-const App = ({ navigation }) => {
+const Forum = ({ navigation }) => {
   const [cards, setCards] = useState({
     theme: [],
     themeMenu: [],
@@ -217,8 +210,10 @@ const App = ({ navigation }) => {
                 return (
                   <CardTheme
                     key={item.id}
+                    id={item.id}
                     title={item.title}
                     description={item.description}
+                    navigation={navigation}
                   />
                 );
               })}
@@ -231,9 +226,11 @@ const App = ({ navigation }) => {
                 return (
                   <CardTopic
                     key={item.id}
+                    idTopic={item.id}
                     title={item.title}
                     theme={item.Theme.title}
                     messages={item.Messages}
+                    navigation={navigation}
                   />
                 );
               })}
@@ -242,9 +239,11 @@ const App = ({ navigation }) => {
                 return (
                   <CardTopic
                     key={item.id}
+                    idTopic={item.id}
                     title={item.title}
                     theme={item.Theme.title}
                     messages={item.Messages}
+                    navigation={navigation}
                   />
                 );
               })}
@@ -343,103 +342,7 @@ const App = ({ navigation }) => {
                   )}
           </ScrollView>
         )}
-        {/* CONDITION S'IL YA UNE RECHERCHE*/}
-        {/* <ScrollView
-          contentContainerStyle={{
-            display: "flex",
-            flexGrow: 1,
-            marginBottom: 50,
-          }}
-        >
-          {activeSearch == true &&
-            searchQuery != undefined &&
-            (searchQuery.Messages.count != 0 ||
-            searchQuery.Themes.count != 0 ||
-            searchQuery.Topics.count != 0 ? (
-              <View style={{ display: "flex", width: "100%", top: 50 }}>
-                <View>
-                  <SearchHeaderCard
-                    table="Themes"
-                    count={searchQuery.Themes.count}
-                    handleSetExpanded={() =>
-                      setExpanded({ ...expanded, theme: !expanded.theme })
-                    }
-                  />
-                  {expanded.theme === true && (
-                    <ScrollView horizontal={true}>
-                      {searchQuery.Themes.count > 0 &&
-                        searchQuery.Themes.rows.map((item) => {
-                          return (
-                            <CardTheme
-                              key={item.id}
-                              id={item.id}
-                              title={item.title}
-                              description={item.description}
-                            />
-                          );
-                        })}
-                    </ScrollView>
-                  )}
-                </View>
-                <View>
-                  <SearchHeaderCard
-                    table="Sujets"
-                    count={searchQuery.Topics.count}
-                    handleSetExpanded={() =>
-                      setExpanded({ ...expanded, topic: !expanded.topic })
-                    }
-                  />
-
-                  {expanded.topic === true && (
-                    <View>
-                      {searchQuery.Topics.count > 0 &&
-                        searchQuery.Topics.rows.map((item) => {
-                          return (
-                            <CardTopic
-                              key={item.id}
-                              id={item.id}
-                              title={item.title}
-                              theme={item.Theme.title}
-                              messages={item.Messages}
-                            />
-                          );
-                        })}
-                    </View>
-                  )}
-                </View>
-                <View>
-                  <SearchHeaderCard
-                    table="Messages"
-                    count={searchQuery.Messages.count}
-                    handleSetExpanded={() =>
-                      setExpanded({ ...expanded, messages: !expanded.messages })
-                    }
-                  />
-                  {expanded.messages === true && (
-                    <View>
-                      {searchQuery.Messages.count > 0 &&
-                        searchQuery.Messages.rows.map((item) => {
-                          return (
-                            <CardMessage
-                              key={item.id}
-                              idTopic={item.Topic.id}
-                              theme={item.Topic.Theme.title}
-                              text={item.text}
-                              topic={item.Topic.title}
-                              createdAt={item.createdAt}
-                            />
-                          );
-                        })}
-                    </View>
-                  )}
-                </View>
-              </View>
-            ) : (
-              <View style={{ display: "flex", width: "100%", top: 50 }}>
-                <Text style={styles.searchInfo}>Aucun résultat</Text>
-              </View>
-            ))}
-        </ScrollView> */}
+      
 
         {/* CONDITION SI LE MOT RECHERCHER EST TROP COURT  */}
         {activeSearch == true && searchQuery == undefined && (
@@ -498,4 +401,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-export default App;
+export default Forum;

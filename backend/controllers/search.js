@@ -14,9 +14,9 @@ async function getSearchForum(req, res)
 
 async function getSearchCourses (req,res) 
 {
-    const {search} = req.query;
+    const {search, order} = req.query;
     if (search?.length < 3 || !search ) return res.status(400).send('Votre recherche doit contenir au moins 3 caractères');
-    const Courses = await getSearch(sequelize.models.Course, search, {model : sequelize.models.Theme}, 'title');
+    const Courses = await getSearch(sequelize.models.Course, search, {model : sequelize.models.Theme}, 'title', order);
     return res.json({Courses});
 }
 

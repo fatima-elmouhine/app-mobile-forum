@@ -1,8 +1,8 @@
 import React from 'react'
 import { Text, View, Pressable } from 'react-native';
-import { Avatar, Button} from 'react-native-paper';
+import { Avatar} from 'react-native-paper';
 
-export default function CardTheme({id, title, description, navigation, num, key}) {
+export default function CardTheme({id, title, description, navigation, num}) {
 
   const themeInfo = {
     id: id,
@@ -13,7 +13,11 @@ export default function CardTheme({id, title, description, navigation, num, key}
 
 
   function chooseTheme() {
-    navigation.navigate('SectionChoiceScreen', themeInfo)
+    if(num){
+     return navigation.navigate('SectionChoiceScreen', themeInfo)
+    }else{
+      return navigation.navigate('SearchByThemeScreen', {title:title, id:id})
+    }
   }
 
         return (
@@ -24,7 +28,6 @@ export default function CardTheme({id, title, description, navigation, num, key}
                     {title}
                 </Text>
                 } />
-    
             </Pressable>
             <Text style={{marginLeft:15, marginBottom:50, color:'white', fontWeight:'bold', fontSize:16}}>{title}</Text>
           </View>
