@@ -1,10 +1,8 @@
 import axiosInstance from '../config'
 
  export const searchCourse= async (query) => {
-  console.log('QUERY',query)
     try {
       const { data } = await axiosInstance.get(`search/courses?${query}`)
-      console.log('DATA',data)
       return data
     }
     catch (e) {

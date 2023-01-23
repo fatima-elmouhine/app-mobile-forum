@@ -27,8 +27,6 @@ const UserContextProvider = (props) =>  {
         });
 
         SecureStore.getItemAsync('token').then((jwt) => {
-          console.log('jwt Context', jwt);
-          console.log('isLogged Context', isLogged);
           if (jwt === null) {
             return;
           }
