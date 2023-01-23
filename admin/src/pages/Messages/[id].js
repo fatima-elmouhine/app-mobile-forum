@@ -5,18 +5,20 @@ import { Modal, Container, Box, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import AddCommentIcon from '@mui/icons-material/AddComment';
-import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import SideBar from '../component/layout/SideBar';
+import SideBar from '../layout/SideBar';
 import CreateTopic from '@/component/topics/CreateTopic';
 import UpdateTopic from '@/component/topics/UpdateTopic';
 import DeleteTopic from '@/component/topics/DeleteTopic';
-import Messages from '@/component/topics/Messages';
 import style from '@/styles/Global.module.css';
+import { useParams } from 'react-router-dom'
 
-import { getTopics } from '../api/Topics/getTopics';
+import { getTopicMessage } from '@/api/Topics/getTopicMessages';
 
-const Topics = () => {
+const Messages = (props) => {
+    const params = useParams();
+    console.log('params', params);
+    const topicID = props.data.id;
     const [openCreate, setOpenCreate] = useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
 
@@ -24,43 +26,28 @@ const Topics = () => {
     const [openUpdate, setOpenUpdate] = useState(false);
     const handleOpenUpdate = () => setOpenUpdate(true);
 
-    const [openMessages, setOpenMessages] = useState(false);
-    const handleOpenMessages = () => setOpenMessages(true);
-
     const [openDelete, setOpenDelete] = useState(false);
     const handleOpenDelete = () => setOpenDelete(true);
 
     const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
 
-    const [topics, setTopics] = useState([]);
+    const [messages, setMessages] = useState([]);
 
     useEffect(() => {
-        getTopics().then((data) => {
-            setTopics(data);
+        getTopicMessage(topicID).then((data) => {
+            console.log('okok', data);
+            setMessages(data);
         });
-    }, [openCreate, openUpdate, openDelete]);
+    }, []);
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'title', headerName: 'Titre', width: 170 },
-        { field: 'user', headerName: 'De', width: 210 },
-        { field: 'theme', headerName: 'Thème', width: 250 },
+        { field: 'text', headerName: 'Texte', width: 130 },
+        { field: 'id_user', headerName: 'De', width: 130 },
+        { field: 'theme', headerName: 'Thème', width: 200 },
         { field: 'createdAt', headerName: 'Date de création', width: 180 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
-        { field: 'messages', headerName: 'Messages', width: 180, 
-            renderCell: (params) => (
-                <strong>
-                    <Button
-                        variant="contained"
-                        color="inherit"
-                        href={`Messages/${params.row.id}`}
-                    >
-                        <VisibilityIcon /> Messages
-                    </Button>
-                </strong>
-            ),
-        },
-        { field: 'update', headerName: 'Modifier', width: 150,
+        { field: 'update', headerName: 'Modifier', width: 130,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -79,7 +66,7 @@ const Topics = () => {
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 150,
+        { field: 'delete', headerName: 'Supprimer', width: 130,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -100,7 +87,7 @@ const Topics = () => {
         },
     ];
 
-    const rows = topics.map((topic) => {
+    const rows = messages.map((topic) => {
         return {
             id: topic.id,
             title: topic.title,
@@ -135,7 +122,7 @@ const Topics = () => {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={14}
+                    pageSize={50}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
                 />
@@ -144,4 +131,4 @@ const Topics = () => {
     );
 }
 
-export default Topics
+export default Messages

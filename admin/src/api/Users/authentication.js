@@ -17,6 +17,7 @@ export const userAuthentication = async ( email, password ) => {
       decodedToken.role.map((roleItem) => {
         if (roleItem === 'ROLE_ADMIN') {
           window.localStorage.setItem('jsonwebtoken', response.data.token)
+          window.localStorage.setItem('userID', decodedToken.id)
           console.log('responsToken', response.data.token);
           return response.data.token
         } else {

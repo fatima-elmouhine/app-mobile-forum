@@ -1,18 +1,28 @@
 import * as React from 'react';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
-    Card, Typography, Container , Select,
-	Input, InputLabel, MenuItem, FormControl,
-	Box, Chip, Button, Snackbar
+    Card, Typography, Container , Select, Input, 
+    InputLabel, MenuItem, FormControl, Button, Snackbar
 } from '@mui/material';
 
+import { getThemes } from '@/api/Themes/getThemes';
 import { postTopic } from '@/api/Topics/postTopic';
 
 const CreateTopic = () => {
 
     const [title, setTitle] = useState('');
-    const [userID, setUserID] = useState('');
-    const [themeID, setThemeID] = useState('');
+    const userID = window.localStorage.getItem('userID');
+    const [themes, setThemes] = useState([]);
+    const [itemSelect, setItemSelect] = useState([]);
+    console.log('themes', themes);
+
+    useEffect(() => {
+        const fetchThemes = async () => {
+            const themesItems = await getThemes();
+            setItemSelect(themesItems);
+        };
+        fetchThemes();
+    }, []);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -26,11 +36,8 @@ const CreateTopic = () => {
     const handleTitleChange = (event) => {  
         setTitle(event.target.value);
     };
-    const handleUserIDChange = (event) => {
-        setUserID(event.target.value);
-    };
-    const handleThemeIDChange = (event) => {
-        setThemeID(event.target.value);
+    const handleThemeChange = (event) => {
+        setThemes(event.target.value);
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -40,12 +47,7 @@ const CreateTopic = () => {
             return;
         }
         try {
-            const topicInformations = [
-                title,
-                userID,
-                themeID
-            ]
-            const response = await postTopic(topicInformations);
+            const response = await postTopic(title, userID, themes);
             console.log(response);
             setMessage('Le forum a bien été créé !');
         } catch (error) {
@@ -72,25 +74,21 @@ const CreateTopic = () => {
                             onChange={handleTitleChange}
                         />
                     </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel>de ?</InputLabel>
-                        <Input
+                    <FormControl variant='standard' fullWidth sx={{ m: 1 }}>
+                        <InputLabel id='themes'>Choisissez un thème</InputLabel>
+                        <Select
                             required
-                            id="userID"
-                            type="text"
-                            value={userID}
-                            onChange={handleUserIDChange}
-                        />
-                    </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel>Choisissez un thème</InputLabel>
-                        <Input
-                            required
-                            id="themeID"
-                            type="email"
-                            value={themeID}
-                            onChange={handleThemeIDChange}
-                        />
+                            id="themes"
+                            labelId="themes"
+                            value={themes}
+                            onChange={handleThemeChange}
+                        >
+                            {itemSelect.map((themeSelect) => (
+                                <MenuItem key={themeSelect.id} value={themeSelect.id}>
+                                    {themeSelect.title}
+                                </MenuItem>
+                            ))}
+                        </Select>
                     </FormControl>
                     <Button
                         variant="contained"

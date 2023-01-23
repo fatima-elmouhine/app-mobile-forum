@@ -134,7 +134,7 @@ const Users = () => {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={50}
+                    pageSize={14}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
                 />

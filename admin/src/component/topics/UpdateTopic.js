@@ -1,18 +1,36 @@
 import * as React from 'react';
-import { useState } from 'react'
-import { Card, Typography, Container , Select,
-	Snackbar, InputLabel, MenuItem,
-    FormControl, Box, Chip, Button, Input
+import { useState, useEffect } from 'react'
+import { 
+    Card, Typography, Container , Select, Input, 
+    InputLabel, MenuItem, FormControl, Button, Snackbar
 } from '@mui/material';
 
+import { getThemes } from '@/api/Themes/getThemes';
+import { getUsers } from '@/api/Users/getUsers';
 import { putTopic } from '@/api/Topics/putTopic';
 
-const UpdateUser = (props) => {
-    
+const CreateTopic = (props) => {
+
     const topicID = props.data.id;
     const [title, setTitle] = useState(props.data.title);
-    const [userID, setuserID] = useState(props.data.id_user);
-    const [themeID, setThemeID] = useState(props.data.id_theme);
+    const [users, setUsers] = useState(props.data.user);
+    const [themes, setThemes] = useState(props.data.theme);
+    const [itemUsers, setItemUsers] = useState([]);
+    const [itemThemes, setItemThemes] = useState([]);
+    console.log('themes', themes);
+    console.log('users', users);
+    useEffect(() => {
+        const fetchThemes = async () => {
+            const themesItems = await getThemes();
+            setItemThemes(themesItems);
+        };
+        const fetchUsers = async () => {
+            const usersItems = await getUsers();
+            setItemUsers(usersItems);
+        };
+        fetchUsers();
+        fetchThemes();
+    }, []);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -23,16 +41,26 @@ const UpdateUser = (props) => {
         setOpen(false);
     };
 
+    const handleTitleChange = (event) => {  
+        setTitle(event.target.value);
+    };
+    const handleUserChange = (event) => {
+        setUsers(event.target.value);
+    };
+    const handleThemeChange = (event) => {
+        setThemes(event.target.value);
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         if (title < 3) {
             setMessage('Le titre doit contenir au moins 3 caractères');
+            setOpen(true);
             return;
         }
         try {
-            const topicInformations = await putTopic(topicID, title, userID, themeID);
-            console.log(topicInformations);
-            setMessage('Le forum a bien été modifié !');
+            const response = await putTopic(topicID, title, users, themes);
+            console.log(response);
+            setMessage('Le Forum a bien était modifier !');
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue !');
@@ -44,32 +72,50 @@ const UpdateUser = (props) => {
         <Container maxWidth="sm">
             <Card sx={{ p: 2, m: 2 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Modifier un forum
+                    Ajouter un forum
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel htmlFor="text">title</InputLabel>
+                        <InputLabel htmlFor="text">Titre</InputLabel>
                         <Input
+                            required
+                            id="title"
                             type="text"
                             value={title}
-                            onChange={text => setTitle(text.target.value)}
+                            onChange={handleTitleChange}
                         />
                     </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel htmlFor="text">De ?</InputLabel>
-                        <Input
-                            type="text"
-                            value={userID}
-                            onChange={text => setuserID(text.target.value)}
-                        />
+                    <FormControl variant='standard' fullWidth sx={{ m: 1 }}>
+                        <InputLabel id='users'>De qui cela provient ?</InputLabel>
+                        <Select
+                            required
+                            id="users"
+                            labelId="users"
+                            value={users}
+                            onChange={handleUserChange}
+                        >
+                            {itemUsers.map((userSelect) => (
+                                <MenuItem key={userSelect.id} value={userSelect.id}>
+                                    {userSelect.firstName} {userSelect.lastName}
+                                </MenuItem>
+                            ))}
+                        </Select>
                     </FormControl>
-                    <FormControl fullWidth sx={{ m: 1 }}>
-                        <InputLabel htmlFor="email">Thème</InputLabel>
-                        <Input
-                            type="email"
-                            value={themeID}
-                            onChange={text => setThemeID(text.target.value)}
-                        />
+                    <FormControl variant='standard' fullWidth sx={{ m: 1 }}>
+                        <InputLabel id='themes'>Choisissez un thème</InputLabel>
+                        <Select
+                            required
+                            id="themes"
+                            labelId="themes"
+                            value={themes}
+                            onChange={handleThemeChange}
+                        >
+                            {itemThemes.map((themeSelect) => (
+                                <MenuItem key={themeSelect.id} value={themeSelect.id}>
+                                    {themeSelect.title}
+                                </MenuItem>
+                            ))}
+                        </Select>
                     </FormControl>
                     <Button
                         variant="contained"
@@ -96,4 +142,4 @@ const UpdateUser = (props) => {
     );
 };
 
-export default UpdateUser;
+export default CreateTopic;
