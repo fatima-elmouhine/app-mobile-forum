@@ -31,8 +31,8 @@ export default function CoursesScreen ({ navigation }) {
   }, []);
 
   useEffect( () => {
-    if (searchQuery.length > 2) {
-      setActiveSearch(true);
+    if (searchQuery.length > 3) {
+    setActiveSearch(true);
       const queryOrder ='search='+searchQuery+'&order=createdAt:DESC';
       handleSearch(queryOrder);
 
@@ -80,18 +80,7 @@ export default function CoursesScreen ({ navigation }) {
               courses.map((course, i) => {
                 return <CourseCardComponent key={i} course={course} />;
               }))}
-            {activeSearch===false && (courses.length !== 0 &&
-              courses.map((course, i) => {
-                return <CourseCardComponent key={i} course={course} />;
-              }))}
-                          {activeSearch===false && (courses.length !== 0 &&
-              courses.map((course, i) => {
-                return <CourseCardComponent key={i} course={course} />;
-              }))}
-                          {activeSearch===false && (courses.length !== 0 &&
-              courses.map((course, i) => {
-                return <CourseCardComponent key={i} course={course} />;
-              }))}
+
               {activeSearch=== true && (
                 searchData?.Courses?.count !== 0 ?
                   searchData?.Courses?.rows.map((course, i) => {
@@ -99,6 +88,7 @@ export default function CoursesScreen ({ navigation }) {
                   })
               : <Text style={{color:'white', textAlign:'center', marginTop:20, fontSize:30}}>Aucun résultat</Text>)
             }
+
           </View>
             </ScrollView>
        

@@ -71,7 +71,9 @@ export default function SectionChoiceScreen({route, navigation }) {
                               style={{backgroundColor:'#3AC49A', borderRadius:8,}}
 
                               onPress={() => 
-                                navigation.navigate('CoursesScreen', {title:title, id:id})
+                                // navigation.navigate('CoursesScreen', {title:title, id:id})
+                                navigation.navigate('SearchByThemeScreen', {title:title, id:id, type:'course'})
+
                               }
                           >
                               <Text style={{fontSize:21, color:'white'}}>
@@ -97,7 +99,7 @@ export default function SectionChoiceScreen({route, navigation }) {
                               style={{backgroundColor:'#DC31D5', borderRadius:8,}}
 
                               onPress={() => {
-                                navigation.navigate('SearchByThemeScreen', {title:title, id:id})}}
+                                navigation.navigate('SearchByThemeScreen', {title:title, id:id, type:'topic'})}}
                           >
                               <Text style={{fontSize:21, color:'white'}}>
                                 Forum
