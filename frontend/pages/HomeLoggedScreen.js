@@ -42,6 +42,7 @@ export default function HomeLoggedScreen({ navigation }) {
       const coursesReq = await getCourses('limit=3&order=createdAt:DESC');
       setCourses(coursesReq);
     }
+    console.log(userDetails)
     getCoursesInHome();
   }, []);
 
@@ -79,7 +80,7 @@ export default function HomeLoggedScreen({ navigation }) {
             >
               <Avatar.Image
                 size={120}
-                source={require("../assets/img-test/image1.png")}
+                source={{uri : userDetails.avatar}}
                 style={styles.image}
                 onPress={() => {
                   handlePressEdit();

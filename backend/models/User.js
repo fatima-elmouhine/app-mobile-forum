@@ -26,6 +26,10 @@ const User = sequelize.define('User', {
     
     // allowNull defaults to true
   },
+  avatar: {
+    type: DataTypes.STRING
+    // allowNull defaults to true
+  }
 }, {
   // Other model options go here
 });
