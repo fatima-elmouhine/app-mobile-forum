@@ -11,9 +11,10 @@ import {
 import { Card, Divider, Button, Surface } from "react-native-paper";
 
 export default function CourseCardComponent(props) {
-  // console.log('COURSEEEEE',props.course.Theme.title)
-  // const windowWidth = Dimensions. get('window')
-  // console.log(windowWidth)
+
+  const [ themeTitle, setThemeTitle ] = React.useState(props.course.Theme?.title || props.themeTitle)
+  const [ themeId, setThemeId ] = React.useState(props.course.Theme?.id || props.course.id_theme)
+
   const themeColor = {
     1: "#EEA923",
     2: "#3AC49A",
@@ -23,17 +24,16 @@ export default function CourseCardComponent(props) {
     6: "#C71585",
     7: "#DA70D6",
   };
-  // console.log(themeColor[props.course.Theme.id]);
   return (
     <Surface
     elevation={3}
       style={{
         ...styles().cardContainer,
-        backgroundColor: themeColor[props.course.Theme.id],
+        backgroundColor: themeColor[themeId],
       }}
     >
       <View>
-        <Text style={styles().themeTitle}>{props.course.Theme.title}</Text>
+        <Text style={styles().themeTitle}>{themeTitle}</Text>
         <Text style={styles().title}>{props.course.title}</Text>
       </View>
       <Surface style={styles().btn} elevation={3}>
@@ -45,35 +45,13 @@ export default function CourseCardComponent(props) {
         </Button>
       </Surface>
     </Surface>
-    // <Card style={styles().container}>
-    //   <Card.Content style={styles.containerText}>
-    //     <View
-    //       style={{
-    //         backgroundColor: "red",
-    //         flexDirection: "row",
-    //       }}
-    //     >
-    //       <View>
-    //         <Text style={styles.title}>{props.course.Theme.title}</Text>
-    //         <Text color="pink" style={styles.title}>
-    //           {props.course.title}
-    //         </Text>
-    //       </View>
-    //     </View>
-    //     <Button
-    //       icon="eye"
-    //       mode="contained-tonal"
-    //       onPress={() => Linking.openURL(props.course.link)}
-    //     >
-    //       Voir
-    //     </Button>
-    //   </Card.Content>
-    // </Card>
   );
 }
 const styles = (bgColor) =>
   StyleSheet.create({
     cardContainer: {
+      width: Dimensions.get("window").width - 32,
+      marginTop:35,
       marginBottom: 16,
       borderRadius: 10,
       height: 96,

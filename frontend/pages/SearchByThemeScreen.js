@@ -12,20 +12,22 @@ import { useEffect, useContext, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { getTheme } from "../api/Themes/getTheme";
 import CardTopic from "../component/Forum/CardTopic";
-
+import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
 
 export default function SearchByThemeScreen({route, navigation }) {
-  const { title, id} = route.params;
+  const { title, id, type} = route.params;
   const [topics, setTopics] = useState([]);
+  const [theme, setTheme] = useState([]);
 
   useEffect( () => {
 
     async function getThemeInScreen() {
-        const themeReq = await getTheme(id);
-        setTopics(themeReq.Topics);
+      const themeReq = await getTheme(id);
+      setTheme(themeReq);
+      setTopics(themeReq.Topics);
     }
-    getThemeInScreen();
-}, []);
+        getThemeInScreen();
+      }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -46,7 +48,8 @@ export default function SearchByThemeScreen({route, navigation }) {
 
         <ScrollView>
             <View style={{ display:'flex',  alignItems:'center', justifyContent:'center', }} >
-            {topics.map((item) => {
+            {type == 'topic' ?
+             topics.map((item) => {
                 return (
                   <CardTopic
                     key={item.id}
@@ -56,7 +59,16 @@ export default function SearchByThemeScreen({route, navigation }) {
                     navigation={navigation}
                   />
                 );
-              })}
+              }):
+              (
+                type == 'course' && theme.Courses?.map((item,i) => {
+                  return (
+                    <>
+                      <CourseCardComponent key={i} themeTitle={theme.title} course={item} />
+                    </>
+                  );
+                })
+              )}
             </View>
         </ScrollView>
 
