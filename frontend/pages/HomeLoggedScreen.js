@@ -94,7 +94,7 @@ export default function HomeLoggedScreen({ navigation }) {
                 width: "60%",
               }}
             >
-              <Text style={styles.name}>{userDetails.avatar} {userDetails.lastName}</Text>
+              <Text style={styles.name}>{userDetails.firstName} {userDetails.lastName}</Text>
               <View
                 style={{
                   flexDirection: "row",

@@ -197,6 +197,7 @@ async function loginUser(req, res) {
 }
 
 async function uploadAvatar(req, res) {
+    console.log('L. req.file', req.file)
   if (!req.file) {
     return res.status(400).send({ error: "Aucune image téléchargée" });
   }

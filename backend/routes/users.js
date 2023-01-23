@@ -22,7 +22,7 @@ router.get('/avatar/:id', getAvatar)
 
 router.post('/',postUser);
 
-router.post('/avatar',upload.single('avatar'), uploadAvatar)
+router.post('/avatar',upload.single('avatar'),(req,res,next) => {console.log(req.file); next()} ,uploadAvatar)
 
 router.post('/login', loginUser)
 

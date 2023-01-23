@@ -1,16 +1,34 @@
 import * as React from "react";
 import { useEffect, useContext, useState } from "react";
-import { StyleSheet, Text, Image, View, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Image,
+  View,
+  Pressable,
+  Dimensions,
+  Modal,
+  Alert,
+} from "react-native";
 import {
   useFonts,
   Roboto_400Regular,
   Roboto_400Regular_Italic,
 } from "@expo-google-fonts/roboto";
-import { TextInput, Avatar, IconButton, Snackbar } from "react-native-paper";
+import {
+  TextInput,
+  Avatar,
+  IconButton,
+  Snackbar,
+  Portal,
+  Button,
+  Provider,
+} from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { putUser } from "../api/Users/putUser";
 import { UserContext } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
+import { postAvatar } from "../api/Users/postAvatar";
 import { getAvatar } from "../api/Users/getAvatar";
 
 export default function ProfileScreen({ navigation }) {
@@ -27,17 +45,61 @@ export default function ProfileScreen({ navigation }) {
   const [visible, setVisible] = React.useState(false);
   const [message, setMessage] = React.useState("");
   const [colorMessage, setColorMessage] = React.useState("");
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [imageUri, setImageUri] = React.useState(null);
 
   const onToggleSnackBar = () => setVisible(!visible);
 
   const onDismissSnackBar = () => setVisible(false);
 
-  async function handlePressCamera() {
+  async function sendAvatar() {
+    const response = await postAvatar(userDetails.id, imageUri);
+    setImageUri(null);
+    Alert.alert("Success", "Avatar mis à jour");
+    const newAvatar = await getAvatar(userDetails.id);
+    setUserDetails({ ...userDetails, avatar: newAvatar });
+    setModalVisible(false);
+    return response;
+  }
 
-    console.log(userDetails)  
+  useEffect(() => {
+    if (imageUri !== null) {
+      sendAvatar();
+    }
+  }, [imageUri]);
+
+  async function handlePressLibrary() {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Vous n'autorisez pas cette application à accéder à vos photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync();
+
+    // Explore the result
+
+    if (!result.assets[0].cancelled) {
+      setImageUri(result.assets[0]);
+    }
+  }
+  async function handlePressCamera() {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Vous n'autorisez pas cette application à accéder à vos photos!");
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync();
+
+    if (!result.assets[0].cancelled) {
+      setImageUri(result.assets[0]);
+    }
   }
   async function handleSaveEdit() {
-
     if (firstname !== "" && lastname !== "" && email !== "") {
       if (password !== "") {
         userInfo = {
@@ -100,6 +162,33 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Modal animationType="fade" transparent={true} visible={modalVisible}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Pressable
+              style={[styles.buttonModal, styles.buttonOpen]}
+              onPress={() => handlePressLibrary()}
+            >
+              <Text style={styles.textStyle}>
+                Choisir depuis la bibliothèque
+              </Text>
+            </Pressable>
+            <Pressable
+              style={[styles.buttonModal, styles.buttonOpen]}
+              onPress={() => handlePressCamera()}
+            >
+              <Text style={styles.textStyle}>Ouvrir la caméra</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.buttonModal, styles.buttonClose]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Fermer</Text>
+            </Pressable>
+
+          </View>
+        </View>
+      </Modal>
       <Image source={require("../assets/logo_fond.png")} style={styles.bgTop} />
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
@@ -108,7 +197,7 @@ export default function ProfileScreen({ navigation }) {
         <View style={[styles.profileImgContainer]}>
           <Avatar.Image
             size={150}
-            source={{uri: userDetails.avatar}}
+            source={{ uri: userDetails?.avatar }}
             style={styles.image}
           />
           <IconButton
@@ -117,7 +206,7 @@ export default function ProfileScreen({ navigation }) {
             style={styles.icon}
             size={40}
             onPress={() => {
-              handlePressCamera();
+              setModalVisible(true);
             }}
           />
           <Text style={styles.advise}>Change de photo</Text>
@@ -301,5 +390,48 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
     marginBottom: 100,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  buttonModal: {
+    borderRadius: 5,
+    padding: 10,
+    elevation: 2,
+    width: 200,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+    marginBottom: 20,
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center",
   },
 });
