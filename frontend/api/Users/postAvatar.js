@@ -2,8 +2,6 @@ import axiosInstance from "../config";
 import { Platform } from "react-native";
 
 export const postAvatar = async (id, file) => {
-    console.log('file', file)
-    console.log('id', id)
   const formData = new FormData();
   formData.append("avatar", {
     uri: file.uri,
