@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-
 import {
   StyleSheet,
   Text,
@@ -12,10 +11,10 @@ import {
   Searchbar,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getCourses } from "../api/Courses/getCourses";
 import { getQcms } from "../api/Qcms/getQcms";
-import {searchCourse} from "../api/Courses/searchCourse";
-import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
+import QcmCard from "../component/Qcms/QcmCardHome";
+
+
 
 export default function ListQcmScreen ({ navigation }) {
 //   const [courses, setCourses] = useState([]);
@@ -28,7 +27,7 @@ const [qcmsList, setQcmsList] = useState([]);
 
     async function getQcmInQcmScreen() {
       const qcmsReq = await getQcms();
-      console.log(qcmsReq);
+    //   console.log(qcmsReq);
       setQcmsList(qcmsReq);
     }
     getQcmInQcmScreen();
@@ -80,6 +79,16 @@ const [qcmsList, setQcmsList] = useState([]);
 
             <ScrollView>
           <View style={styles.sectionLatestCourse}>
+            <Text style={styles.titleSection}>Les derniers QCM</Text>
+            <View>
+                {qcmsList.map((qcm) => (
+                    <QcmCard
+                        key={qcm.id}
+                        qcm={qcm}
+                        navigation={navigation}
+                    />  
+                ))}
+            </View>
             
           </View>
             </ScrollView>
@@ -128,6 +137,14 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 40,
 
+  },
+  titleSection: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginLeft: 20,
   }
+
 });
 
