@@ -9,12 +9,11 @@ import { getThemes } from '@/api/Themes/getThemes';
 import { getUsers } from '@/api/Users/getUsers';
 import { putTopic } from '@/api/Topics/putTopic';
 
-const CreateTopic = (props) => {
-
+const UpdateTopic = (props) => {
     const topicID = props.data.id;
     const [title, setTitle] = useState(props.data.title);
-    const [users, setUsers] = useState(props.data.user);
-    const [themes, setThemes] = useState(props.data.theme);
+    const [users, setUsers] = useState(props.data.userID);
+    const [themes, setThemes] = useState(props.data.themeID);
     const [itemUsers, setItemUsers] = useState([]);
     const [itemThemes, setItemThemes] = useState([]);
     console.log('themes', themes);
@@ -142,4 +141,4 @@ const CreateTopic = (props) => {
     );
 };
 
-export default CreateTopic;
+export default UpdateTopic;

@@ -7,7 +7,7 @@ import {
 
 import { putTheme } from '@/api/Themes/putTheme';
 
-const CreateCourse = (props) => {
+const UpdateTheme = (props) => {
     const themeID = props.data.id
     const [title, setTitle] = useState(props.data.title);
     const [description, setDescription] = useState(props.data.description);
@@ -90,4 +90,4 @@ const CreateCourse = (props) => {
     );
 };
 
-export default CreateCourse;
+export default UpdateTheme;

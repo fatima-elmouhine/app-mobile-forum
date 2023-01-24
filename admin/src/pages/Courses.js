@@ -33,6 +33,12 @@ const Courses = () => {
         getCourses().then((data) => {
             setCourses(data);
         });
+    }, []);
+
+    useEffect(() => {
+        getCourses().then((data) => {
+            setCourses(data);
+        });
     }, [openCreate, openUpdate, openDelete]);
 
 
@@ -89,10 +95,9 @@ const Courses = () => {
             title: course.title,
             link: course.link,
             Theme: course.Theme.title,
+            idTheme: course.Theme.id,
             createdAt: course.createdAt,
             updatedAt: course.updatedAt,
-            update: course.id,
-            delete: course.id
         };
     });
 

@@ -31,6 +31,13 @@ const Users = () => {
 
     useEffect(() => {
         getUsers().then((data) => {
+            console.log('data', data);
+            setusers(data);
+        });
+    }, []);
+
+    useEffect(() => {
+        getUsers().then((data) => {
             setusers(data);
         });
     }, [openCreate, openUpdate, openDelete]);
@@ -44,7 +51,7 @@ const Users = () => {
         { field: 'role', headerName: 'Rôle', width: 360 ,
             renderCell: (params) => (
                 <strong>
-                    {params.row.role.split(',').map((role) => (
+                    {params.row.role?.split(',').map((role) => (
                         <Chip
                             key={role}
                             label={role}
@@ -105,11 +112,9 @@ const Users = () => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            role: user.role.role.join(','),
+            role: user.role.role?.join(','),
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
-            update: user.id,
-            delete: user.id
         };
     });
 

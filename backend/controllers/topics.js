@@ -59,7 +59,7 @@ async function updateTopic (req, res)
 
     try 
     {
-        const topic = await Topic.findOne({ where: {id: req.params.id }})
+        const topic = await Topic.findOne({ where: {id: req.body.topicID }})
         .then(topic => {
             return topic;
         })
@@ -75,14 +75,17 @@ async function updateTopic (req, res)
                 { 
                     id: req.body.id,
                     title: req.body.title,
-                    id_user: req.body.id_user
+                    id_user: req.body.id_user,
+                    id_theme: req.body.id_theme
+                    
                 }, 
                 {
                 where: 
                 {
-                    id: req.params.id
+                    id: req.body.topicID
                 }})
                 .then(topic => {
+                    console.log(topic);
                     res.status(201).send('La modification a été effectuée')
                 })
                 .catch(err => {
@@ -102,7 +105,7 @@ async function deleteTopic (req, res)
 {
     try 
     {
-       const topic = await Topic.findOne({ where: {id: req.params.id }})
+       const topic = await Topic.findOne({ where: {id: req.body.id }})
         .then(topic => {
             return topic;
         })
@@ -111,7 +114,7 @@ async function deleteTopic (req, res)
         {
             await Topic.destroy({
                 where: {
-                id: req.params.id
+                id: req.body.id
                 }
             })
             .then(topic => {

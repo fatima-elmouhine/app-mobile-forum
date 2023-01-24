@@ -73,6 +73,7 @@ async function updateUser (req, res, next) {
         const id       = req.user.isAdmin ? req.body.id : req.user.id;
         const user     = await User.update(req.body, {where: {id: id }});
         const newUser  = await User.findOne({where: {id: id }});
+        console.log('L. newUser ', newUser);
         const expireIn = 24 * 60 * 60;
         const token    = jwt.sign({
             id: newUser['dataValues'].id,
@@ -101,15 +102,16 @@ async function updateUser (req, res, next) {
 }
 
 async function deleteUser (req, res) {
+    console.log('L. req.params.id_user', req.body.id_user);
     try {
-        const user = await User.findOne({ where: {id: req.params.id_user }})
+        const user = await User.findOne({ where: {id:req.body.id_user }})
         .then(user => {
             return user;
         })
         if(user != null) {
             await User.destroy({
                 where: {
-                    id: req.params.id
+                    id: req.body.id_user
                 }
             })
             .then(user => {
@@ -117,9 +119,11 @@ async function deleteUser (req, res) {
                 // return user;
             })
             .catch(err => {
+                console.log('1',err);
                 res.status(404).send('L\'utilisateur n\'a pas été trouvé');
             })
         } else {
+            console.log('2 erreur');
             res.status(404).send('L\'utilisateur n\'a pas été trouvé');
         }
     } catch (error) {

@@ -1,15 +1,20 @@
 import axiosInstance from '../config'
 
-export const deleteUser = async (userID) => {
+ export const postMessageTopic = async ( text, userID, topicID ) => {
+    const { data } = await axiosInstance.post(`topics`, {
+        data : {
+            text: text,
+            id_user: userID,
+            id_topic: topicID
+        }
+    })
 
-    const { data } = await axiosInstance.delete(`users`, {
-        data: {
-            id_user: userID
-        }})
     try {
-        if (data.status == 200) {
+        
+        if (data.status == 201) {
             console.log(data);
             console.log(data.data);
+            logIn(data.status);
             return data
         } 
     } catch (e) {
@@ -26,4 +31,6 @@ export const deleteUser = async (userID) => {
             console.log(e.config)
         }
     }
-}                    
+
+    return data
+}

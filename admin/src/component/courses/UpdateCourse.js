@@ -8,11 +8,13 @@ import {
 import { putCourse } from '../../api/Courses/putCourse';
 import { getThemes } from '@/api/Themes/getThemes';
 
-const CreateCourse = (props) => {
+const UpdateCourse = (props) => {
+    console.log('L. props', props);
     const courseID = props.data.id
     const [title, setTitle] = useState(props.data.title);
     const [link, setLink] = useState(props.data.link);
-    const [id_theme, setidTheme] = useState(props.data.Theme);
+    const [id_theme, setidTheme] = useState(props.data.idTheme);
+    console.log('L. id_theme', id_theme);
     const [themes, setThemes] = useState([]);
     useEffect(() => {
         const fetchThemes = async () => {
@@ -78,10 +80,9 @@ const CreateCourse = (props) => {
                         />
                     </FormControl>
                     <FormControl variant='standard' fullWidth sx={{ m: 1 }}>
-                        <InputLabel id='theme'>Choisissez un thème</InputLabel>
+                        <InputLabel id='id_theme'>Choisissez un thème</InputLabel>
                         <Select
-                            id="theme"
-                            labelId="theme"
+                            labelId="id_theme"
                             value={id_theme}
                             onChange={handleThemeChange}
                         >
@@ -113,4 +114,4 @@ const CreateCourse = (props) => {
     );
 };
 
-export default CreateCourse;
+export default UpdateCourse;

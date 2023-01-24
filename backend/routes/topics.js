@@ -10,11 +10,11 @@ router.get('/:id', getTopic);
 
 router.post('/',auth , postTopic);
 
-router.put('/:id',updateTopic);
+router.put('/',auth, updateTopic);
 
-router.delete('/:id', deleteTopic);
+router.delete('/',auth, deleteTopic);
 
-router.get('/:id/messages', getMessagesTopic);
+router.get('/:id/messages',auth, getMessagesTopic);
 router.post('/:id/messages',auth, postMessageTopic);
 
 module.exports = router;

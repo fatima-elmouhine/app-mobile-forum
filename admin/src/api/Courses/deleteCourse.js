@@ -3,7 +3,9 @@ import axiosInstance from '../config'
 export const deleteCourse = async (courseID) => {
 
     const { data } = await axiosInstance.delete(`courses`, {
-        id : courseID
+        data: {
+            courseID: courseID
+        }
     })
     try {
         if (data.status == 200) {

@@ -33,6 +33,12 @@ const Themes = () => {
         getThemes().then((data) => {
             setThemes(data);
         });
+    }, []);
+
+    useEffect(() => {
+        getThemes().then((data) => {
+            setThemes(data);
+        });
     }, [openCreate, openUpdate, openDelete]);
 
     const columns = [
@@ -88,8 +94,6 @@ const Themes = () => {
             description: theme.description,
             createdAt: theme.createdAt,
             updatedAt: theme.updatedAt,
-            update: theme.id,
-            delete: theme.id,
         };
     });
 

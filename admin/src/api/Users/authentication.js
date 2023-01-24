@@ -1,9 +1,11 @@
 import axiosInstance from '../config'
 import jwtDecode from 'jwt-decode'
+import { set } from 'cookie-cutter'
+import { Cookie } from '@mui/icons-material'
 
 export const userAuthentication = async ( email, password ) => {
-  if (window.localStorage.getItem('jsonwebtoken') !== null) {
-    window.localStorage.removeItem('jsonwebtoken')
+  if (window.localStorage.getItem('token') !== null) {
+    window.localStorage.removeItem('token')
   }
 
   const response = await axiosInstance.post('users/login', {
@@ -16,8 +18,9 @@ export const userAuthentication = async ( email, password ) => {
       const decodedToken = jwtDecode(response.data.token)
       decodedToken.role.map((roleItem) => {
         if (roleItem === 'ROLE_ADMIN') {
-          window.localStorage.setItem('jsonwebtoken', response.data.token)
+          window.localStorage.setItem('token', response.data.token)
           window.localStorage.setItem('userID', decodedToken.id)
+          document.cookie = `token=${response.data.token}`
           console.log('responsToken', response.data.token);
           return response.data.token
         } else {

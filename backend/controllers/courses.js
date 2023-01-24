@@ -50,9 +50,9 @@ async function updateCourse (req, res)
             title: req.body.title,
             link: req.body.link,
             id_theme: req.body.id_theme
-        }, {where: {id: req.body.id}});
+        }, {where: {id: req.body.courseID}});
         if (!course[0]) throw new Error('Aucun cours trouvé');
-        res.status(200).json({"id": req.body.id, "title": req.body.title, "link": req.body.link, "id_theme": req.body.id_theme});
+        res.status(200).json({"id": req.body.courseID, "title": req.body.title, "link": req.body.link, "id_theme": req.body.id_theme});
     } catch (error) {
         res.status(500).json(error.message);
     }
@@ -61,9 +61,9 @@ async function updateCourse (req, res)
 async function deleteCourse (req, res) 
 {
     try {
-        const course = await Course.destroy({where: {id: req.body.id}});
+        const course = await Course.destroy({where: {id: req.body.courseID}});
         if (!course) throw new Error('Aucun QCM trouvé');
-        res.status(200).json({message : "Le cours " + req.body.id + " a été supprimé"});
+        res.status(200).json({message : "Le cours " + req.body.courseID + " a été supprimé"});
     } catch (error) {
         res.status(500).json(error.message);
     }

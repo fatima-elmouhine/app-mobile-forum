@@ -14,7 +14,7 @@ const UpdateUser = (props) => {
     const [lastName, setLastName] = useState(props.data.lastName);
     const [email, setEmail] = useState(props.data.email);
    
-    const rolesArray= props.data.role.split(',');
+    const rolesArray= props.data.role?.split(',');
     const [role, setRole] = useState(rolesArray);
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -39,7 +39,7 @@ const UpdateUser = (props) => {
             target: { value },
         } = event;
         setRole(
-            typeof value === 'string' ? value.split(',') : value,
+            typeof value === 'string' ? value?.split(',') : value,
         );
     };
 
@@ -63,9 +63,10 @@ const UpdateUser = (props) => {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
-                role: role
+                role: {role : role}
             };
         }
+        console.log('userInformations',userInformations);
         const response = await putUser(userInformations);
 
         if (response === 404) {

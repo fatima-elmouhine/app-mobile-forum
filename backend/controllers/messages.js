@@ -81,7 +81,7 @@ async function updateMessage (req, res)
                 {
                 where: 
                 {
-                    id: req.params.id
+                    id: req.body.id
                 }})
                 .then(message => {
                     res.status(201).send('La modification a été effectuée')
@@ -103,7 +103,7 @@ async function deleteMessage (req, res)
 {
     try 
     {
-       const message = await Message.findOne({ where: {id: req.params.id }})
+       const message = await Message.findOne({ where: {id: req.body.id }})
         .then(message => {
             return message;
         })
@@ -112,7 +112,7 @@ async function deleteMessage (req, res)
         {
             await Message.destroy({
                 where: {
-                id: req.params.id
+                id: req.body.id
                 }
             })
             .then(message => {

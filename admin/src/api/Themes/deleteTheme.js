@@ -3,7 +3,9 @@ import axiosInstance from '../config'
 export const deleteTheme = async (themeID) => {
 
     const { data } = await axiosInstance.delete(`themes`, {
-        id: themeID
+        data: {
+            id: themeID
+        }
     })
     try {
         if (data.status == 200) {

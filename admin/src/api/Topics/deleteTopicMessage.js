@@ -1,11 +1,12 @@
 import axiosInstance from '../config'
 
-export const deleteUser = async (userID) => {
+export const deleteTopicMessage = async (topicID) => {
 
-    const { data } = await axiosInstance.delete(`users`, {
+    const { data } = await axiosInstance.delete(`messages`, {
         data: {
-            id_user: userID
-        }})
+            id: topicID
+        }
+    })
     try {
         if (data.status == 200) {
             console.log(data);
@@ -26,4 +27,4 @@ export const deleteUser = async (userID) => {
             console.log(e.config)
         }
     }
-}                    
+}

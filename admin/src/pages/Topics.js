@@ -11,7 +11,6 @@ import SideBar from '../component/layout/SideBar';
 import CreateTopic from '@/component/topics/CreateTopic';
 import UpdateTopic from '@/component/topics/UpdateTopic';
 import DeleteTopic from '@/component/topics/DeleteTopic';
-import Messages from '@/component/topics/Messages';
 import style from '@/styles/Global.module.css';
 
 import { getTopics } from '../api/Topics/getTopics';
@@ -24,8 +23,10 @@ const Topics = () => {
     const [openUpdate, setOpenUpdate] = useState(false);
     const handleOpenUpdate = () => setOpenUpdate(true);
 
-    const [openMessages, setOpenMessages] = useState(false);
-    const handleOpenMessages = () => setOpenMessages(true);
+    const handleOpenMessages = (id) => {
+        window.location.href=`Messages/${id}`
+        window.localStorage.setItem('topicId', id);
+    }
 
     const [openDelete, setOpenDelete] = useState(false);
     const handleOpenDelete = () => setOpenDelete(true);
@@ -38,6 +39,14 @@ const Topics = () => {
         getTopics().then((data) => {
             setTopics(data);
         });
+        console.log('topics', topics);
+    }, []);
+    
+    useEffect(() => {
+        getTopics().then((data) => {
+            setTopics(data);
+        });
+        console.log('topics', topics);
     }, [openCreate, openUpdate, openDelete]);
 
     const columns = [
@@ -53,7 +62,7 @@ const Topics = () => {
                     <Button
                         variant="contained"
                         color="inherit"
-                        href={`Messages/${params.row.id}`}
+                        onClick={()=>{handleOpenMessages(params.row.id)}}
                     >
                         <VisibilityIcon /> Messages
                     </Button>
@@ -105,12 +114,11 @@ const Topics = () => {
             id: topic.id,
             title: topic.title,
             user: topic.User.firstName + ' ' + topic.User.lastName,
-            theme: topic.Theme?.title,
+            userID: topic.User.id,
+            theme: topic.Theme.title,
+            themeID: topic.Theme.id,
             createdAt: topic.createdAt,
             updatedAt: topic.updatedAt,
-            messages: topic.id,
-            update: topic.id,
-            delete: topic.id
         };
     });
 

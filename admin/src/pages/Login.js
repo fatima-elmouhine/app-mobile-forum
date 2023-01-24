@@ -9,8 +9,8 @@ import { userAuthentication } from '../api/Users/authentication';
 
 const Login = () => {
     useEffect(() => {
-        window.localStorage.getItem('jsonwebtoken');
-        if (window.localStorage.getItem('jsonwebtoken') !== null) {
+        window.localStorage.getItem('token');
+        if (window.localStorage.getItem('token') !== null) {
             window.location.href = '/Users';
         }
     }, []);

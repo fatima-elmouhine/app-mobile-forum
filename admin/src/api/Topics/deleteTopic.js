@@ -2,7 +2,11 @@ import axiosInstance from '../config'
 
 export const deleteTopic = async (topicID) => {
 
-    const { data } = await axiosInstance.delete(`topics/${topicID}`)
+    const { data } = await axiosInstance.delete(`topics`, {
+        data: {
+            id: topicID
+        }
+    })
     try {
         if (data.status == 200) {
             console.log(data);
