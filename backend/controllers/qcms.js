@@ -1,5 +1,5 @@
 const sequelize  = require('../models/index');
-const {Qcm, Type, Question} = sequelize.models;
+const {Qcm, Type, Question, Message, QuestionAnswered, Theme, User, Answer} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
@@ -18,12 +18,16 @@ async function getQcm (req, res)
 {
     try 
     {
-        const qcm = await genericGetOne(Qcm, req);
+        const qcm = await Qcm.findAll({
+            where : {id: req.params.id},
+            include: {model: Question, include: Answer},
+            order: [[sequelize.random()]],
+        })
         if (qcm === null) return res.status(404).json('La réponse n\'existe pas');
         res.status(200).json(qcm);
     }
     catch (error) {
-        res.status(500).send(error);
+        res.status(500).json(error.message);
     }
 }
 
