@@ -8,7 +8,7 @@ import {
 import { postCourse } from '../../api/Courses/postCourse';
 import { getThemes } from '@/api/Themes/getThemes';
 
-const CreateCourse = () => {
+const CreateCourse = (props) => {
 
     const [title, setTitle] = useState('');
     const [link, setLink] = useState('');
@@ -50,6 +50,9 @@ const CreateCourse = () => {
             }
             const response = await postCourse(title, link, id_theme);
             setMessage('Le cours a bien été créé');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue');
@@ -102,6 +105,15 @@ const CreateCourse = () => {
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Enregistrer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

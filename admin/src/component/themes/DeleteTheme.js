@@ -12,6 +12,9 @@ export const DeleteTheme = (props) => {
             const response = await deleteTheme(props.data.id);
             console.log(response);
             setMessage('Suppression réussie');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (e) {
             console.log(e);
             setMessage('Une erreur est survenue');
@@ -46,6 +49,7 @@ export const DeleteTheme = (props) => {
                 sx={{ m: 1 }}
                 variant="contained"
                 color="inherit"
+                onClick={() => props.onClose()}
             >
                 Non
             </Button>

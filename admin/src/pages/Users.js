@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Modal, Container, Box, Chip, Button } from '@mui/material';
+import { Modal, Container, Box, Chip, Button, Avatar } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
@@ -31,7 +31,6 @@ const Users = () => {
 
     useEffect(() => {
         getUsers().then((data) => {
-            console.log('data', data);
             setusers(data);
         });
     }, []);
@@ -48,7 +47,7 @@ const Users = () => {
         { field: 'firstName', headerName: 'Prénom', width: 130 },
         { field: 'lastName', headerName: 'Nom', width: 130 },
         { field: 'email', headerName: 'E-mail', width: 200 },
-        { field: 'role', headerName: 'Rôle', width: 360 ,
+        { field: 'role', headerName: 'Rôle', width: 330 ,
             renderCell: (params) => (
                 <strong>
                     {params.row.role?.split(',').map((role) => (
@@ -64,9 +63,18 @@ const Users = () => {
                 </strong>
             ),
         },
-        { field: 'createdAt', headerName: 'Date de création', width: 180 },
-        { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
-        { field: 'update', headerName: 'Modifier', width: 130 ,
+        { field: 'avatar', headerName: 'Photo de profil', width: 115,
+            renderCell: (params) => (
+                <strong>
+                    <Avatar
+                        alt={params.row.firstName}
+                        src={params.row.avatar}
+                    />
+                </strong>
+            ), },
+        { field: 'createdAt', headerName: 'Date de création', width: 130 },
+        { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
+        { field: 'update', headerName: 'Modifier', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -80,12 +88,12 @@ const Users = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateUser data={item} />
+                        <UpdateUser data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 130 ,
+        { field: 'delete', headerName: 'Supprimer', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -99,7 +107,7 @@ const Users = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteUser data={item} />
+                        <DeleteUser data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
@@ -113,8 +121,9 @@ const Users = () => {
             lastName: user.lastName,
             email: user.email,
             role: user.role.role?.join(','),
-            createdAt: user.createdAt,
-            updatedAt: user.updatedAt,
+            avatar: user.avatar ? user.avatar : './image1.png',
+            createdAt: new Date(user.createdAt).toLocaleDateString(),
+            updatedAt: new Date(user.updatedAt).toLocaleString()
         };
     });
 
@@ -123,19 +132,23 @@ const Users = () => {
             <Box className={style.sideBar}>
                 <SideBar />
             </Box>
-            <Box style={{ height: 845, width: '100%', color: 'white' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<PersonAddAlt1Icon />}
-                    onClick={handleOpenCreate}
-                />
-                <Modal
-                    open={openCreate}
-                    onClose={handleClose}
-                >
-                    <CreateUser />
-                </Modal>
+            <Box className={style.tableContent}>
+                <h1 style={{ color: 'black' }}>Liste des étudiants</h1>
+                <Box className={style.buttonAdd}>
+                    <Button
+                        style={{ width: 'max-content' }}
+                        variant="contained"
+                        color="primary"
+                        startIcon={<PersonAddAlt1Icon />}
+                        onClick={handleOpenCreate}
+                    />
+                    <Modal
+                        open={openCreate}
+                        onClose={handleClose}
+                    >
+                        <CreateUser onClose={handleClose}/>
+                    </Modal>
+                </Box>
                 <DataGrid
                     rows={rows}
                     columns={columns}

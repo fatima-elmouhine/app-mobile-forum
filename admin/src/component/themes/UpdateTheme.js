@@ -37,6 +37,9 @@ const UpdateTheme = (props) => {
             }
             const response = await putTheme(themeID, title, description);
             setMessage('Modification réussie');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue');
@@ -71,6 +74,15 @@ const UpdateTheme = (props) => {
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Modifier
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

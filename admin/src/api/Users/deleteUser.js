@@ -4,7 +4,7 @@ export const deleteUser = async (userID) => {
 
     const { data } = await axiosInstance.delete(`users`, {
         data: {
-            id_user: userID
+            id: userID
         }})
     try {
         if (data.status == 200) {

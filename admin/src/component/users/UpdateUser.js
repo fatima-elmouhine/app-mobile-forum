@@ -13,12 +13,14 @@ const UpdateUser = (props) => {
     const [firstName, setFirstName] = useState(props.data.firstName);
     const [lastName, setLastName] = useState(props.data.lastName);
     const [email, setEmail] = useState(props.data.email);
-   
-    const rolesArray= props.data.role?.split(',');
+    const avatarArray = props.data.avatar;
+    const [avatar, setAvatar] = useState(avatarArray);
+    const rolesArray = props.data.role?.split(',');
     const [role, setRole] = useState(rolesArray);
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
+    const avatars = './image1.png'
     const roles = [
         'ROLE_ADMIN',
         'ROLE_TUTOR',
@@ -43,6 +45,10 @@ const UpdateUser = (props) => {
         );
     };
 
+    const handleAvatarChange = (event) => {
+        setAvatar(event.target.value);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         var userInformations 
@@ -54,7 +60,8 @@ const UpdateUser = (props) => {
                     lastName: lastName,
                     email: email,
                     role: role,
-                    password: password
+                    password: password,
+                    avatar: avatar
                 };
             }
         } else {
@@ -63,12 +70,15 @@ const UpdateUser = (props) => {
                 firstName: firstName,
                 lastName: lastName,
                 email: email,
-                role: {role : role}
+                role: {role : role},
+                avatar: avatar
             };
         }
-        console.log('userInformations',userInformations);
         const response = await putUser(userInformations);
-
+        setTimeout(() => {
+            props.onClose()
+        }, 2000);
+        
         if (response === 404) {
             setMessage('Cet email est déjà utilisé !');
         } else {
@@ -149,12 +159,35 @@ const UpdateUser = (props) => {
                             onChange={text => setPasswordConfirm(text.target.value)}
                         />
                     </FormControl>
+                    <FormControl variant='standard' fullWidth sx={{ m: 1 }}>
+                        <InputLabel id="avatar">Avatar</InputLabel>
+                        <Select
+                            labelId="avatar"
+                            value={avatar}
+                            onChange={handleAvatarChange}
+                        >
+                                <MenuItem  
+                                  value={avatars}
+                                >
+                                  Avatar par défaut
+                                </MenuItem>
+                        </Select>
+                    </FormControl>
                     <Button
                         variant="contained"
                         sx={{ m: 1 }}
                         type="submit"
                     >
                         Modifier
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

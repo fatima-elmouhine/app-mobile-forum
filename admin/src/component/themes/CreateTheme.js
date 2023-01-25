@@ -7,7 +7,7 @@ import {
 
 import { postTheme } from '@/api/Themes/postTheme';
 
-const CreateTheme = () => {
+const CreateTheme = (props) => {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -37,6 +37,9 @@ const CreateTheme = () => {
             }
             const response = await postTheme(title, description);
             setMessage('Le thème a bien été créé');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue');
@@ -73,6 +76,15 @@ const CreateTheme = () => {
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Enregistrer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

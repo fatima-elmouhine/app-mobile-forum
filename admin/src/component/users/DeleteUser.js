@@ -12,6 +12,9 @@ export const DeleteUser = (props) => {
             const response = await deleteUser(props.data.id);
             console.log(response);
             setMessage('L\'utilisateur a bien été supprimé');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (e) {
             console.log(e);
             setMessage('Une erreur est survenue');
@@ -46,6 +49,7 @@ export const DeleteUser = (props) => {
                 sx={{ m: 1 }}
                 variant="contained"
                 color="inherit"
+                onClick={() => props.onClose()}
             >
                 Non
             </Button>
