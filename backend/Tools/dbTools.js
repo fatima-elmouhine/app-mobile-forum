@@ -1,6 +1,6 @@
 const sequelize  = require('../models/index');
 
-async function genericGetAll(model,req) {
+async function genericGetAll(model, req) {
     
     const include = req.query?.include?.split(',');
     const limit = req.query?.limit ?? 100;
@@ -25,6 +25,7 @@ async function genericGetOne(model,req)
         include?.map((name) => {
             options.push({ 'model': sequelize.models[name]})
         }); 
+
         const orderOptions = order ? [options[0].model, order[0], order[1]] : ['createdAt', 'ASC'] ;
         const datas = await model.findOne({ where: {id}, include: options, order: [orderOptions]});
         return datas;

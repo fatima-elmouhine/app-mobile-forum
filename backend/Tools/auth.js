@@ -5,11 +5,12 @@ const { User } = sequelize.models;
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const auth = async (req, res, next) => {
-    if (req.headers.cookie === undefined){ 
-        return  res.status(401).json({message: "Vous n'êtes pas connecté"});
+
+    if (req.headers.cookies === undefined && req.headers.cookie === undefined){ 
+       return  res.status(401).json({message: "Vous n'êtes pas connecté"});
     };
     
-    const tokenAllStr = req.headers.cookie;
+    const tokenAllStr = req.headers.cookies || req.headers.cookie ;
     const tokenStr = tokenAllStr.split('=')[1];
     try {
         const token = jwt.verify(tokenStr, SECRET_KEY);

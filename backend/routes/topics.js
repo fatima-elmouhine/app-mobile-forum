@@ -10,9 +10,9 @@ router.get('/:id', getTopic);
 
 router.post('/',auth , postTopic);
 
-router.put('/:id',updateTopic);
+router.put('/',auth, updateTopic);
 
-router.delete('/:id', deleteTopic);
+router.delete('/',auth, deleteTopic);
 
 router.get('/:id/messages', getMessagesTopic);
 router.post('messages',auth, postMessageTopic);
