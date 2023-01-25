@@ -6,13 +6,11 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 const auth = async (req, res, next) => {
 
-    console.log('body', req.body);
-    if (req.headers.cookies === undefined){ 
-
+    if (req.headers.cookies === undefined && req.headers.cookie === undefined){ 
        return  res.status(401).json({message: "Vous n'êtes pas connecté"});
     };
     
-    const tokenAllStr = req.headers.cookies;
+    const tokenAllStr = req.headers.cookies || req.headers.cookie ;
     const tokenStr = tokenAllStr.split('=')[1];
     try {
         const token = jwt.verify(tokenStr, SECRET_KEY);

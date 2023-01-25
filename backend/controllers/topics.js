@@ -29,16 +29,16 @@ async function getTopic (req, res)
 
 async function postTopic (req, res) 
 {
-    if(!req.body.title)
+    if(!req.body.data.title)
     {
         res.status(406).send('Les champs doivent être tous remplis');
     }
     else
     {
         const newTopic = {            
-            title: req.body.title,
-            id_user: req.user.id,
-            id_theme: req.body.id_theme
+            title: req.body.data.title,
+            id_theme: req.body.data.id_theme,
+            id_user: req.user.id
         }
 
         await Topic.create(newTopic)
@@ -159,6 +159,7 @@ async function getMessagesTopic (req, res){
 }
 
 async function postMessageTopic (req, res){
+
 
     // TODO : Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
     if(!req.body.text || !req.body.id_user || !req.body.id_topic)
