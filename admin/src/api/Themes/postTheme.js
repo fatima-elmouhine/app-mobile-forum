@@ -1,9 +1,10 @@
 import axiosInstance from '../config'
 
- export const postTheme = async ( title, description ) => {
+ export const postTheme = async ( title, description, image ) => {
     const { data } = await axiosInstance.post(`themes`, {
         title: title,
-        description: description
+        description: description,
+        imageTheme: image
     })
 
     try {

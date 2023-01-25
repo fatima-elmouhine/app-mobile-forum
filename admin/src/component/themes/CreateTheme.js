@@ -11,8 +11,11 @@ const CreateTheme = (props) => {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [image, setImage] = useState(null);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
+
+    console.log('image', image);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -27,6 +30,9 @@ const CreateTheme = (props) => {
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
+    const handleImageChange = (event) => {
+        setImage(event.target.files[0]);
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -35,7 +41,7 @@ const CreateTheme = (props) => {
                 setOpen(true);
                 return;
             }
-            const response = await postTheme(title, description);
+            const response = await postTheme(title, description, image.name);
             setMessage('Le thème a bien été créé');
             setTimeout(() => {
                 props.onClose()
@@ -73,6 +79,17 @@ const CreateTheme = (props) => {
                             value={description}
                             onChange={handleDescriptionChange}
                         />
+                    </FormControl>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                        <Button variant='contained' component='label' color='secondary'>
+                            Ajouter une image
+                            <input
+                                type="file"
+                                accept='image/*'
+                                hidden
+                                onChange={handleImageChange}
+                            />
+                        </Button>
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Enregistrer
