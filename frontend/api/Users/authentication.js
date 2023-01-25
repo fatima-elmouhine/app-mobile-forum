@@ -5,6 +5,7 @@ export const userAuthentication = async ( email, password ) => {
   if (SecureStore.getItemAsync('token') !== null) {
     SecureStore.deleteItemAsync('token')
   }
+  console.log(email, password );
 
   const response = await axiosInstance.post('users/login', {
     email,

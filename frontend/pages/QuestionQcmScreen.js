@@ -20,24 +20,38 @@ import {
   Button,
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-
+import {getQcm} from "../api/Qcms/getQcm";
+import SelectDropdown from 'react-native-select-dropdown'
 
 export default function QuestionQcmScreen({ route, navigation }) {
     // const [checked, setChecked] = React.useState(false);
-    const [textInputValue, setTextInputValue] = React.useState("");
-    const [answersChecked, setAnswersChecked] = React.useState({
-        question: "",
-        A: false,
-        B: false,
-        C: false,
-        D: false,
-        E: false,
-    });
+    const [qcmQuestion, setQcmQuestion] = React.useState({});
+    const [questionTitle, setQuestionTitle] = React.useState("Question 1"); 
+    const [qcmTitle, setQcmTitle] = React.useState(); 
+    const [textInputValue, setTextInputValue] = React.useState({});
+    const [currentQuestion, setCurrentQuestion] = React.useState(0);
+    // on va le setter dans la boucle pour chaque question afin de récupérer les réponses cochées par l'utilisateur 
+    //et les incrementer dans un tableau 
+    const [answersChecked, setAnswersChecked] = React.useState({});
     const { idQcm } = route.params;
 
-    console.log(idQcm);
 
 
+    useEffect(() => {
+      async function fetchQcm() {
+        const qcm = await getQcm(idQcm);
+        setQcmTitle(qcm.title);
+        setQcmQuestion(qcm.Questions);
+        setCurrentQuestion(qcm.Questions[0]);
+        // console.log('current question',currentQuestion);
+      }
+
+      fetchQcm();
+    }, []);
+
+
+
+    var letterArray = ["A", "B", "C", "D", "E"];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,6 +63,17 @@ export default function QuestionQcmScreen({ route, navigation }) {
           source={require("../assets/logo_fond.png")}
           style={styles.bgTop}
         />
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "bold",
+            marginTop: 50,
+            marginLeft: 40,
+            color: "#fff",
+          }}
+        >
+          {qcmTitle}
+        </Text>
         <View style={{
             display: "flex",
             flexDirection: "row",
@@ -61,7 +86,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                marginTop: 50,
+                marginTop: 10,
                 marginLeft: 20,
                 paddingBottom: 20,
             }}>
@@ -72,7 +97,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
                     // padding: 20,
                     
                     borderRadius: 8,
-                    marginTop: 50,
+                    // marginTop: 50,
                     marginLeft: 20,
                     marginRight: 20,
                     shadowColor: "#000",
@@ -87,28 +112,46 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 >
                     Terminer
                 </Button>
-                <Button
-                    labelStyle={{fontSize: 17, color: "#fff"}}
-                    style={{
-                        backgroundColor: "#232160",
-                        // padding: 20,
-                        
-                        borderRadius: 8,
-                        marginTop: 50,
-                        marginLeft: 20,
-                        marginRight: 20,
-                        shadowColor: "#000",
-                        shadowOffset: {
-                        width: 0,
-                        height: 2,
-                        },
-                        shadowOpacity: 0.25,
-                        shadowRadius: 4,
-                        elevation: 5,
-                    }}
-                >
-                    Choisissez une question
-                </Button>
+
+                  <SelectDropdown
+                      data={qcmQuestion}
+                      onSelect={(selectedItem, index) => {
+                        setCurrentQuestion(selectedItem);
+                          // // setSelectedTheme(selectedItem.id);
+                          // console.log(selectedItem, index)
+                      }}
+                      defaultButtonText={"Choissisez une question "}
+
+                      buttonTextStyle={{fontSize: 18, color: 'white', textAlign:'left',}}
+                      buttonStyle={{
+                        width: 240,
+                        whiteSpace: "wrap",
+
+                        borderRadius:8, 
+                        backgroundColor:'#232160',
+                        display: "flex",
+                        // marginTop: 50, 
+                        marginLeft: 20, 
+                        marginRight: 20, 
+                        shadowColor: "#000", 
+                        shadowOffset: {width: 0,height: 2,}, 
+                        shadowOpacity: 0.25, shadowRadius: 4, 
+                        elevation: 5, 
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                          // text represented after item is selected
+                          // if data array is an array of objects then return selectedItem.property to render after item is selected
+                          // return selectedItem.title
+                          setQuestionTitle('Question ' + (index+1));
+
+                          return 'Choissisez une question  ' 
+                      }}
+                      rowTextForSelection={(item, index) => {
+                          // text represented for each item in dropdown
+                          // if data array is an array of objects then return item.property to represent item in dropdown
+                          return 'Question ' + (index+1)
+                      }}
+                  />
             </View>
 
         </View>
@@ -123,7 +166,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
             marginRight: 20,
         }}>
             <Text style={{fontSize: 22, color: "#FF00B8", fontWeight: "bold"}}>
-                Question 1/20
+              {questionTitle}/{qcmQuestion.length}
             </Text>
 
         </View>
@@ -138,9 +181,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
             
         }}>
             <Text style={{fontSize: 19, borderRadius:8, color: "#86439D",backgroundColor:'white', fontWeight: "bold",  marginTop: 20, padding:20}}>
-                On considère un système thermodynamique. Lors d'une réaction chimique à 300 K, on mesure Q la quantité 
-                de chaleur liée à la réaction et on trouve -600 J / mol. On désire étudier la variation d'entropie molaire 
-                liée à cette transformation.
+                {currentQuestion.text}
             </Text>
             <Text 
                 style={{fontSize: 14, borderRadius:8, color: "#FF00B8", fontWeight: "bold",  marginTop: 20,}}
@@ -153,21 +194,41 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 justifyContent: "space-between",
                 marginTop: 10,
             }}>
-                    <Text style={{fontSize: 19, borderRadius:8, color: "#86439D",backgroundColor:'white', fontWeight: "bold",  marginTop: 20, padding:20}}>
-                        A. 0
-                    </Text>
-                    <Text style={{fontSize: 19, borderRadius:8, color: "#86439D",backgroundColor:'white', fontWeight: "bold",  marginTop: 20, padding:20}}>
-                        B. 0
-                    </Text>
-                    <Text style={{fontSize: 19, borderRadius:8, color: "#86439D",backgroundColor:'white', fontWeight: "bold",  marginTop: 20, padding:20}}>
-                        C. 0
-                    </Text>
-                    <Text style={{fontSize: 19, borderRadius:8, color: "#86439D",backgroundColor:'white', fontWeight: "bold",  marginTop: 20, padding:20}}>
-                        D. 0
-                    </Text>
-                    <Text style={{fontSize: 19, borderRadius:8, color: "#86439D",backgroundColor:'white', fontWeight: "bold",  marginTop: 20, padding:20}}>
-                        E. 0
-                    </Text>
+              {currentQuestion.Answers?.map((answer, i) => (
+  
+                    <View style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      // justifyContent: "space-between",
+                      alignContent: "center",
+                      alignItems: "center",
+                      backgroundColor:'white',
+                      fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",   marginTop:20 ,padding:15
+                      ,paddingRight: 20,
+                      }}>
+
+                    <Checkbox 
+                        status={answersChecked[letterArray[i]] ? 'checked' : 'unchecked'}
+                        color="#500E5D"
+                        onPress={() => {
+                            setAnswersChecked({
+                                ...answersChecked,
+                                [letterArray[i]]: !answersChecked[letterArray[i]],
+                            });
+                        }}
+                        style={{
+                          marginLeft: 16,
+                        borderRadius: 8, 
+                        marginBottom:0
+                      }}/>
+                      <Text style={{fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",padding:15, paddingRight: 20}}>
+                       {letterArray[i]}) {answer.text}
+                      </Text>
+                     </View>
+                    ))
+
+  
+              }
 
             </View>
         </View>
