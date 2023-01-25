@@ -30,9 +30,6 @@ async function getMessage (req, res)
 async function postMessage (req, res) 
 
 {
-    console.log(req.body);
-    console.log(req.user.id);
-    // return
     // TODO: Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
     try {
         if (!req.body.data.id_topic) throw new Error("Une erreur est survenue lors de la création du message");
@@ -94,7 +91,7 @@ async function updateMessage (req, res)
                 {
                 where: 
                 {
-                    id: req.params.id
+                    id: req.body.id
                 }})
                 .then(message => {
                     res.status(201).send('La modification a été effectuée')
@@ -116,7 +113,7 @@ async function deleteMessage (req, res)
 {
     try 
     {
-       const message = await Message.findOne({ where: {id: req.params.id }})
+       const message = await Message.findOne({ where: {id: req.body.id }})
         .then(message => {
             return message;
         })
@@ -125,7 +122,7 @@ async function deleteMessage (req, res)
         {
             await Message.destroy({
                 where: {
-                id: req.params.id
+                id: req.body.id
                 }
             })
             .then(message => {

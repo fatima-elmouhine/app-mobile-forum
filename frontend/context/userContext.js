@@ -110,7 +110,6 @@ const UserContextProvider = (props) =>  {
             {props.children}
         </UserContext.Provider>
     );
-    
 }
 
 export default UserContextProvider;

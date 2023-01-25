@@ -9,8 +9,8 @@ router.get('/:id', getMessage);
 
 router.post('/', auth, postMessage);
 
-router.put('/:id', updateMessage);
+router.put('/',auth, updateMessage);
 
-router.delete('/:id', auth, deleteMessage);
+router.delete('/', auth, deleteMessage);
 
 module.exports = router

@@ -2,15 +2,16 @@ const {getThemes, postTheme, getTheme, updateTheme, deleteTheme} = require('../c
 
 const express = require('express');
 const router = express.Router();
+const auth = require("../Tools/auth");
 
 router.get('/', getThemes);
 
 router.get('/:id', getTheme);
 
-router.post('/', postTheme);
+router.post('/',auth, postTheme);
 
-router.put('/', updateTheme);
+router.put('/',auth, updateTheme);
 
-router.delete('/', deleteTheme);
+router.delete('/', auth, deleteTheme);
 
 module.exports = router;

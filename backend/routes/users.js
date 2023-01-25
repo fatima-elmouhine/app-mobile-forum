@@ -28,6 +28,6 @@ router.post('/login', loginUser)
 
 router.put('/' , auth, updateUser);
 
-router.delete('/:id_user',auth ,deleteUser);
+router.delete('/',auth ,deleteUser);
 
 module.exports = router;
