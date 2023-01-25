@@ -23,7 +23,7 @@ export async function getServerSideProps(context) {
 }
 
 const Messages = (props) => {
-    const [messagesItem, setMessages] = useState([]);
+    const [messagesItem, setMessagesItem] = useState([]);
     console.log('messagesItem', messagesItem);
     const [openCreate, setOpenCreate] = useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
@@ -36,13 +36,13 @@ const Messages = (props) => {
 
     useEffect(() => {
         getTopicMessage(props.id).then((data) => {
-            setMessages(data.Messages);
+            setMessagesItem(data.Messages);
         });
     }, []);
 
     useEffect(() => {
         getTopicMessage(props.id).then((data) => {
-            setMessages(data);
+            setMessagesItem(data.Messages);
         });
     }, [openCreate, openDelete]);
 
@@ -54,6 +54,7 @@ const Messages = (props) => {
         { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
         { field: 'delete', headerName: 'Supprimer', width: 150,
             renderCell: (params) => (
+                
                 <strong>
                     <Button
                         variant="contained"
@@ -102,7 +103,7 @@ const Messages = (props) => {
                     open={openCreate}
                     onClose={handleClose}
                 >
-                    <CreateMessage />
+                    <CreateMessage idTopic={props.id} />
                 </Modal>
                 <DataGrid
                     rows={rows}

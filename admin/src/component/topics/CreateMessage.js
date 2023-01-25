@@ -6,11 +6,13 @@ import {
 } from '@mui/material';
 
 import { postMessageTopic } from '@/api/Topics/postTopicMessage';
+import { getServerSideProps } from '../layout/SideBar';
 
-const CreateMessage = () => {
+
+const CreateMessage = (props) => {
     const [text, setText] = useState('');
-    const userID = window.localStorage.getItem('userID');
-    const topicID = window.localStorage.getItem('topicID');
+   
+    const topicID = props.idTopic
     
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
@@ -28,7 +30,7 @@ const CreateMessage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await postMessageTopic(text, userID, topicID);
+            const response = await postMessageTopic(text, topicID);
             console.log(response);
             setMessage('Message envoyer !');
         } catch (error) {
