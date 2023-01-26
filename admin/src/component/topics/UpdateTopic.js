@@ -16,8 +16,6 @@ const UpdateTopic = (props) => {
     const [themes, setThemes] = useState(props.data.themeID);
     const [itemUsers, setItemUsers] = useState([]);
     const [itemThemes, setItemThemes] = useState([]);
-    console.log('themes', themes);
-    console.log('users', users);
     useEffect(() => {
         const fetchThemes = async () => {
             const themesItems = await getThemes();
@@ -60,6 +58,9 @@ const UpdateTopic = (props) => {
             const response = await putTopic(topicID, title, users, themes);
             console.log(response);
             setMessage('Le Forum a bien était modifier !');
+            setTimeout(() => {
+                props.onClose();
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue !');
@@ -122,6 +123,15 @@ const UpdateTopic = (props) => {
                         type="submit"
                     >
                         Modifier
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

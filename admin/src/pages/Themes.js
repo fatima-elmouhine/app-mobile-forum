@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Modal, Container, Box, Button } from '@mui/material';
+import { Modal, Container, Box, Button, Avatar } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
@@ -43,9 +43,19 @@ const Themes = () => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'title', headerName: 'Titre', width: 350 },
+        { field: 'title', headerName: 'Titre', width: 200 },
         { field: 'description', headerName: 'Description', width: 470 },
-        { field: 'createdAt', headerName: 'Date de création', width: 180 },
+        { field: 'imageTheme', headerName: 'Image du thème', width: 180,
+            renderCell: (params) => (
+                <strong>
+                    <Avatar
+                        alt={params.row.title}
+                        src={params.row.imageTheme}
+                    />
+                </strong>
+            ),
+        },
+        { field: 'createdAt', headerName: 'Date de création', width: 150 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
         { field: 'update', headerName: 'Modifier', width: 150 ,
             renderCell: (params) => (
@@ -61,7 +71,7 @@ const Themes = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateTheme data={item} />
+                        <UpdateTheme data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
@@ -80,7 +90,7 @@ const Themes = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteTheme data={item} />
+                        <DeleteTheme data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
@@ -92,8 +102,9 @@ const Themes = () => {
             id: theme.id,
             title: theme.title,
             description: theme.description,
-            createdAt: theme.createdAt,
-            updatedAt: theme.updatedAt,
+            imageTheme: theme.imageTheme ? theme.imageTheme : 'https://www.lespetitsmarches.com/wp-content/uploads/2019/04/placeholder.png',
+            createdAt: new Date(theme.createdAt).toLocaleDateString(),
+            updatedAt: new Date(theme.updatedAt).toLocaleString(),
         };
     });
 
@@ -102,19 +113,23 @@ const Themes = () => {
             <Box className={style.sideBar}>
                 <SideBar />
             </Box>
-            <Box style={{ height: 845, width: '100%', color: 'white' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<BookmarkAddIcon />}
-                    onClick={handleOpenCreate}
-                />
-                <Modal
-                    open={openCreate}
-                    onClose={handleClose}
-                >
-                    <CreateTheme />
-                </Modal>
+            <Box className={style.tableContent}>
+                <h1 style={{ color: 'black' }}>Liste des thèmes</h1>
+                <Box className={style.buttonAdd}>
+                    <Button
+                        style={{ width: 'max-content' }}
+                        variant="contained"
+                        color="primary"
+                        startIcon={<BookmarkAddIcon />}
+                        onClick={handleOpenCreate}
+                    />
+                    <Modal
+                        open={openCreate}
+                        onClose={handleClose}
+                    >
+                        <CreateTheme onClose={handleClose}/>
+                    </Modal>
+                </Box>
                 <DataGrid
                     rows={rows}
                     columns={columns}

@@ -13,6 +13,10 @@ const Theme = sequelize.define('Theme', {
     type: DataTypes.STRING(255)
     // allowNull defaults to true
   },
+  imageTheme: {
+    type: DataTypes.STRING
+    // allowNull defaults to true
+  }
 
 }, {
   // Other model options go here

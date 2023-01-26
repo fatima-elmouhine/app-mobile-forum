@@ -63,7 +63,7 @@ const Courses = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateCourse data={item} />
+                        <UpdateCourse data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
@@ -82,7 +82,7 @@ const Courses = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteCourse data={item} />
+                        <DeleteCourse data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
@@ -96,8 +96,8 @@ const Courses = () => {
             link: course.link,
             Theme: course.Theme.title,
             idTheme: course.Theme.id,
-            createdAt: course.createdAt,
-            updatedAt: course.updatedAt,
+            createdAt: new Date(course.createdAt).toLocaleDateString(),
+            updatedAt: new Date(course.updatedAt).toLocaleString()
         };
     });
 
@@ -106,19 +106,23 @@ const Courses = () => {
             <Box className={style.sideBar}>
                 <SideBar />
             </Box>
-            <Box style={{ height: 845, width: '100%', color: 'white' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<PostAddIcon />}
-                    onClick={handleOpenCreate}
-                />
-                <Modal
-                    open={openCreate}
-                    onClose={handleClose}
-                >
-                    <CreateCourse />
-                </Modal>
+            <Box className={style.tableContent}>
+                <h1 style={{ color: 'black' }}>Liste des cours</h1>
+                <Box className={style.buttonAdd}>
+                    <Button
+                        style={{ width: 'max-content' }}
+                        variant="contained"
+                        color="primary"
+                        startIcon={<PostAddIcon />}
+                        onClick={handleOpenCreate}
+                    />
+                    <Modal
+                        open={openCreate}
+                        onClose={handleClose}
+                    >
+                        <CreateCourse onClose={handleClose}/>
+                    </Modal>
+                </Box>
                 <DataGrid
                     rows={rows}
                     columns={columns}

@@ -1,11 +1,10 @@
 import axiosInstance from '../config'
 
- export const postTopic = async ( title, userID, themeID ) => {
+ export const postTopic = async ( title, themeID ) => {
     const { data } = await axiosInstance.post(`topics`, {
         data: {
-        title: title,
-        id_user: userID,
-        id_theme: themeID
+            title: title,
+            id_theme: themeID
         }
     })
 

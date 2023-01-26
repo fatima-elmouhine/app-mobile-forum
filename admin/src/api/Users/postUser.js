@@ -2,9 +2,9 @@ import axiosInstance from '../config'
 
  export const postUser = async (firstName, lastName, email, password, role) => {
     const { data } = await axiosInstance.post(`users`, {
-        email,
         firstName,
         lastName,
+        email,
         password,
         role
     })

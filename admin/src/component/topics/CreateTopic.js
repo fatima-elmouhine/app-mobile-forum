@@ -8,13 +8,11 @@ import {
 import { getThemes } from '@/api/Themes/getThemes';
 import { postTopic } from '@/api/Topics/postTopic';
 
-const CreateTopic = () => {
+const CreateTopic = (props) => {
 
     const [title, setTitle] = useState('');
-    const userID = window.localStorage.getItem('userID');
     const [themes, setThemes] = useState([]);
     const [itemSelect, setItemSelect] = useState([]);
-    console.log('themes', themes);
 
     useEffect(() => {
         const fetchThemes = async () => {
@@ -47,9 +45,12 @@ const CreateTopic = () => {
             return;
         }
         try {
-            const response = await postTopic(title, userID, themes);
+            const response = await postTopic(title, themes);
             console.log(response);
             setMessage('Le forum a bien été créé !');
+            setTimeout(() => {
+                props.onClose();
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue !');
@@ -96,6 +97,15 @@ const CreateTopic = () => {
                         type="submit"
                     >
                         Enregistrer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

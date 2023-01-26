@@ -2,7 +2,6 @@ const sequelize  = require('../models/index');
 const {Theme} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
-
 async function getThemes(req, res)
 {   
     try {
@@ -29,9 +28,10 @@ async function getTheme (req, res)
 
 async function postTheme (req, res) 
 {
+    console.log('req.body', req.body);
     try 
     {
-        if(!req.body.title || !req.body.description)
+        if(!req.body.title || !req.body.description || !req.body.imageTheme)
         {
             res.status(406).send('Les champs doivent être tous remplis');
         }
@@ -39,8 +39,11 @@ async function postTheme (req, res)
         {
             const newTheme = {
                 title: req.body.title,
-                description: req.body.description
+                description: req.body.description,
+                imageTheme: req.body.imageTheme
             }
+            
+            const file = req.body.imageTheme;
             const theme = await Theme.create(newTheme);
             res.status(200).json(theme);
         }

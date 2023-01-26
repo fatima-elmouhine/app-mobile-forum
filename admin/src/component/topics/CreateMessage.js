@@ -6,12 +6,9 @@ import {
 } from '@mui/material';
 
 import { postMessageTopic } from '@/api/Topics/postTopicMessage';
-import { getServerSideProps } from '../layout/SideBar';
-
 
 const CreateMessage = (props) => {
     const [text, setText] = useState('');
-   
     const topicID = props.idTopic
     
     const [open, setOpen] = useState(false);
@@ -33,6 +30,9 @@ const CreateMessage = (props) => {
             const response = await postMessageTopic(text, topicID);
             console.log(response);
             setMessage('Message envoyer !');
+            setTimeout(() => {
+                props.onClose();
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue !');
@@ -63,6 +63,15 @@ const CreateMessage = (props) => {
                         type="submit"
                     >
                         Envoyer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={props.onClose}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

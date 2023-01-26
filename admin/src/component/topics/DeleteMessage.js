@@ -12,6 +12,9 @@ export const DeleteMessage = (props) => {
             const response = await deleteTopicMessage(props.data.id);
             console.log(response);
             setMessage('La suppression a été effectuée !');
+            setTimeout(() => {
+                props.onClose();
+            }, 2000);
         } catch (e) {
             console.log(e);
             setMessage('Une erreur est survenue');
@@ -45,6 +48,7 @@ export const DeleteMessage = (props) => {
                 sx={{ m: 1 }}
                 variant="contained"
                 color="inherit"
+                onClick={() => props.onClose()}
             >
                 Non
             </Button>

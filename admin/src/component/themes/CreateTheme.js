@@ -7,12 +7,15 @@ import {
 
 import { postTheme } from '@/api/Themes/postTheme';
 
-const CreateTheme = () => {
+const CreateTheme = (props) => {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [image, setImage] = useState(null);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
+
+    // console.log('image', image);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -27,6 +30,9 @@ const CreateTheme = () => {
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
+    const handleImageChange = (event) => {
+        setImage(event.target.files[0]);
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -35,8 +41,11 @@ const CreateTheme = () => {
                 setOpen(true);
                 return;
             }
-            const response = await postTheme(title, description);
+            const response = await postTheme(title, description, image);
             setMessage('Le thème a bien été créé');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue');
@@ -50,7 +59,7 @@ const CreateTheme = () => {
                 <Typography variant="h4" component="h1" gutterBottom>
                     Ajouter un Thème
                 </Typography>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} action='/upload_files' enctype='multipart/form-data'>
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="text">Titre</InputLabel>
                         <Input
@@ -71,8 +80,29 @@ const CreateTheme = () => {
                             onChange={handleDescriptionChange}
                         />
                     </FormControl>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                        <Button variant='contained' component='label' color='secondary'>
+                            Ajouter une image
+                            <input
+                                type="file"
+                                accept='image/*'
+                                hidden
+                                multiple
+                                onChange={handleImageChange}
+                            />
+                        </Button>
+                    </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Enregistrer
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar
