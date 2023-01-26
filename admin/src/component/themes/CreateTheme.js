@@ -15,7 +15,7 @@ const CreateTheme = (props) => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
-    console.log('image', image);
+    // console.log('image', image);
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -41,7 +41,7 @@ const CreateTheme = (props) => {
                 setOpen(true);
                 return;
             }
-            const response = await postTheme(title, description, image.name);
+            const response = await postTheme(title, description, image);
             setMessage('Le thème a bien été créé');
             setTimeout(() => {
                 props.onClose()
@@ -59,7 +59,7 @@ const CreateTheme = (props) => {
                 <Typography variant="h4" component="h1" gutterBottom>
                     Ajouter un Thème
                 </Typography>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} action='/upload_files' enctype='multipart/form-data'>
                     <FormControl fullWidth sx={{ m: 1 }}>
                         <InputLabel htmlFor="text">Titre</InputLabel>
                         <Input
@@ -87,6 +87,7 @@ const CreateTheme = (props) => {
                                 type="file"
                                 accept='image/*'
                                 hidden
+                                multiple
                                 onChange={handleImageChange}
                             />
                         </Button>

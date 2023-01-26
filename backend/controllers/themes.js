@@ -2,7 +2,6 @@ const sequelize  = require('../models/index');
 const {Theme} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
-
 async function getThemes(req, res)
 {   
     try {
@@ -29,6 +28,7 @@ async function getTheme (req, res)
 
 async function postTheme (req, res) 
 {
+    console.log('req.body', req.body);
     try 
     {
         if(!req.body.title || !req.body.description || !req.body.imageTheme)
@@ -42,6 +42,8 @@ async function postTheme (req, res)
                 description: req.body.description,
                 imageTheme: req.body.imageTheme
             }
+            
+            const file = req.body.imageTheme;
             const theme = await Theme.create(newTheme);
             res.status(200).json(theme);
         }

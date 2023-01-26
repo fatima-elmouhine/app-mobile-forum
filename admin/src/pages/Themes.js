@@ -102,7 +102,7 @@ const Themes = () => {
             id: theme.id,
             title: theme.title,
             description: theme.description,
-            imageTheme: theme.imageTheme,
+            imageTheme: theme.imageTheme ? theme.imageTheme : 'https://www.lespetitsmarches.com/wp-content/uploads/2019/04/placeholder.png',
             createdAt: new Date(theme.createdAt).toLocaleDateString(),
             updatedAt: new Date(theme.updatedAt).toLocaleString(),
         };

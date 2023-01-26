@@ -20,7 +20,7 @@ const UpdateUser = (props) => {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
-    const avatars = './image1.png'
+    const avatars = './defaultAvatar.png'
     const roles = [
         'ROLE_ADMIN',
         'ROLE_TUTOR',

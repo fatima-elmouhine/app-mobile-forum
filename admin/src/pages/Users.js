@@ -121,7 +121,7 @@ const Users = () => {
             lastName: user.lastName,
             email: user.email,
             role: user.role.role?.join(','),
-            avatar: user.avatar ? user.avatar : './image1.png',
+            avatar: user.avatar ? user.avatar : './defaultAvatar.png',
             createdAt: new Date(user.createdAt).toLocaleDateString(),
             updatedAt: new Date(user.updatedAt).toLocaleString()
         };
