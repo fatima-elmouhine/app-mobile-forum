@@ -27,7 +27,114 @@ import { set } from "date-fns";
 
 export default function ScoreScreen({ route, navigation }) {
 
-    console.log(route.params)
+    const nbrQuestion = route.params.qcmQuestion.length
+    const answersUser = route.params.answersChecked
+    const goodAnswer  = route.params.goodAnswer
+    const [scoreEnd, setScoreEnd] = useState(0)
+    var scoreTotal = nbrQuestion
+    const letterArray = ['A', 'B', 'C', 'D', 'E']
+    var errorsArray = []
+
+    function addToErrorsArray(id){
+       
+        for(var i = 0; i < errorsArray.length; i++){
+            if(errorsArray[i].questionId == id){
+                errorsArray[i].nbrErr++
+                return
+            }
+        }
+       
+        errorsArray = [
+            ...errorsArray,
+            errorsArray[id] = {
+                questionId: id,
+                nbrErr: 1,
+            }
+        ]
+    }
+
+    function compareAnswer(correctionAnswer, value, id){
+        for(var i = 0; i < letterArray.length; i++){
+            if(correctionAnswer[letterArray[i]] != value[letterArray[i]]){
+                addToErrorsArray(id)
+            }
+
+        }
+    }
+
+    function calculScoreByError(id){
+
+        for(var i = 0; i < errorsArray.length; i++){
+            if(errorsArray[i].questionId == id){
+                switch (errorsArray[i].nbrErr) {
+                    case 1:
+                        errorsArray[i].score = 0.5
+                        break;
+                    case 2:
+                        errorsArray[i].score = 0.2
+                        break;
+                    default:
+                        errorsArray[i].score = 0
+                        break;
+
+                }
+                return errorsArray[i].score
+            }
+        }
+      
+    }
+    function calculScoreTotal(){
+        var scoreStart = 0
+        
+        var arrayBadAnswerId = []
+        for(var i = 0; i < errorsArray.length; i++){
+            for (var value in answersUser) {
+                if(errorsArray[i].questionId == value){
+                    scoreStart += errorsArray[i].score
+                    arrayBadAnswerId.push(value)
+
+                }
+            }
+        }
+
+        var scorePoint1 = scoreTotal - arrayBadAnswerId.length
+        scoreStart += scorePoint1
+        setScoreEnd(parseFloat(scoreStart).toFixed(1))
+    }
+
+    function returnNbrError(id){
+        for(var i = 0; i < errorsArray.length; i++){
+            if(errorsArray[i].questionId == id){
+                return errorsArray[i].nbrErr
+            }
+        }
+    }
+
+    function returnScore(id){
+        for(var i = 0; i < errorsArray.length; i++){
+            if(errorsArray[i].questionId == id){
+                return errorsArray[i].score
+            }
+        }
+    }
+
+    useEffect(() => {
+        calculScoreTotal()
+    }, [])
+
+
+    for (const [key, value] of Object.entries(answersUser)) {
+        goodAnswer.forEach((element, i) => {
+            var correctionAnswer = element
+            var id = element.questionId
+            if(key == element.questionId){
+                compareAnswer(correctionAnswer, value, id)
+                calculScoreByError(id)
+                
+            }
+        });
+    }
+
    
 
   return (
@@ -40,7 +147,10 @@ export default function ScoreScreen({ route, navigation }) {
           source={require("../assets/logo_fond.png")}
           style={styles.bgTop}
         />
-        
+        <ScrollView style={{
+        width:'100%',
+        marginBottom:40,
+            }}>
         <View style={{
             display:'flex',
             alignItems:'center',
@@ -55,7 +165,6 @@ export default function ScoreScreen({ route, navigation }) {
                         <Avatar.Text size={120} style={{marginLeft:15, marginBottom:20, backgroundColor:'#caca'}} label={
                         <Text >
                             theme
-                            {/* {title} */}
                         </Text>
                         } />
                 </View>
@@ -70,7 +179,7 @@ export default function ScoreScreen({ route, navigation }) {
                             fontWeight:'bold',
                         }}
                     >
-                        QCM Anatomie
+                        QCM {route.params.qcmTitle}
                     </Text>
                     <Text
                         style={{
@@ -78,11 +187,9 @@ export default function ScoreScreen({ route, navigation }) {
                             color: "white",
                             marginLeft: 10,
                             marginTop: 20,
-                            // textAlign: "center",
-                            // marginTop: 50,
                             }}
                     >
-                        5 questions
+                        {nbrQuestion} question{nbrQuestion > 1 && 's'}
                     </Text>
             </View>
             </View>
@@ -120,7 +227,7 @@ export default function ScoreScreen({ route, navigation }) {
                         borderRadius:5,
                     }}
                 >
-                    2,7/5
+                   {scoreEnd}/{nbrQuestion}
                 </Text>
             </View>
 
@@ -128,6 +235,7 @@ export default function ScoreScreen({ route, navigation }) {
                 width:'100%',
                 display:'flex',
                 alignItems:'center',
+                marginBottom:20,
             }}>
                 <Button
                 labelStyle={{
@@ -150,6 +258,7 @@ export default function ScoreScreen({ route, navigation }) {
                     Voir la correction
                 </Button>
             </View>
+
             <View 
                 style={{
                     width:'100%',
@@ -170,7 +279,7 @@ export default function ScoreScreen({ route, navigation }) {
                       
                     }}
                 >
-                    Vos réponses :
+                    Vos résultats :
                 </Text>
                 <View style={{
                     // width:320,
@@ -209,62 +318,44 @@ export default function ScoreScreen({ route, navigation }) {
                                 }}
                                 >Point</DataTable.Title>
                             </DataTable.Header>
-
-                            <DataTable.Row>
+                        {Object.entries(answersUser).map((answer, i) => {
+                            const nbrErrorFound = returnNbrError(answer[0])
+                            var msgError = nbrErrorFound > 1 ? ' erreurs' : ' erreur'
+                            const nbrPoint = nbrErrorFound == undefined ? 1 : returnScore(answer[0])
+                            
+                            
+                           return ( <DataTable.Row key={i}>
                                 <DataTable.Cell 
                                     textStyle={{
                                         color:'#FF00B8',
-                                        fontSize:20,
+                                        fontSize:18,
                                         fontWeight:'bold',
 
-                                    }}>Question 1</DataTable.Cell>
+                                    }}>Question {i+1}</DataTable.Cell>
                                 <DataTable.Cell numeric 
                                 textStyle={{
                                     color:'#FDB2FF',
-                                    fontSize:20,
+                                    fontSize:18,
 
-                                }}>0 erreur</DataTable.Cell>
+                                 }}>{nbrErrorFound != undefined ?
+                                    nbrErrorFound + msgError : '0 erreur'
+                                } </DataTable.Cell>
                                 <DataTable.Cell numeric
                                 textStyle={{
                                     color:'#FFE600',
-                                    fontSize:20,
+                                    fontSize:18,
 
                                 }}
-                                >1 point</DataTable.Cell>
-                            </DataTable.Row>
-
-                            <DataTable.Row>
-                                <DataTable.Cell 
-                                    textStyle={{
-                                        color:'#FF00B8',
-                                        fontSize:20,
-                                        fontWeight:'bold',
-
-                                    }}
-                                >
-                                    Question 2
-                                </DataTable.Cell>
-                                <DataTable.Cell numeric
-                                textStyle={{
-                                    color:'#FDB2FF',
-                                    fontSize:20,
-
-                                }}
-                                >1 erreur</DataTable.Cell>
-                                <DataTable.Cell numeric
-                                textStyle={{
-                                    color:'#FFE600',
-                                    fontSize:20,
-
-                                }}
-                                >0,5 point</DataTable.Cell>
-                            </DataTable.Row>
+                                >{nbrPoint} point</DataTable.Cell>
+                            </DataTable.Row>)
+                        })}
+                     
                         </DataTable>
 
                 </View>
             </View>
-
         </View>
+            </ScrollView>
 
 
 

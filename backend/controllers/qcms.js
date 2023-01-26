@@ -32,12 +32,12 @@ async function getQcm (req, res)
                 ...arrayAnswers,
                 arrayAnswers[element.id] =
                 {
-                    questionId : element.id,
-                    A : element.Answers[0].isCorrect_answer,
-                    B : element.Answers[1].isCorrect_answer,
-                    C : element.Answers[2].isCorrect_answer,
-                    D : element.Answers[3].isCorrect_answer,
-                    E : element.Answers[4].isCorrect_answer,
+                    questionId:element.id,
+                    A:element.Answers[0].isCorrect_answer,
+                    B:element.Answers[1].isCorrect_answer,
+                    C:element.Answers[2].isCorrect_answer,
+                    D:element.Answers[3].isCorrect_answer,
+                    E:element.Answers[4].isCorrect_answer,
 
                 }
             ]

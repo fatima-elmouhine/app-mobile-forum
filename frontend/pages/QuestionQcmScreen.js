@@ -139,6 +139,9 @@ export default function QuestionQcmScreen({ route, navigation }) {
                     textInputValue: textInputValue,
                     answersChecked: answersChecked,
                     goodAnswer: goodAnswer,
+                    qcmTitle: qcmTitle,
+                    qcmQuestion: qcmQuestion,
+
                     
                     
                     });
