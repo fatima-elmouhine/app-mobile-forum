@@ -123,7 +123,6 @@ const styles = StyleSheet.create({
     // flex: 6,
     width: "100%",
     height: "100%",
-    fontFamily: "Roboto_400Regular",
     margin: 0,
   },
   searchInfo: {
