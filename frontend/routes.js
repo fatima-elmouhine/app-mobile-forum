@@ -18,6 +18,7 @@ import CoursesScreen from './pages/CoursesScreen.js';
 import QcmHomeScreen from './pages/QcmHomeScreen.js';
 import ListQcmScreen from './pages/ListQcmScreen.js';
 import QuestionQcmScreen from './pages/QuestionQcmScreen.js';
+import ScoreScreen from './pages/ScoreScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +41,7 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="QcmHomeScreen" component={QcmHomeScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ListQcmScreen" component={ListQcmScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="QuestionQcmScreen" component={QuestionQcmScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="ScoreScreen" component={ScoreScreen} />
                 </Stack.Navigator>
             <MenuButton/>
             </NavigationContainer>

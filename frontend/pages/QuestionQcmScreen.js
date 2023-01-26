@@ -47,7 +47,6 @@ export default function QuestionQcmScreen({ route, navigation }) {
       async function fetchQcm() {
         const data = await getQcm(idQcm);
         const arrayAnswers = data.answers;
-        console.log("arrayAnswers", arrayAnswers);
         const qcm = data.qcm
 
         setTextInputValue(qcm[0]);
@@ -56,8 +55,8 @@ export default function QuestionQcmScreen({ route, navigation }) {
         setCurrentQuestion(qcm[0].Questions[indexQuestion]);
         setQuestionId(qcm[0].Questions[indexQuestion].id);
         setGoodAnswer(arrayAnswers);
-        console.log("toto");
         var userAnswers = {};
+        
         for (let i = 0; i < qcm[0].Questions.length; i++) {
           userAnswers[qcm[0].Questions[i].id] = {
             A: false,
@@ -133,6 +132,16 @@ export default function QuestionQcmScreen({ route, navigation }) {
                     shadowOpacity: 0.25,
                     shadowRadius: 4,
                     elevation: 5,
+                }}
+                onPress={() => {
+                    navigation.navigate("ScoreScreen", {
+                    idQcm: idQcm,
+                    textInputValue: textInputValue,
+                    answersChecked: answersChecked,
+                    goodAnswer: goodAnswer,
+                    
+                    
+                    });
                 }}
                 >
                     Terminer
