@@ -44,7 +44,7 @@ const Qcms = () => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'title', headerName: 'Titre', width: 130 },
+        { field: 'title', headerName: 'Titre', width: 230 },
         { field: 'isGenerated', headerName: 'Visible', width: 130 },
         { field: 'type', headerName: 'Type', width: 200 },
         { field: 'createdAt', headerName: 'Date de création', width: 130 },
