@@ -51,7 +51,7 @@ const UpdateTheme = (props) => {
         <Container maxWidth="sm">
             <Card sx={{ p: 2, m: 2 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Ajouter un Thème
+                    Modifier un Thème
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <FormControl fullWidth sx={{ m: 1 }}>
