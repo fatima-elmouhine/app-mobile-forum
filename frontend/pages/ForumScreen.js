@@ -97,6 +97,7 @@ const Forum = ({ navigation }) => {
     const fetchInit = async () => {
       const Theme = await getTheme();
       const Topic = await getTopics();
+      console.log("Theme", Topic);
       return setCards({
         ...cards,
         topic: await getTopics(),
@@ -104,6 +105,10 @@ const Forum = ({ navigation }) => {
       });
     };
     fetchInit();
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      fetchInit();
+    });
+    return willFocusSubscription;
   }, []);
 
   useEffect(() => {
@@ -271,7 +276,6 @@ const Forum = ({ navigation }) => {
                         id={item.id}
                         title={item.title}
                         description={item.description}
-                        navigation={navigation}
                       />
                     );
                   })}
@@ -388,6 +392,7 @@ const styles = StyleSheet.create({
     // flex: 6,
     width: "100%",
     height: "100%",
+    fontFamily: "Roboto_400Regular",
     margin: 0,
   },
   checkbox: {
