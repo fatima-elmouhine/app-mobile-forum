@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyleSheet, Text,Image, View, ScrollView, Modal, TouchableHighlight, Pressable, Keyboard } from 'react-native';
-import {useFonts,Roboto_400Regular,Roboto_400Regular_Italic} from "@expo-google-fonts/roboto";
 import { List,TextInput, Portal, IconButton, Button, Provider, Snackbar } from 'react-native-paper';
 import { LinearGradient } from "expo-linear-gradient";
 import MessageCardComponent from '../component/TopicMessageCard/MessageCardComponent';
@@ -108,7 +107,6 @@ export default function ForumDetailScreen({route,navigation}, ) {
       width: '100%',
       height: '100%',
       display: 'flex',
-      fontFamily: "Roboto_400Regular",
       // paddingLeft: 28,
       margin: 0,
 
@@ -120,7 +118,6 @@ export default function ForumDetailScreen({route,navigation}, ) {
       width: '100%',
       height: '100%',
       display: 'flex',
-      fontFamily: "Roboto_400Regular",
       paddingLeft: 28,
       margin: 0,
     },

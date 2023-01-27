@@ -1,7 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-
 import {
   StyleSheet,
   Text,
@@ -12,42 +11,46 @@ import {
   Searchbar,
 } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getCourses } from "../api/Courses/getCourses";
-import {searchCourse} from "../api/Courses/searchCourse";
-import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
+import { getQcms } from "../api/Qcms/getQcms";
+import QcmCard from "../component/Qcms/QcmCardHome";
 
-export default function CoursesScreen ({ navigation }) {
-  const [courses, setCourses] = useState([]);
+
+
+export default function ListQcmScreen ({ navigation }) {
+//   const [courses, setCourses] = useState([]);
+const [qcmsList, setQcmsList] = useState([]);
+
   const [activeSearch , setActiveSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchData, setSearchData] = useState([]);
   useEffect( () => {
 
-    async function getCoursesInCoursesScreen() {
-      const coursesReq = await getCourses();
-      setCourses(coursesReq);
+    async function getQcmInQcmScreen() {
+      const qcmsReq = await getQcms();
+    //   console.log(qcmsReq);
+      setQcmsList(qcmsReq);
     }
-    getCoursesInCoursesScreen();
+    getQcmInQcmScreen();
   }, []);
 
-  useEffect( () => {
-    if (searchQuery.length > 3) {
-    setActiveSearch(true);
-      const queryOrder ='search='+searchQuery+'&order=createdAt:DESC';
-      handleSearch(queryOrder);
+//   useEffect( () => {
+// //     if (searchQuery.length > 3) {
+// //     setActiveSearch(true);
+// //       const queryOrder ='search='+searchQuery+'&order=createdAt:DESC';
+// //       handleSearch(queryOrder);
 
-    } else {
-      setActiveSearch(false);
-    }
-  }, [searchQuery]);
+// //     } else {
+// //       setActiveSearch(false);
+// //     }
+//   }, [searchQuery]);
 
 
-  async function handleSearch(query) {
-      if (activeSearch) {
-      const searchReq = await searchCourse(query);
-      setSearchData(searchReq);
-    }
-  }
+//   async function handleSearch(query) {
+//       if (activeSearch) {
+//       const searchReq = await searchCourse(query);
+//       setSearchData(searchReq);
+//     }
+//   }
 
   
 
@@ -70,25 +73,23 @@ export default function CoursesScreen ({ navigation }) {
           onChangeText={(query) => {
             setSearchQuery(query);
           }}
-          placeholder="Rechercher un cours"
+          placeholder="Rechercher un QCM"
           icon={require("../assets/logo/search.png")}
         />
 
             <ScrollView>
           <View style={styles.sectionLatestCourse}>
-            {activeSearch===false && (courses.length !== 0 &&
-              courses.map((course, i) => {
-                return <CourseCardComponent key={i} course={course} />;
-              }))}
-
-              {activeSearch=== true && (
-                searchData?.Courses?.count !== 0 ?
-                  searchData?.Courses?.rows.map((course, i) => {
-                    return <CourseCardComponent key={i} course={course} />;
-                  })
-              : <Text style={{color:'white', textAlign:'center', marginTop:20, fontSize:30}}>Aucun résultat</Text>)
-            }
-
+            <Text style={styles.titleSection}>Les derniers QCM</Text>
+            <View>
+                {qcmsList.map((qcm) => (
+                    <QcmCard
+                        key={qcm.id}
+                        qcm={qcm}
+                        navigation={navigation}
+                    />  
+                ))}
+            </View>
+            
           </View>
             </ScrollView>
        
@@ -117,10 +118,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    // padding:10,
   },
   containerGradient: {
-    // flex: 6,
     width: "100%",
     height: "100%",
     margin: 0,
@@ -135,6 +134,14 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 40,
 
+  },
+  titleSection: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
+    marginLeft: 20,
   }
+
 });
 

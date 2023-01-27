@@ -1,4 +1,4 @@
-const {getQcms, postQcm, getQcm, loginqcm, updateQcm, deleteQcm} = require('../controllers/qcms')
+const {getQcms, postQcm, getQcm, updateQcm, deleteQcm} = require('../controllers/qcms')
 
 const express = require('express');
 const router = express.Router();

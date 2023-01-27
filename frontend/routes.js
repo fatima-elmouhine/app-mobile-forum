@@ -15,6 +15,10 @@ import ForumHomeScreen from './pages/ForumHomeScreen.js';
 import NewTopicScreen from './pages/NewTopicScreen.js';
 import SearchByThemeScreen from './pages/SearchByThemeScreen.js';
 import CoursesScreen from './pages/CoursesScreen.js';
+import QcmHomeScreen from './pages/QcmHomeScreen.js';
+import ListQcmScreen from './pages/ListQcmScreen.js';
+import QuestionQcmScreen from './pages/QuestionQcmScreen.js';
+import ScoreScreen from './pages/ScoreScreen.js';
 
 const Stack = createStackNavigator();
 
@@ -34,6 +38,10 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="NewTopicScreen" component={NewTopicScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="SearchByThemeScreen" component={SearchByThemeScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="CoursesScreen" component={CoursesScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="QcmHomeScreen" component={QcmHomeScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="ListQcmScreen" component={ListQcmScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="QuestionQcmScreen" component={QuestionQcmScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="ScoreScreen" component={ScoreScreen} />
                 </Stack.Navigator>
             <MenuButton/>
             </NavigationContainer>

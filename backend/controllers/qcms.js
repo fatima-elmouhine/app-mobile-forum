@@ -24,7 +24,33 @@ async function getQcm (req, res)
             order: [[sequelize.random()]],
         })
         if (qcm === null) return res.status(404).json('La réponse n\'existe pas');
-        res.status(200).json(qcm);
+
+        var arrayAnswers = [{}];
+
+        qcm[0]['dataValues']['Questions'].forEach((element) => {
+            arrayAnswers = [
+                ...arrayAnswers,
+                arrayAnswers[element.id] =
+                {
+                    questionId:element.id,
+                    A:element.Answers[0].isCorrect_answer,
+                    B:element.Answers[1].isCorrect_answer,
+                    C:element.Answers[2].isCorrect_answer,
+                    D:element.Answers[3].isCorrect_answer,
+                    E:element.Answers[4].isCorrect_answer,
+
+                }
+            ]
+        
+        });
+        console.log('arrayAnswers',arrayAnswers);
+
+        res.status(200).json(
+            {
+                qcm: qcm,
+                answers: arrayAnswers
+            }
+        );
     }
     catch (error) {
         res.status(500).json(error.message);

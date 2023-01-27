@@ -51,7 +51,7 @@ const UserContextProvider = (props) =>  {
           if (isLogged == true){
             
             userDetail();
-            console.log('userDetails', userDetails)
+            // console.log('userDetails', userDetails)
 
           }
         }, [token]);
