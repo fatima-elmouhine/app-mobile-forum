@@ -271,6 +271,7 @@ const Forum = ({ navigation }) => {
                         id={item.id}
                         title={item.title}
                         description={item.description}
+                        navigation={navigation}
                       />
                     );
                   })}

@@ -16,6 +16,7 @@ import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
 
 export default function SearchByThemeScreen({route, navigation }) {
   const { title, id, type} = route.params;
+  console.log('route.params', route.params);
   const [topics, setTopics] = useState([]);
   const [theme, setTheme] = useState([]);
 
@@ -49,6 +50,7 @@ export default function SearchByThemeScreen({route, navigation }) {
         <ScrollView>
             <View style={{ display:'flex',  alignItems:'center', justifyContent:'center', }} >
             {type == 'topic' ?
+              topics?.length != 0 ?
              topics.map((item) => {
                 return (
                   <CardTopic
@@ -60,6 +62,12 @@ export default function SearchByThemeScreen({route, navigation }) {
                   />
                 );
               }):
+              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
+              Aucun résultat
+              </Text>
+              :
+              theme.Courses?.length != 0 ?
+
               (
                 type == 'course' && theme.Courses?.map((item,i) => {
                   return (
@@ -68,7 +76,34 @@ export default function SearchByThemeScreen({route, navigation }) {
                     </>
                   );
                 })
-              )}
+              )
+              :
+              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
+              Aucun résultat
+              </Text>
+              ? 
+              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
+              Aucun résultat
+              </Text>
+              : 
+              topics?.length != 0 ?
+              topics?.map((item) => {
+                return (
+                  <CardTopic
+                    key={item.id}
+                    idTopic={item.id}
+                    title={item.title}
+                    theme={title}
+                    navigation={navigation}
+                  />
+                );
+              })
+              :
+              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
+              Aucun résultat
+              </Text>
+              
+              }
             </View>
         </ScrollView>
 

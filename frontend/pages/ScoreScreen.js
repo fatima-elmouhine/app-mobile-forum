@@ -83,6 +83,7 @@ export default function ScoreScreen({ route, navigation }) {
         }
       
     }
+
     function calculScoreTotal(){
         var scoreStart = 0
         
@@ -204,7 +205,6 @@ export default function ScoreScreen({ route, navigation }) {
                     style={{
                         fontSize: 20,
                         color: "white",
-                        // marginLeft: 10,
                         marginTop: 20,
                         fontWeight:'bold',
                     }}
@@ -383,16 +383,11 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    // flex: 6,
     width: "100%",
     height: "100%",
-    // paddingLeft: 28,
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
 
   containerGradient: {
-    // flex: 6,
     width: "100%",
     height: "100%",
   },
@@ -411,28 +406,5 @@ const styles = StyleSheet.create({
     borderColor: "#50F4E1",
   },
 
-  containerText: {},
 
-  name: {
-    fontSize: 20,
-    color: "#fff",
-  },
-
-  paragraphe: {
-    fontSize: 15,
-    color: "#fff",
-  },
-
-  progress: {
-    width: 150,
-    height: 20,
-    borderRadius: 10,
-  },
-
-  sectionTitle: {
-    fontSize: 20,
-    marginHorizontal: 16,
-    color: "#fff",
-    marginBottom: 24,
-  },
 });
