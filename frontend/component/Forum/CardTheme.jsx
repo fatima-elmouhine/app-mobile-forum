@@ -16,7 +16,7 @@ export default function CardTheme({id, title, description, navigation, num}) {
     if(num){
      return navigation.navigate('SectionChoiceScreen', themeInfo)
     }else{
-      return navigation.navigate('SearchByThemeScreen', {title:title, id:id})
+      return navigation.navigate('SearchByThemeScreen', {title:title, id:id, type: 'topic'})
     }
   }
 
