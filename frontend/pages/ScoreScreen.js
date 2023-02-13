@@ -26,14 +26,56 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { set } from "date-fns";
 
 export default function ScoreScreen({ route, navigation }) {
+  // arrondir le score quand il est egale a nbrQuestion
+  // remettre le bouton suivant
+  // envoyer le score a la bdd 
+  // vider les variables une fois la partie fini
+
 
     const nbrQuestion = route.params.qcmQuestion.length
     const answersUser = route.params.answersChecked
+    // console.log('answersUser',answersUser);
+
     const goodAnswer  = route.params.goodAnswer
+    const msgErrorNotAnswer = "pas de réponse"
     const [scoreEnd, setScoreEnd] = useState(0)
     var scoreTotal = nbrQuestion
     const letterArray = ['A', 'B', 'C', 'D', 'E']
     var errorsArray = []
+
+    function filterGoodAnswersUser(){
+        var arrayAnswersUser = []
+        for (var element in answersUser) {
+           for(var [key, value] of Object.entries(answersUser[element])){
+                if(value == true){
+                        arrayAnswersUser = [
+                            ...arrayAnswersUser,
+                            {
+                                questionId : element,
+                                letter : [key]
+                            }
+                        ]
+                }
+           }
+
+        }
+
+        const newArray = arrayAnswersUser.reduce((acc, current) => {
+            const x = acc.find(item => item.questionId == current.questionId);
+
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                x.letter = x.letter.concat(current.letter);
+                return acc;
+            }
+        }, []);
+
+        // console.log('newArray',newArray);
+
+        return newArray
+    }
+
 
     function addToErrorsArray(id){
        
@@ -54,12 +96,17 @@ export default function ScoreScreen({ route, navigation }) {
     }
 
     function compareAnswer(correctionAnswer, value, id){
-        for(var i = 0; i < letterArray.length; i++){
-            if(correctionAnswer[letterArray[i]] != value[letterArray[i]]){
-                addToErrorsArray(id)
-            }
 
-        }
+        // for(var i = 0; i < letterArray.length; i++){
+        //     if(correctionAnswer[letterArray[i]] != value[letterArray[i]]){
+        //         addToErrorsArray(id)
+        //     }
+        //     if(value.A == false && value.B == false && value.C == false && value.D == false && value.E == false){
+        //         addToErrorsArray(id)
+        //     }
+
+
+        // }
     }
 
     function calculScoreByError(id){
@@ -120,21 +167,81 @@ export default function ScoreScreen({ route, navigation }) {
     }
 
     useEffect(() => {
+        // setUserAnswer()
+    
         calculScoreTotal()
     }, [])
 
 
-    for (const [key, value] of Object.entries(answersUser)) {
+    // console.log('userAnswer',userAnswer);
+    const userAnswer = filterGoodAnswersUser()
+
+    function countDifferences(array1, array2, id) {
+        console.log('id',id);
+        //sort the arrays
+        array1.sort();
+        array2.sort();
+        // console.log('array1',array1);
+        // console.log('array2',array2);
+        let count = 0;
+        // for (let i = 0; i < array1.length; i++) {
+        //   if (array1[i] !== array2[i]) {
+        //     count++;
+        //   }
+        // }
+        // console.log('array1[i]',array1);
+        // console.log('array2[j]',array2);
+        if(JSON.stringify(array1) !== JSON.stringify(array2)){
+
+            // console.log('array1',array1);
+            // console.log('array2',array2);
+            // return
+            for (var i in array1) {
+                for (var j in array2) {
+                    if (array1[i] !== array2[j]) { 
+                        console.log('c\'est pas le meme array',array1[i] , array2[j]);  
+                        count++
+                    }else{
+
+                        console.log('c\'est le meme array',array1[i] , array2[j]);
+                        // count--
+                    
+                    }
+                }
+                // break;
+            }
+        }
+  
+        // console.log(objMap)
+
+        return count;
+  
+
+      }
+    for (const [key, value] of Object.entries(userAnswer)) {
+
         goodAnswer.forEach((element, i) => {
             var correctionAnswer = element
             var id = element.questionId
-            if(key == element.questionId){
-                compareAnswer(correctionAnswer, value, id)
-                calculScoreByError(id)
+            if(value.questionId == element.questionId){
+                let differences = countDifferences(correctionAnswer.letter, value.letter, id)
+                
+                // correctionAnswer.letter.reduce((acc, val, i) => acc + (val !== value.letter[i] ? 1 : 0), 0);
+                console.log(value.questionId, ': ',differences);
+                // console.log('correctionAnswer',correctionAnswer.letter);
+                // console.log('value',value.letter);
+                // console.log('is it the same',JSON.stringify(correctionAnswer.letter) == JSON.stringify(value.letter));    
+
+        //         compareAnswer(correctionAnswer, value, id)
+        //         calculScoreByError(id)
                 
             }
         });
     }
+    let arr1 = [1, 2];
+let arr2 = [1, 3, 4,7];
+let differences2 = arr1.reduce((acc, val, i) => acc + (val !== arr2[i] ? 1 : 0), 0);
+console.log('exemple',differences2);
 
    
 
@@ -320,7 +427,15 @@ export default function ScoreScreen({ route, navigation }) {
                             </DataTable.Header>
                         {Object.entries(answersUser).map((answer, i) => {
                             const nbrErrorFound = returnNbrError(answer[0])
-                            var msgError = nbrErrorFound > 1 ? ' erreurs' : ' erreur'
+                            var msgError = nbrErrorFound > 1 ? nbrErrorFound +' erreurs' : '1 erreur'
+                            // if(answer[1].A == false && answer[1].B == false &&  answer[1].C == false && answer[1].D  == false && answer[1].E == false){
+                            //     console.log(answer[0], 'pas de reponse')
+                            //     msgError = ' 0 réponse'
+                            // }else{
+                            //     console.log(answer[0], 'nbre erreur', nbrErrorFound)
+                                
+                            // }
+                            
                             const nbrPoint = nbrErrorFound == undefined ? 1 : returnScore(answer[0])
                             
                             
@@ -338,7 +453,7 @@ export default function ScoreScreen({ route, navigation }) {
                                     fontSize:18,
 
                                  }}>{nbrErrorFound != undefined ?
-                                    nbrErrorFound + msgError : '0 erreur'
+                                     msgError : '0 erreur'
                                 } </DataTable.Cell>
                                 <DataTable.Cell numeric
                                 textStyle={{

@@ -16,6 +16,7 @@ async function getQcms(req, res)
 
 async function getQcm (req, res) 
 {
+    const letterArray = ['A', 'B', 'C', 'D', 'E'];
     try 
     {
         const qcm = await Qcm.findAll({
@@ -26,29 +27,58 @@ async function getQcm (req, res)
         if (qcm === null) return res.status(404).json('La réponse n\'existe pas');
 
         var arrayAnswers = [{}];
-
+        var arrayGoodAnswers =[{}]
         qcm[0]['dataValues']['Questions'].forEach((element) => {
+            const numberGoodAnswers = element.Answers.filter(answer => answer.isCorrect_answer === true).length;
+           
+            // console.log('numberGoodAnswers',numberGoodAnswers);
             arrayAnswers = [
                 ...arrayAnswers,
                 arrayAnswers[element.id] =
                 {
                     questionId:element.id,
+                    numberOfGoodAnswers:numberGoodAnswers,
+                    // arrayGoodAnswers:element.Answers.filter(answer => answer.isCorrect_answer === true),
                     A:element.Answers[0].isCorrect_answer,
                     B:element.Answers[1].isCorrect_answer,
                     C:element.Answers[2].isCorrect_answer,
                     D:element.Answers[3].isCorrect_answer,
                     E:element.Answers[4].isCorrect_answer,
-
                 }
             ]
-        
+
         });
-        console.log('arrayAnswers',arrayAnswers);
+        for (let i = 0; i < arrayAnswers.length; i++) {
+            for (let j = 0; j < letterArray.length; j++) {
+                if (arrayAnswers[i][letterArray[j]] === true) {                
+
+                    if (arrayGoodAnswers[i]?.questionId == arrayAnswers[i].questionId) {
+                        arrayGoodAnswers[i].letter.push(letterArray[j]);
+                        
+                    }else{
+                        arrayGoodAnswers = [
+                            ...arrayGoodAnswers,
+                            arrayGoodAnswers[arrayAnswers[i].questionId] =
+                            {
+                                questionId:arrayAnswers[i].questionId,
+                                letter:[letterArray[j]],
+                            }
+                        ]
+                    }
+                    
+                    
+                } 
+            }
+
+            
+            
+        }
+        console.log('arrayAnswers',arrayGoodAnswers);
 
         res.status(200).json(
             {
                 qcm: qcm,
-                answers: arrayAnswers
+                answers: arrayGoodAnswers
             }
         );
     }
