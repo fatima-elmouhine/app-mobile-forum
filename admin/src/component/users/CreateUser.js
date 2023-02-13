@@ -8,7 +8,7 @@ import {
 
 import { postUser } from '../../api/Users/postUser';
 
-const CreateUser = () => {
+const CreateUser = (props) => {
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -65,6 +65,9 @@ const CreateUser = () => {
             const response = await postUser(firstName, lastName, email, password, role);
             console.log(response);
             setMessage('Utilisateur créé avec succès');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (error) {
             console.log(error);
              if (error.response.status === 404) {
@@ -171,18 +174,21 @@ const CreateUser = () => {
                     >
                         Enregistrer
                     </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
+                    </Button>
                 </form>
                 <Snackbar
                     open={open}
-                    autoHideDuration={3000}
+                    autoHideDuration={2000}
                     onClose={handleClose}
                     message={message}
-                    aaction={{
-                        label: 'X',
-                        onPress: () => {
-                          handleClose();
-                        },
-                    }}
                 />
             </Card>
         </Container>

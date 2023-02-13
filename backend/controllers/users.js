@@ -33,29 +33,26 @@ async function getUser(req, res) {
 }
 
 async function postUser(req, res) {
+  console.log(req.body);
   if (!isValidEmailForm(req.body.email)) {
     res.status(406).send("Cette adresse email n'est pas valide");
   } else {
-    if (
-      !req.body.firstname ||
-      !req.body.lastname ||
-      !req.body.email ||
-      !req.body.password
-    ) {
-      res.status(406).send("Les champs doivent être tous remplis");
+    if (!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.role) {
+      res.status(400).send("Les champs doivent être tous remplis");
     } else {
       const newUser = {
-        firstName: req.body.firstname,
-        lastName: req.body.lastname,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         email: req.body.email,
         password: hashPassword(req.body.password),
+        role: {role: req.body.role}
       };
       await User.create(newUser)
         .then((user) => {
           res.status(201).json(user);
         })
         .catch((err) => {
-          res.status(406).send("Cette adresse email est déjà utilisée");
+          res.status(404).send("Cette adresse email est déjà utilisée");
         });
     }
   }
@@ -88,6 +85,7 @@ async function updateUser(req, res, next) {
         firstName: newUser["dataValues"].firstName,
         lastName: newUser["dataValues"].lastName,
         role: newUser["dataValues"].role.role,
+        avatar: newUser["dataValues"].avatar,
       },
       SECRET_KEY,
       {
@@ -113,7 +111,7 @@ async function updateUser(req, res, next) {
 
 async function deleteUser(req, res) {
   try {
-    const user = await User.findOne({ where: { id: req.params.id_user } }).then(
+    const user = await User.findOne({ where: { id: req.body.id } }).then(
       (user) => {
         return user;
       }
@@ -121,7 +119,7 @@ async function deleteUser(req, res) {
     if (user != null) {
       await User.destroy({
         where: {
-          id: req.params.id,
+          id: req.body.id,
         },
       })
         .then((user) => {

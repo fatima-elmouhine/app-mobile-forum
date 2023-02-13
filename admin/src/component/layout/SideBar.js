@@ -20,7 +20,7 @@ const SideBar = () => {
     useEffect(() => {
         window.localStorage.getItem('token');
         if (window.localStorage.getItem('token') === null) {
-            window.location.href = '/Login';
+            window.location.href = '/';
         }
     }, []);
 
@@ -33,7 +33,7 @@ const SideBar = () => {
                     <MenuItem className={style.menuItem}>
                         <Link href="/Users" className={style.link}>
                             <SchoolIcon className={style.linkTitle} />
-                            <p className={style.linkTitle}>Etudiants</p>
+                            <p className={style.linkTitle}>Étudiants</p>
                         </Link>
                     </MenuItem>
                     <MenuItem className={style.menuItem}>
@@ -55,7 +55,7 @@ const SideBar = () => {
                         </Link>
                     </MenuItem>
                     <MenuItem className={style.menuItem}>
-                        <Link href="/Users" className={style.link}>
+                        <Link href="/Qcm" className={style.link}>
                             <QuizIcon className={style.linkTitle} />
                             <p className={style.linkTitle}>QCM</p>
                         </Link>
@@ -64,8 +64,7 @@ const SideBar = () => {
                         style={{ borderRadius: '3vh', padding: '2vh' }}
                         onClick={() => {
                             window.localStorage.removeItem('token');
-                            
-                            window.location.href = '/Login';
+                            window.location.href = '/';
                         }}
                     >
                         Déconnexion

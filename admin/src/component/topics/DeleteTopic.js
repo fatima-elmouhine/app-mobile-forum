@@ -12,6 +12,9 @@ export const DeleteTopic = (props) => {
             const response = await deleteTopic(props.data.id);
             console.log(response);
             setMessage('Le forum a bien été supprimé !');
+            setTimeout(() => {
+                props.onClose();
+            }, 2000);
         } catch (e) {
             console.log(e);
             setMessage('Une erreur est survenue');
@@ -46,6 +49,7 @@ export const DeleteTopic = (props) => {
                 sx={{ m: 1 }}
                 variant="contained"
                 color="inherit"
+                onClick={() => props.onClose()}
             >
                 Non
             </Button>

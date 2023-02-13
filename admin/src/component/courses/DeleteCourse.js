@@ -13,6 +13,9 @@ export const DeleteCourse = (props) => {
             const response = await deleteCourse(courseID);
             console.log(response);
             setMessage('Le cours a bien été supprimé');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (e) {
             console.log(e);
             setMessage('Une erreur est survenue');
@@ -47,6 +50,7 @@ export const DeleteCourse = (props) => {
                 sx={{ m: 1 }}
                 variant="contained"
                 color="inherit"
+                onClick={() => props.onClose()}
             >
                 Non
             </Button>

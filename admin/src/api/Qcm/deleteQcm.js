@@ -1,20 +1,15 @@
 import axiosInstance from '../config'
 
- export const postUser = async (firstName, lastName, email, password, role) => {
-    const { data } = await axiosInstance.post(`users`, {
-        firstName,
-        lastName,
-        email,
-        password,
-        role
-    })
+export const deleteQcm = async (qcmID) => {
 
+    const { data } = await axiosInstance.delete(`qcms`, {
+        data: {
+            id: qcmID
+        }})
     try {
-        
-        if (data.status == 201) {
+        if (data.status == 200) {
             console.log(data);
             console.log(data.data);
-            logIn(data.status);
             return data
         } 
     } catch (e) {
@@ -31,6 +26,4 @@ import axiosInstance from '../config'
             console.log(e.config)
         }
     }
-
-    return data
-}
+}                    

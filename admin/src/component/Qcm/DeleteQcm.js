@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Button, Box, Typography, Snackbar } from '@mui/material';
-import { deleteUser } from '../../api/Users/deleteUser';
+import { deleteQcm } from '@/api/Qcm/deleteQcm';
 
-export const DeleteUser = (props) => {
+export const DeleteQcm = (props) => {
+    console.log('ici', props.data);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
     const handleSubmit = async () => {
         try {
-            const response = await deleteUser(props.data.id);
+            const response = await deleteQcm(props.data.id);
             console.log(response);
-            setMessage('L\'utilisateur a bien été supprimé');
+            setMessage('Le QCM a bien été supprimé');
             setTimeout(() => {
                 props.onClose()
             }, 2000);
@@ -32,8 +33,8 @@ export const DeleteUser = (props) => {
     return (
         <Box sx={{ background: '#f0f0f0', p: 2, m: 2, textAlign: 'center', margin: 'auto', marginTop: '16vh' }} maxWidth="sm">
             <Typography component="h1" gutterBottom>
-                Êtes-vous sûr de vouloir supprimer cet utilisateur ?<br></br>
-                ({props.data.firstName} {props.data.lastName})<br></br>
+                Êtes-vous sûr de vouloir supprimer ce QCM ?<br></br>
+                ({props.data.title})<br></br>
                 Cette action est irréversible.
             </Typography>
             <Button
@@ -69,4 +70,4 @@ export const DeleteUser = (props) => {
     );
 }
 
-export default DeleteUser;
+export default DeleteQcm;

@@ -1,17 +1,18 @@
 import axiosInstance from '../config'
 
- export const postTheme = async ( title, description ) => {
+ export const postTheme = async ( title, description, image ) => {
+
     const { data } = await axiosInstance.post(`themes`, {
         title: title,
-        description: description
+        description: description,
+        imageTheme: image
     })
 
     try {
         
-        if (data.status == 201) {
+        if (data.status == 200) {
             console.log(data);
             console.log(data.data);
-            logIn(data.status);
             return data
         } 
     } catch (e) {

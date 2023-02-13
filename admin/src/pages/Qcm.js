@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Modal, Container, Box, Button, Avatar } from '@mui/material';
+import { Modal, Container, Box, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
-import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 import SideBar from '../component/layout/SideBar';
-import CreateTheme from '../component/themes/CreateTheme';
-import UpdateTheme from '../component/themes/UpdateTheme';
-import DeleteTheme from '../component/themes/DeleteTheme';
+import CreateUser from '../component/users/CreateUser';
+import UpdateUser from '../component/users/UpdateUser';
+import DeleteQcm from '@/component/Qcm/DeleteQcm';
 import style from '@/styles/Global.module.css';
 
-import { getThemes } from '@/api/Themes/getThemes';
+import { getQcm } from '@/api/Qcm/getQcms';
 
-const Themes = () => {
+const Qcms = () => {
     const [openCreate, setOpenCreate] = useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
 
@@ -27,37 +27,29 @@ const Themes = () => {
 
     const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
 
-    const [themes, setThemes] = useState([]);
+    const [qcms, setQcms] = useState([]);
 
     useEffect(() => {
-        getThemes().then((data) => {
-            setThemes(data);
+        getQcm().then((data) => {
+            setQcms(data);
         });
     }, []);
 
     useEffect(() => {
-        getThemes().then((data) => {
-            setThemes(data);
+        getQcm().then((data) => {
+            setQcms(data);
         });
     }, [openCreate, openUpdate, openDelete]);
 
+
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'title', headerName: 'Titre', width: 200 },
-        { field: 'description', headerName: 'Description', width: 470 },
-        { field: 'imageTheme', headerName: 'Image du thème', width: 180,
-            renderCell: (params) => (
-                <strong>
-                    <Avatar
-                        alt={params.row.title}
-                        src={params.row.imageTheme}
-                    />
-                </strong>
-            ),
-        },
-        { field: 'createdAt', headerName: 'Date de création', width: 150 },
-        { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
-        { field: 'update', headerName: 'Modifier', width: 150 ,
+        { field: 'title', headerName: 'Titre', width: 230 },
+        { field: 'isGenerated', headerName: 'Visible', width: 130 },
+        { field: 'type', headerName: 'Type', width: 200 },
+        { field: 'createdAt', headerName: 'Date de création', width: 130 },
+        { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
+        { field: 'update', headerName: 'Modifier', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -71,12 +63,12 @@ const Themes = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateTheme data={item} onClose={handleClose}/>
+                        <UpdateUser data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 150 ,
+        { field: 'delete', headerName: 'Supprimer', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -90,21 +82,22 @@ const Themes = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteTheme data={item} onClose={handleClose}/>
+                        <DeleteQcm data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
         },
     ];
 
-    const rows = themes.map((theme) => {
+    const rows = qcms.map((qcm) => {
         return {
-            id: theme.id,
-            title: theme.title,
-            description: theme.description,
-            imageTheme: theme.imageTheme ? theme.imageTheme : 'https://www.lespetitsmarches.com/wp-content/uploads/2019/04/placeholder.png',
-            createdAt: new Date(theme.createdAt).toLocaleDateString(),
-            updatedAt: new Date(theme.updatedAt).toLocaleString(),
+            id: qcm.id,
+            title: qcm.title,
+            isGenerated: qcm.isGenerated ? 'Oui' : 'Non',
+            type: qcm.Type.type_name,
+            id_type: qcm.Type.id,
+            createdAt: new Date(qcm.createdAt).toLocaleDateString(),
+            updatedAt: new Date(qcm.updatedAt).toLocaleString()
         };
     });
 
@@ -114,20 +107,20 @@ const Themes = () => {
                 <SideBar />
             </Box>
             <Box className={style.tableContent}>
-                <h1 style={{ color: 'black' }}>Liste des thèmes</h1>
+                <h1 style={{ color: 'black' }}>Liste des QCM</h1>
                 <Box className={style.buttonAdd}>
                     <Button
                         style={{ width: 'max-content' }}
                         variant="contained"
                         color="primary"
-                        startIcon={<BookmarkAddIcon />}
+                        startIcon={<ControlPointIcon />}
                         onClick={handleOpenCreate}
                     />
                     <Modal
                         open={openCreate}
                         onClose={handleClose}
                     >
-                        <CreateTheme onClose={handleClose}/>
+                        <CreateUser onClose={handleClose}/>
                     </Modal>
                 </Box>
                 <DataGrid
@@ -142,4 +135,4 @@ const Themes = () => {
     );
 }
 
-export default Themes
+export default Qcms

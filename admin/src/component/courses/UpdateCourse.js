@@ -9,12 +9,10 @@ import { putCourse } from '../../api/Courses/putCourse';
 import { getThemes } from '@/api/Themes/getThemes';
 
 const UpdateCourse = (props) => {
-    console.log('L. props', props);
     const courseID = props.data.id
     const [title, setTitle] = useState(props.data.title);
     const [link, setLink] = useState(props.data.link);
     const [id_theme, setidTheme] = useState(props.data.idTheme);
-    console.log('L. id_theme', id_theme);
     const [themes, setThemes] = useState([]);
     useEffect(() => {
         const fetchThemes = async () => {
@@ -47,6 +45,9 @@ const UpdateCourse = (props) => {
         try {
             const response = await putCourse(courseID, title, link, id_theme);
             setMessage('Modification réussie');
+            setTimeout(() => {
+                props.onClose()
+            }, 2000);
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue');
@@ -58,7 +59,7 @@ const UpdateCourse = (props) => {
         <Container maxWidth="sm">
             <Card sx={{ p: 2, m: 2 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
-                    Ajouter un Thème
+                    Modifier un cours
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <FormControl fullWidth sx={{ m: 1 }}>
@@ -95,6 +96,15 @@ const UpdateCourse = (props) => {
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Modifier
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color='inherit'
+                        sx={{ m: 1 }}
+                        type="submit"
+                        onClick={() => props.onClose()}
+                    >
+                        Annuler
                     </Button>
                 </form>
                 <Snackbar

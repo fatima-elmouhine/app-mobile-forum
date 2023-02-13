@@ -25,7 +25,6 @@ const Topics = () => {
 
     const handleOpenMessages = (id) => {
         window.location.href=`Messages/${id}`
-        window.localStorage.setItem('topicId', id);
     }
 
     const [openDelete, setOpenDelete] = useState(false);
@@ -39,14 +38,12 @@ const Topics = () => {
         getTopics().then((data) => {
             setTopics(data);
         });
-        console.log('topics', topics);
     }, []);
     
     useEffect(() => {
         getTopics().then((data) => {
             setTopics(data);
         });
-        console.log('topics', topics);
     }, [openCreate, openUpdate, openDelete]);
 
     const columns = [
@@ -83,7 +80,7 @@ const Topics = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateTopic data={item} />
+                        <UpdateTopic data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
@@ -102,7 +99,7 @@ const Topics = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteTopic data={item} />
+                        <DeleteTopic data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
@@ -117,8 +114,8 @@ const Topics = () => {
             userID: topic.User.id,
             theme: topic.Theme.title,
             themeID: topic.Theme.id,
-            createdAt: topic.createdAt,
-            updatedAt: topic.updatedAt,
+            createdAt: new Date(topic.createdAt).toLocaleString(),
+            updatedAt: new Date(topic.updatedAt).toLocaleString()
         };
     });
 
@@ -127,19 +124,23 @@ const Topics = () => {
             <Box className={style.sideBar}>
                 <SideBar />
             </Box>
-            <Box style={{ height: 845, width: '100%', color: 'white' }}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddCommentIcon />}
-                    onClick={handleOpenCreate}
-                />
-                <Modal
-                    open={openCreate}
-                    onClose={handleClose}
-                >
-                    <CreateTopic />
-                </Modal>
+            <Box className={style.tableContent}>
+                <h1 style={{ color: 'black' }}>Liste des forums</h1>
+                <Box className={style.buttonAdd}>
+                    <Button
+                        style={{ width: 'max-content' }}
+                        variant="contained"
+                        color="primary"
+                        startIcon={<AddCommentIcon />}
+                        onClick={handleOpenCreate}
+                    />
+                    <Modal
+                        open={openCreate}
+                        onClose={handleClose}
+                    >
+                        <CreateTopic onClose={handleClose}/>
+                    </Modal>
+                </Box>
                 <DataGrid
                     rows={rows}
                     columns={columns}

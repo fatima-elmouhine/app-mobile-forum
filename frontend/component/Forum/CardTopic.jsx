@@ -11,6 +11,7 @@ export default function CardTopic({idTopic, title, theme, messages, navigation})
   }
 
   React.useEffect(() => {
+    console.log(messages.length);
     getTopicInForumDetail();
   }, [idTopic]);
 
@@ -28,7 +29,7 @@ export default function CardTopic({idTopic, title, theme, messages, navigation})
         </View>
         <View style={{alignItems: "flex-end", left: 0, }}>
           <Text variant="bodyMedium">Contient </Text>
-          <Text variant="bodyMedium"> {numberMessage} message{numberMessage >0 &&'s'}</Text>
+          <Text variant="bodyMedium"> {messages.length} message{messages.length > 1 &&'s'}</Text>
         </View>
       </Card.Content>
     </Card>
