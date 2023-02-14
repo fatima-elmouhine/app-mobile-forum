@@ -1,5 +1,5 @@
 const sequelize  = require('../models/index');
-const {Qcm, Type, Question, Message, QuestionAnswered, Theme, User, Answer} = sequelize.models;
+const {Qcm, Type, Question, Message, QuestionAnswered, Theme, User, Answer, QcmQuestion} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
@@ -102,11 +102,45 @@ async function deleteQcm (req, res)
     }
 }
 
+async function generateQcm(req, res) 
+{
+    try {
+        const {limit, idTheme} = req.params;
+        if (!limit || !idTheme) return res.status(406).json('Les champs doivent être tous remplis');
+        const questions = await Question.findAll({
+            limit: parseInt(limit),
+            where: {id_theme: parseInt(idTheme)},
+            order: [[sequelize.random()]],
+        });
+        if (limit > questions.length) return res.status(406).json('Le nombre de questions demandées est supérieur au nombre de questions disponibles');
+        const newQcm = await Qcm.create({
+            title: 'QCM généré',
+            isGenerated: true,
+            id_type: 1,
+            // TODO : id_user to token
+            id_user: 1
+        });
+        console.log('newQcm', newQcm.id);
+        questions.map(async (question) => {
+            await QcmQuestion.create({
+                QcmId: newQcm.id,
+                QuestionId: question.id
+            });
+        })
+        res.json({qcmId : newQcm.id});
+
+    } catch (error) {
+        res.json(error.message)
+    }
+    
+}
+
 
 module.exports = {
     getQcms,
     postQcm,
     getQcm,
     updateQcm,
-    deleteQcm
+    deleteQcm,
+    generateQcm
 }
