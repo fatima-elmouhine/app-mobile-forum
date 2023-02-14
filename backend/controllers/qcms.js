@@ -73,7 +73,6 @@ async function getQcm (req, res)
             
             
         }
-        console.log('arrayAnswers',arrayGoodAnswers);
 
         res.status(200).json(
             {
@@ -134,27 +133,29 @@ async function deleteQcm (req, res)
 
 async function playGame (req, res)
 {
+    const userId = req.user.id;
+
+    const qcmId = req.body.id_qcm;
+    const textStucture = req.body.text_structure;
+    const textResponse = req.body.text_response;
+    const errorsArray = req.body.errorArray;
+
+    const userGame = await UserQcm.create({
+        text_response: JSON.stringify(textResponse),
+        text_structure: JSON.stringify(textStucture),
+        id_user: userId,
+        id_qcm: qcmId,       
+    });
     try {
+        // console.log(req.body)
 
-        const userId = req.body.id_user;
-        const qcmId = req.body.id_qcm;
-        const textStucture = req.body.text_structure;
-        const textResponse = req.body.text_response;
-        const errorsArray = req.body.errorArray;
-
-        const userGame = await UserQcm.create({
-            text_response: textResponse,
-            text_structure: textStucture,
-            id_user: userId,
-            id_qcm: qcmId,       
-        });
         
         const userQcmId = userGame['dataValues']['id'];
         for (let i = 0; i < errorsArray.length; i++) {
             const element = errorsArray[i];
             await Result.create({
                 result : element.score,
-                id_question : element.questionID,
+                id_question : element.questionId,
                 id_user_qcm : userQcmId,
             })
             

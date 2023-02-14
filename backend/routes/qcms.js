@@ -14,6 +14,6 @@ router.put('/', auth, updateQcm);
 
 router.delete('/', auth, deleteQcm);
 
-router.post('/playingGame', playGame);
+router.post('/playingGame', auth, playGame);
 
 module.exports = router;
