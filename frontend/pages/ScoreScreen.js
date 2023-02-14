@@ -199,7 +199,6 @@ export default function ScoreScreen({ route, navigation }) {
             var id = element.questionId
             if(value.questionId == element.questionId){
                 let differences = countDifferences(correctionAnswer.letter, value.letter, id)
-                // console.log('value.letter',value.letter)
                 if(value.letter.length == 0){
                     differences ="nr"
                 }
@@ -212,12 +211,6 @@ export default function ScoreScreen({ route, navigation }) {
                     }
                 ]
                 calculScoreByError(id)
-                // calculScoreTotal()
-
-                // console.log(errorsArray)
-
-        
-            
 
             }
         });
@@ -411,17 +404,14 @@ export default function ScoreScreen({ route, navigation }) {
                                     msgError = '1 erreur'
                                     break;
                                 case (2 || 3 || 4 || 5) :
-                                    console.log('ok')
                                     msgError = nbrErrorFound +' erreurs'
                                     break;
                                 default:
                                     msgError = '0 reponse'
                                     break;
                             }
-                            console.log(nbrErrorFound)
                             
                             const nbrPoint = returnScore(answer[0])
-                            console.log(answer[0], nbrPoint)
                             
                            return ( <DataTable.Row key={i}>
                                 <DataTable.Cell 
