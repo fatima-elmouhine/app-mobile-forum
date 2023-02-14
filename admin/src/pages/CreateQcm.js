@@ -5,8 +5,8 @@ import { Container, Box, Button, Modal, Select, MenuItem, InputLabel, FormContro
 
 import SideBar from '../component/layout/SideBar';
 import { getThemes } from '@/api/Themes/getThemes';
-import { getQuestions } from '@/api/Qcm/getQuestion';
-import { CreateQuestion } from '@/component/Qcm/CreateQuestion';
+import { getQuestions } from '@/api/Qcm/getQuestions';
+import CreateQuestion from '@/component/Qcm/CreateQuestion';
 import style from '@/styles/Global.module.css';
 
 const CreateQcm = () => {
@@ -15,7 +15,9 @@ const CreateQcm = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    
+
+    const [title, setTitle] = useState('');
+
     const [questions, setQuestions] = useState([]);
     const [questionsArray, setQuestionsArray] = useState([]);
     const handleChangeQuestions = (event) => {
@@ -42,6 +44,10 @@ const CreateQcm = () => {
             <Box className={style.tableContent}>
                 <h1 style={{ color: 'black' }}>Création de QCM</h1>
                 <Box className={style.formContent}>
+                    <FormControl>
+                        <InputLabel id="demo-simple-select-label">Titre du QCM</InputLabel>
+                        <OutlinedInput onChange={(e) => setTitle(e.target.value)} label="Titre du QCM"/>
+                    </FormControl>
                     <FormControl>
                         <InputLabel id="demo-simple-select-label">Nombre de question</InputLabel>
                         <OutlinedInput onChange={(e) => setNumberQuestion(e.target.value)} label="Nombre de question"/>
@@ -81,6 +87,7 @@ const CreateQcm = () => {
                             </Typography>
                             <Modal open={open} onClose={handleClose}>
                                 <CreateQuestion onClose={handleClose}/>
+                                {/* <Typography>Test</Typography> */}
                             </Modal>
                         </Box>
                     </FormControl>

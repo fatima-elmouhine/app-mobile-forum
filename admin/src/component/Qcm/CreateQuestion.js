@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { 
     Card, Typography, Container , Select,
 	Input, InputLabel, MenuItem, FormControl,
@@ -7,6 +7,8 @@ import {
 } from '@mui/material';
 
 import { getThemes } from '@/api/Themes/getThemes';
+import { postQuestions } from '@/api/Qcm/postQuestions';
+import { postAnswers } from '@/api/Qcm/postAnswers';
 
 const CreateQuestion = (props) => {
     const [open, setOpen] = useState(false);
@@ -26,16 +28,30 @@ const CreateQuestion = (props) => {
     };
 
     const [question, setQuestion] = useState('');
-    const [answer1, setAnswer1] = useState('');
-    const [answer2, setAnswer2] = useState('');
-    const [answer3, setAnswer3] = useState('');
-    const [answer4, setAnswer4] = useState('');
-    const [answer5, setAnswer5] = useState('');
-    const [radioAnswer1, setRadioAnswer1] = useState('');
-    const [radioAnswer2, setRadioAnswer2] = useState('');
-    const [radioAnswer3, setRadioAnswer3] = useState('');
-    const [radioAnswer4, setRadioAnswer4] = useState('');
-    const [radioAnswer5, setRadioAnswer5] = useState('');
+    const handleChangeQuestions = (event) => {
+        setQuestion(event.target.value);
+    };
+
+    const [answer1, setAnswer1] = useState({});
+    const handleChangeAnswer1 = (event) => {
+        setAnswer1({ ...answer1, [event.target.id]: event.target.value,  [event.target.name]: event.target.value });
+    };
+    const [answer2, setAnswer2] = useState({});
+    const handleChangeAnswer2 = (event) => {
+        setAnswer2({ ...answer2, [event.target.id]: event.target.value,  [event.target.name]: event.target.value });
+    };
+    const [answer3, setAnswer3] = useState({});
+    const handleChangeAnswer3 = (event) => {
+        setAnswer3({ ...answer3, [event.target.id]: event.target.value,  [event.target.name]: event.target.value });
+    };
+    const [answer4, setAnswer4] = useState({});
+    const handleChangeAnswer4 = (event) => {
+        setAnswer4({ ...answer4, [event.target.id]: event.target.value,  [event.target.name]: event.target.value });
+    };
+    const [answer5, setAnswer5] = useState({});
+    const handleChangeAnswer5 = (event) => {
+        setAnswer5({ ...answer5, [event.target.id]: event.target.value,  [event.target.name]: event.target.value });
+    };
 
     useEffect(() => {
         getThemes().then((data) => {
@@ -43,14 +59,49 @@ const CreateQuestion = (props) => {
         });
     }, []);
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const data = {
+            text: question,
+            id_theme: themes
+        }
+        postQuestions(data).then((data) => {
+            if (data.status == 201) {
+                setMessage('Question ajoutée avec succès');
+                setOpen(true);
+            } else {
+                setMessage('Une erreur est survenue');
+                setOpen(true);
+            }
+        });
+
+        const answers = [answer1, answer2, answer3, answer4, answer5];
+        const answersArray = answers.filter((answer) => answer.response1 !== undefined);
+        const answersArray2 = answersArray.map((answer) => {
+            return {
+                text: answer.response,
+                isCorrect_answer: answer.radio
+            }
+        });
+        postAnswers(answersArray2, data.id).then((data) => {
+            if (data.status == 200) {
+                setMessage('Réponses enregistrer avec succès');
+                setOpen(true);
+            } else {
+                setMessage('Une erreur est survenue');
+                setOpen(true);
+            }
+        });
+    };
+
     return (
-        <Container maxWidth="sm">
-            <Card sx={{ p: 2, m: 2 }}>
+        <Container maxWidth="lg">
+            <Card sx={{ p: 4, m: 3 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Ajouter une question
                 </Typography>
-                <form>
-                    <FormControl>
+                <form style={{display: 'flex', flexDirection: 'column', gap: '1.5em'}}>
+                    <FormControl style={{marginTop: '2em'}}>
                         <InputLabel id="demo-simple-select-label">Thème</InputLabel>
                         <Select
                             value={themes}
@@ -69,134 +120,133 @@ const CreateQuestion = (props) => {
                             id="question"
                             type="text"
                             value={question}
+                            onChange={handleChangeQuestions}
                         />
                     </FormControl>
-                    <Box>
+                    <Box style={{display: 'flex', alignItems: 'center'}} onChange={handleChangeAnswer1}>
                         <FormControl fullWidth sx={{ m: 1 }}>
                             <InputLabel htmlFor="text">Response 1</InputLabel>
                             <Input
                                 required
-                                id="response1"
+                                id="response"
                                 type="text"
-                                value={answer1}
                             />
                         </FormControl>
                         <FormControl>
                             <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio"
                                 defaultValue="0"
-                                name="radio-buttons-group"
-                                value={radioAnswer1}
+                                id='radio'
+                                style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
                                 <FormControlLabel value="1" control={<Radio />} label="Vrais" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
-                    <Box>
+                    <Box style={{display: 'flex', alignItems: 'center'}} onChange={handleChangeAnswer2}>
                         <FormControl fullWidth sx={{ m: 1 }}>
                             <InputLabel htmlFor="text">Response 2</InputLabel>
                             <Input
                                 required
-                                id="response2"
+                                id="response"
                                 type="text"
-                                value={answer2}
                             />
                         </FormControl>
                         <FormControl>
                             <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio"
                                 defaultValue="0"
-                                name="radio-buttons-group"
-                                value={radioAnswer2}
+                                id='radio'
+                                style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
                                 <FormControlLabel value="1" control={<Radio />} label="Vrais" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
-                    <Box>
+                    <Box style={{display: 'flex', alignItems: 'center'}} onChange={handleChangeAnswer3}>
                         <FormControl fullWidth sx={{ m: 1 }}>
                             <InputLabel htmlFor="text">Response 3</InputLabel>
                             <Input
                                 required
-                                id="response3"
+                                id="response"
                                 type="text"
-                                value={answer3}
                             />
                         </FormControl>
                         <FormControl>
                             <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio"
                                 defaultValue="0"
-                                name="radio-buttons-group"
-                                value={radioAnswer3}
+                                id='radio'
+                                style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
                                 <FormControlLabel value="1" control={<Radio />} label="Vrais" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
-                    <Box>
+                    <Box style={{display: 'flex', alignItems: 'center'}} onChange={handleChangeAnswer4}>
                         <FormControl fullWidth sx={{ m: 1 }}>
                             <InputLabel htmlFor="text">Response 4</InputLabel>
                             <Input
                                 required
-                                id="response4"
+                                id="response"
                                 type="text"
-                                value={answer4}
                             />
                         </FormControl>
                         <FormControl>
                             <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio"
                                 defaultValue="0"
-                                name="radio-buttons-group"
-                                value={radioAnswer4}
+                                id='radio'
+                                style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
                                 <FormControlLabel value="1" control={<Radio />} label="Vrais" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
-                    <Box>
+                    <Box style={{display: 'flex', alignItems: 'center'}} onChange={handleChangeAnswer5}>
                         <FormControl fullWidth sx={{ m: 1 }}>
                             <InputLabel htmlFor="text">Response 5</InputLabel>
                             <Input
                                 required
-                                id="response5"
+                                id="response"
                                 type="text"
-                                value={answer5}
                             />
                         </FormControl>
                         <FormControl>
                             <RadioGroup
-                                aria-labelledby="demo-radio-buttons-group-label"
+                                name="radio"
                                 defaultValue="0"
-                                name="radio-buttons-group"
-                                value={radioAnswer5}
+                                id='radio'
+                                style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
                                 <FormControlLabel value="1" control={<Radio />} label="Vrais" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
-                    <Button
-                        variant="contained"
-                        sx={{ m: 1 }}
-                        type="submit"
-                    >
-                        Enregistrer
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color='inherit'
-                        sx={{ m: 1 }}
-                        type="submit"
-                        onClick={() => props.onClose()}
-                    >
-                        Annuler
-                    </Button>
+                    <Box style={{display: 'flex', alignItems: 'center', margin: 'auto'}}>
+                        <Button
+                            variant="contained"
+                            sx={{ m: 1, width: 'fit-content' }}
+                            type="submit"
+                            onClick={handleSubmit}
+                        >
+                            Enregistrer
+                        </Button>
+                        <Button
+                            variant="contained"
+                            color='inherit'
+                            sx={{ m: 1, width: 'fit-content' }}
+                            type="submit"
+                            onClick={() => props.onClose()}
+                        >
+                            Annuler
+                        </Button>
+                    </Box>
                 </form>
                 <Snackbar
                     open={open}

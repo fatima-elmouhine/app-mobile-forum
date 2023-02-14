@@ -39,9 +39,7 @@ async function postQuestion (req, res)
             text: req.body.text,
             id_theme: req.body.id_theme
         }
-    }
-
-    await Question.create(newQuestion)
+        await Question.create(newQuestion)
     .then(question => {
         res.status(201).json(question)
     })
@@ -49,6 +47,9 @@ async function postQuestion (req, res)
         res.status(406).send('Cette adresse email est déjà utilisée');
 
     });
+    }
+
+    
 
 }
 
