@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const sequelize  = require('../models/index');
 const {Qcm, Type, Question, Message, QuestionAnswered, Theme, User, Answer, QcmQuestion} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
@@ -6,7 +7,9 @@ const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 async function getQcms(req, res)
 {
     try {
-        const qcms = await genericGetAll(Qcm, req);
+        const { isGenerated } = req.query;
+        console.log('isGenerated', isGenerated);
+        const qcms = await Qcm.findAll({where: {isGenerated:  isGenerated === 'true'}});
         res.status(200).json(qcms);    
     } catch (error) {
         res.status(500).send(error);
