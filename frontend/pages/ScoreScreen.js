@@ -23,21 +23,21 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import {getQcm} from "../api/Qcms/getQcm";
 import SelectDropdown from 'react-native-select-dropdown'
-import { set } from "date-fns";
+import {playQcmUser } from "../api/Qcms/playQcmUser";
 
 export default function ScoreScreen({ route, navigation }) {
+    // console.log('route.params',route.params);
   // arrondir le score quand il est egale a nbrQuestion
   // remettre le bouton suivant
   // envoyer le score a la bdd 
   // vider les variables une fois la partie fini
 
-
+    const qcmId = route.params.idQcm
     const nbrQuestion = route.params.qcmQuestion.length
     const answersUser = route.params.answersChecked
-    // console.log('answersUser',answersUser);
+    const textInputValue = route.params.textInputValue
 
     const goodAnswer  = route.params.goodAnswer
-    const msgErrorNotAnswer = "pas de réponse"
     const [scoreEnd, setScoreEnd] = useState(0)
     var scoreTotal = nbrQuestion
     const letterArray = ['A', 'B', 'C', 'D', 'E']
@@ -55,6 +55,14 @@ export default function ScoreScreen({ route, navigation }) {
                                 letter : [key]
                             }
                         ]
+                }else{
+                    arrayAnswersUser = [
+                        ...arrayAnswersUser,
+                        {
+                            questionId : element,
+                            letter : []
+                        }
+                    ]
                 }
            }
 
@@ -71,49 +79,31 @@ export default function ScoreScreen({ route, navigation }) {
             }
         }, []);
 
-        // console.log('newArray',newArray);
-
         return newArray
     }
 
 
-    function addToErrorsArray(id){
-       
-        for(var i = 0; i < errorsArray.length; i++){
-            if(errorsArray[i].questionId == id){
-                errorsArray[i].nbrErr++
-                return
-            }
-        }
+    function addToErrorsArray(id, diff){
        
         errorsArray = [
             ...errorsArray,
             errorsArray[id] = {
                 questionId: id,
-                nbrErr: 1,
+                nbrErr: diff,
             }
         ]
-    }
-
-    function compareAnswer(correctionAnswer, value, id){
-
-        // for(var i = 0; i < letterArray.length; i++){
-        //     if(correctionAnswer[letterArray[i]] != value[letterArray[i]]){
-        //         addToErrorsArray(id)
-        //     }
-        //     if(value.A == false && value.B == false && value.C == false && value.D == false && value.E == false){
-        //         addToErrorsArray(id)
-        //     }
-
-
-        // }
+    
     }
 
     function calculScoreByError(id){
 
         for(var i = 0; i < errorsArray.length; i++){
+
             if(errorsArray[i].questionId == id){
                 switch (errorsArray[i].nbrErr) {
+                    case 0:
+                        errorsArray[i].score = 1
+                        break;
                     case 1:
                         errorsArray[i].score = 0.5
                         break;
@@ -167,57 +157,54 @@ export default function ScoreScreen({ route, navigation }) {
     }
 
     useEffect(() => {
-        // setUserAnswer()
-    
         calculScoreTotal()
+
     }, [])
+    
 
-
-    // console.log('userAnswer',userAnswer);
     const userAnswer = filterGoodAnswersUser()
 
+
     function countDifferences(array1, array2, id) {
-        console.log('id',id);
-        //sort the arrays
+
         array1.sort();
         array2.sort();
-        // console.log('array1',array1);
-        // console.log('array2',array2);
-        let count = 0;
-        // for (let i = 0; i < array1.length; i++) {
-        //   if (array1[i] !== array2[i]) {
-        //     count++;
-        //   }
-        // }
-        // console.log('array1[i]',array1);
-        // console.log('array2[j]',array2);
-        if(JSON.stringify(array1) !== JSON.stringify(array2)){
 
-            // console.log('array1',array1);
-            // console.log('array2',array2);
-            // return
+        let count = 0;
+
+        var arrNotIn = []
+        var arrIn = []
+        if(JSON.stringify(array1) !== JSON.stringify(array2)){
+   
             for (var i in array1) {
                 for (var j in array2) {
-                    if (array1[i] !== array2[j]) { 
-                        console.log('c\'est pas le meme array',array1[i] , array2[j]);  
-                        count++
-                    }else{
-
-                        console.log('c\'est le meme array',array1[i] , array2[j]);
-                        // count--
-                    
+                    if (array1[i] === array2[j]) {
+                        if (!arrIn.includes(array2[j])) {
+                            arrIn.push(array2[j])
+                        }
                     }
+                    
+                    if(!array1.includes(array2[j]) && array1[i] !== array2[j]){  
+                        if (!arrNotIn.includes(array2[j])) {
+                            arrNotIn.push(array2[j])
+                            count++
+                        } 
+                    }
+
                 }
-                // break;
             }
         }
-  
-        // console.log(objMap)
+
+        // if(array2.length == 0){
+        //     count = 3
+        // }
+
+        if(arrNotIn.length > 0){
+            count += array1.length - arrIn.length
+        }
 
         return count;
-  
-
-      }
+    }
     for (const [key, value] of Object.entries(userAnswer)) {
 
         goodAnswer.forEach((element, i) => {
@@ -225,25 +212,24 @@ export default function ScoreScreen({ route, navigation }) {
             var id = element.questionId
             if(value.questionId == element.questionId){
                 let differences = countDifferences(correctionAnswer.letter, value.letter, id)
-                
-                // correctionAnswer.letter.reduce((acc, val, i) => acc + (val !== value.letter[i] ? 1 : 0), 0);
-                console.log(value.questionId, ': ',differences);
-                // console.log('correctionAnswer',correctionAnswer.letter);
-                // console.log('value',value.letter);
-                // console.log('is it the same',JSON.stringify(correctionAnswer.letter) == JSON.stringify(value.letter));    
+                console.log('value.letter',value.letter)
+                if(value.letter.length == 0){
+                    differences ="nr"
+                }
+                addToErrorsArray(value.questionId, differences)
+                calculScoreByError(id)
+                // console.log(errorsArray)
 
-        //         compareAnswer(correctionAnswer, value, id)
-        //         calculScoreByError(id)
-                
+                if( errorsArray.length !== 0){
+                    // console.log(errorsArray)
+                    playQcmUser(scoreEnd, qcmId, answersUser, textInputValue, errorsArray)
+                }
+            
+
             }
         });
     }
-    let arr1 = [1, 2];
-let arr2 = [1, 3, 4,7];
-let differences2 = arr1.reduce((acc, val, i) => acc + (val !== arr2[i] ? 1 : 0), 0);
-console.log('exemple',differences2);
 
-   
 
   return (
     <SafeAreaView style={styles.container}>
@@ -427,16 +413,26 @@ console.log('exemple',differences2);
                             </DataTable.Header>
                         {Object.entries(answersUser).map((answer, i) => {
                             const nbrErrorFound = returnNbrError(answer[0])
-                            var msgError = nbrErrorFound > 1 ? nbrErrorFound +' erreurs' : '1 erreur'
-                            // if(answer[1].A == false && answer[1].B == false &&  answer[1].C == false && answer[1].D  == false && answer[1].E == false){
-                            //     console.log(answer[0], 'pas de reponse')
-                            //     msgError = ' 0 réponse'
-                            // }else{
-                            //     console.log(answer[0], 'nbre erreur', nbrErrorFound)
-                                
-                            // }
-                            
-                            const nbrPoint = nbrErrorFound == undefined ? 1 : returnScore(answer[0])
+                            console.log(answer[0], nbrErrorFound)
+
+                            // var msgError = nbrErrorFound > 1 ? nbrErrorFound +' erreurs' : nbrErrorFound == 1 ? '1 erreur' : 'pas d\'erreur'
+                            var msgError = ''
+                            switch(nbrErrorFound){
+                                case 0:
+                                    msgError = 'pas d\'erreur'
+                                    break;
+                                case 1:
+                                    msgError = '1 erreur'
+                                    break;
+                                case (2 || 3 || 4 || 5) :
+                                    console.log('ok')
+                                    msgError = nbrErrorFound +' erreurs'
+                                    break;
+                                default:
+                                    msgError = '0 reponse'
+                                    break;
+                            }
+                            const nbrPoint = returnScore(answer[0])
                             
                             
                            return ( <DataTable.Row key={i}>
@@ -452,9 +448,9 @@ console.log('exemple',differences2);
                                     color:'#FDB2FF',
                                     fontSize:18,
 
-                                 }}>{nbrErrorFound != undefined ?
-                                     msgError : '0 erreur'
-                                } </DataTable.Cell>
+                                 }}>
+                                    {msgError} 
+                                </DataTable.Cell>
                                 <DataTable.Cell numeric
                                 textStyle={{
                                     color:'#FFE600',

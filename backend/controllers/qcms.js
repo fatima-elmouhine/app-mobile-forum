@@ -1,5 +1,5 @@
 const sequelize  = require('../models/index');
-const {Qcm, Type, Question, Message, QuestionAnswered, Theme, User, Answer} = sequelize.models;
+const {Qcm, Type, Question, Message, QuestionAnswered, Theme, User, Answer, UserQcm, Result} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
@@ -132,11 +132,47 @@ async function deleteQcm (req, res)
     }
 }
 
+async function playGame (req, res)
+{
+    try {
+
+        const userId = req.body.id_user;
+        const qcmId = req.body.id_qcm;
+        const textStucture = req.body.text_structure;
+        const textResponse = req.body.text_response;
+        const errorsArray = req.body.errorArray;
+
+        const userGame = await UserQcm.create({
+            text_response: textResponse,
+            text_structure: textStucture,
+            id_user: userId,
+            id_qcm: qcmId,       
+        });
+        
+        const userQcmId = userGame['dataValues']['id'];
+        for (let i = 0; i < errorsArray.length; i++) {
+            const element = errorsArray[i];
+            await Result.create({
+                result : element.score,
+                id_question : element.questionID,
+                id_user_qcm : userQcmId,
+            })
+            
+            
+        }
+        
+        res.send('Votre partie a bien été enregistré')
+    } catch (error) {
+        res.status(500).json(error.message);
+    }
+}
+
 
 module.exports = {
     getQcms,
     postQcm,
     getQcm,
     updateQcm,
-    deleteQcm
+    deleteQcm,
+    playGame
 }
