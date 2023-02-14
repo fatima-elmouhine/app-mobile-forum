@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require("../Tools/auth");
 
-router.get('/generate/:limit/:idTheme', generateQcm)
+router.get('/generate/:limit/:idTheme',auth , generateQcm)
 
 router.get('/',getQcms);
 
