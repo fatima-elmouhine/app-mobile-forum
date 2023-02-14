@@ -26,10 +26,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import {playQcmUser } from "../api/Qcms/playQcmUser";
 
 export default function ScoreScreen({ route, navigation }) {
-    // console.log('route.params',route.params);
-  // arrondir le score quand il est egale a nbrQuestion
   // remettre le bouton suivant
-  // envoyer le score a la bdd 
   // vider les variables une fois la partie fini
 
     const qcmId = route.params.idQcm
@@ -41,6 +38,7 @@ export default function ScoreScreen({ route, navigation }) {
     const [scoreEnd, setScoreEnd] = useState(0)
     var scoreTotal = nbrQuestion
     const letterArray = ['A', 'B', 'C', 'D', 'E']
+
     var errorsArray = []
 
     function filterGoodAnswersUser(){
@@ -81,90 +79,6 @@ export default function ScoreScreen({ route, navigation }) {
 
         return newArray
     }
-
-
-    function addToErrorsArray(id, diff){
-       
-        errorsArray = [
-            ...errorsArray,
-            errorsArray[id] = {
-                questionId: id,
-                nbrErr: diff,
-            }
-        ]
-    
-    }
-
-    function calculScoreByError(id){
-
-        for(var i = 0; i < errorsArray.length; i++){
-
-            if(errorsArray[i].questionId == id){
-                switch (errorsArray[i].nbrErr) {
-                    case 0:
-                        errorsArray[i].score = 1
-                        break;
-                    case 1:
-                        errorsArray[i].score = 0.5
-                        break;
-                    case 2:
-                        errorsArray[i].score = 0.2
-                        break;
-                    default:
-                        errorsArray[i].score = 0
-                        break;
-
-                }
-                return errorsArray[i].score
-            }
-        }
-      
-    }
-
-    function calculScoreTotal(){
-        var scoreStart = 0
-        
-        var arrayBadAnswerId = []
-        for(var i = 0; i < errorsArray.length; i++){
-            for (var value in answersUser) {
-                if(errorsArray[i].questionId == value){
-                    scoreStart += errorsArray[i].score
-                    arrayBadAnswerId.push(value)
-
-                }
-            }
-        }
-
-        var scorePoint1 = scoreTotal - arrayBadAnswerId.length
-        scoreStart += scorePoint1
-        setScoreEnd(parseFloat(scoreStart).toFixed(1))
-    }
-
-    function returnNbrError(id){
-        for(var i = 0; i < errorsArray.length; i++){
-            if(errorsArray[i].questionId == id){
-                return errorsArray[i].nbrErr
-            }
-        }
-    }
-
-    function returnScore(id){
-        for(var i = 0; i < errorsArray.length; i++){
-            if(errorsArray[i].questionId == id){
-                return errorsArray[i].score
-            }
-        }
-    }
-
-    useEffect(() => {
-        calculScoreTotal()
-
-    }, [])
-    
-
-    const userAnswer = filterGoodAnswersUser()
-
-
     function countDifferences(array1, array2, id) {
 
         array1.sort();
@@ -205,6 +119,79 @@ export default function ScoreScreen({ route, navigation }) {
 
         return count;
     }
+
+    function calculScoreByError(id){
+
+        for(var i = 0; i < errorsArray.length; i++){
+
+            if(errorsArray[i].questionId == id){
+                switch (errorsArray[i].nbrErr) {
+                    case 0:
+                        errorsArray[i].score = 1
+                        break;
+                    case 1:
+                        errorsArray[i].score = 0.5
+                        break;
+                    case 2:
+                        errorsArray[i].score = 0.2
+                        break;
+                    default:
+                        errorsArray[i].score = 0
+                        break;
+
+                }
+                return errorsArray[i].score
+            }
+        }
+      
+    }
+
+    function calculScoreTotal(){
+        var scoreStart = 0
+        
+        var arrayBadAnswerId = []
+        for(var i = 0; i < errorsArray.length; i++){
+            scoreStart += errorsArray[i].score
+        }
+        const score = parseFloat(scoreStart).toFixed(1) % 1 
+
+        let partieDecimale = score % 1;
+        let decimales = Math.floor(partieDecimale * 10);
+        let index = 1
+        if(decimales == 0){
+            index = 0
+        }
+        setScoreEnd(parseFloat(scoreStart).toFixed(index))
+    }
+
+    function returnNbrError(id){
+        for(var i = 0; i < errorsArray.length; i++){
+            if(errorsArray[i].questionId == id){
+                return errorsArray[i].nbrErr
+            }
+        }
+    }
+
+    function returnScore(id){
+        for(var i = 0; i < errorsArray.length; i++){
+            if(errorsArray[i].questionId == id){
+                return errorsArray[i].score
+            }
+        }
+    }
+
+    useEffect(() => {
+        calculScoreTotal()
+        if( errorsArray.length !== 0){
+            playQcmUser(qcmId, answersUser, textInputValue, errorsArray)
+        }
+    }, [])
+    
+
+    const userAnswer = filterGoodAnswersUser()
+
+
+//  useEffect(() => {
     for (const [key, value] of Object.entries(userAnswer)) {
 
         goodAnswer.forEach((element, i) => {
@@ -212,23 +199,31 @@ export default function ScoreScreen({ route, navigation }) {
             var id = element.questionId
             if(value.questionId == element.questionId){
                 let differences = countDifferences(correctionAnswer.letter, value.letter, id)
-                console.log('value.letter',value.letter)
+                // console.log('value.letter',value.letter)
                 if(value.letter.length == 0){
                     differences ="nr"
                 }
-                addToErrorsArray(value.questionId, differences)
+                
+                errorsArray = [
+                    ...errorsArray,
+                    errorsArray[value.questionId] = {
+                        questionId: value.questionId,
+                        nbrErr: differences,
+                    }
+                ]
                 calculScoreByError(id)
+                // calculScoreTotal()
+
                 // console.log(errorsArray)
 
-                if( errorsArray.length !== 0){
-                    // console.log(errorsArray)
-                    playQcmUser(scoreEnd, qcmId, answersUser, textInputValue, errorsArray)
-                }
+        
             
 
             }
         });
     }
+
+    // }, [errorsArray])
 
 
   return (
@@ -355,9 +350,7 @@ export default function ScoreScreen({ route, navigation }) {
             <View 
                 style={{
                     width:'100%',
-                    // marginLeft:55,
                     display:'flex',
-                    // alignItems:'end',
                     justifyContent:'center',
                 }}
             >
@@ -366,7 +359,6 @@ export default function ScoreScreen({ route, navigation }) {
                         fontSize: 20,
                         color: "white",
                         marginLeft:35,
-                        // marginLeft: 10,
                         marginTop: 20,
                         fontWeight:'bold',
                       
@@ -375,12 +367,8 @@ export default function ScoreScreen({ route, navigation }) {
                     Vos résultats :
                 </Text>
                 <View style={{
-                    // width:320,
-                    // display:'flex',
-                    // height:200,
                     alignItems:'center',
                     justifyContent:'center',
-
                     padding:10,
                     margin:15,
                     backgroundColor:'#251245',
@@ -413,9 +401,7 @@ export default function ScoreScreen({ route, navigation }) {
                             </DataTable.Header>
                         {Object.entries(answersUser).map((answer, i) => {
                             const nbrErrorFound = returnNbrError(answer[0])
-                            console.log(answer[0], nbrErrorFound)
 
-                            // var msgError = nbrErrorFound > 1 ? nbrErrorFound +' erreurs' : nbrErrorFound == 1 ? '1 erreur' : 'pas d\'erreur'
                             var msgError = ''
                             switch(nbrErrorFound){
                                 case 0:
@@ -432,8 +418,10 @@ export default function ScoreScreen({ route, navigation }) {
                                     msgError = '0 reponse'
                                     break;
                             }
-                            const nbrPoint = returnScore(answer[0])
+                            console.log(nbrErrorFound)
                             
+                            const nbrPoint = returnScore(answer[0])
+                            console.log(answer[0], nbrPoint)
                             
                            return ( <DataTable.Row key={i}>
                                 <DataTable.Cell 
@@ -457,7 +445,7 @@ export default function ScoreScreen({ route, navigation }) {
                                     fontSize:18,
 
                                 }}
-                                >{nbrPoint} point</DataTable.Cell>
+                                >{nbrPoint  || 0} point</DataTable.Cell>
                             </DataTable.Row>)
                         })}
                      
