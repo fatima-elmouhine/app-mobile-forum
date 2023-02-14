@@ -7,16 +7,14 @@ import { DataGrid } from '@mui/x-data-grid';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 import SideBar from '../component/layout/SideBar';
-import CreateUser from '../component/users/CreateUser';
 import UpdateUser from '../component/users/UpdateUser';
 import DeleteQcm from '@/component/Qcm/DeleteQcm';
 import style from '@/styles/Global.module.css';
 
-import { getQcm } from '@/api/Qcm/getQcms';
+import { getQcms } from '@/api/Qcm/getQcms';
 
 const Qcms = () => {
     const [openCreate, setOpenCreate] = useState(false);
-    const handleOpenCreate = () => setOpenCreate(true);
 
     const [item, setItem] = useState();
     const [openUpdate, setOpenUpdate] = useState(false);
@@ -27,16 +25,20 @@ const Qcms = () => {
 
     const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
 
+    const handleClick = () => {
+        window.location.href = '/CreateQcm';
+    };
+
     const [qcms, setQcms] = useState([]);
 
     useEffect(() => {
-        getQcm().then((data) => {
+        getQcms().then((data) => {
             setQcms(data);
         });
     }, []);
 
     useEffect(() => {
-        getQcm().then((data) => {
+        getQcms().then((data) => {
             setQcms(data);
         });
     }, [openCreate, openUpdate, openDelete]);
@@ -114,14 +116,8 @@ const Qcms = () => {
                         variant="contained"
                         color="primary"
                         startIcon={<ControlPointIcon />}
-                        onClick={handleOpenCreate}
+                        onClick={handleClick}
                     />
-                    <Modal
-                        open={openCreate}
-                        onClose={handleClose}
-                    >
-                        <CreateUser onClose={handleClose}/>
-                    </Modal>
                 </Box>
                 <DataGrid
                     rows={rows}

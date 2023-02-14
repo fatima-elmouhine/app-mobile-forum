@@ -55,7 +55,7 @@ const SideBar = () => {
                         </Link>
                     </MenuItem>
                     <MenuItem className={style.menuItem}>
-                        <Link href="/Qcm" className={style.link}>
+                        <Link href="/Qcms" className={style.link}>
                             <QuizIcon className={style.linkTitle} />
                             <p className={style.linkTitle}>QCM</p>
                         </Link>
