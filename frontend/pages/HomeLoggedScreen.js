@@ -11,11 +11,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useContext, useState } from "react";
-import {
-  useFonts,
-  Roboto_400Regular,
-  Roboto_400Regular_Italic,
-} from "@expo-google-fonts/roboto";
+
 import {
   ProgressBar,
   Avatar,
@@ -42,7 +38,7 @@ export default function HomeLoggedScreen({ navigation }) {
       const coursesReq = await getCourses('limit=3&order=createdAt:DESC');
       setCourses(coursesReq);
     }
-    console.log(userDetails)
+    // console.log(userDetails)
     getCoursesInHome();
   }, []);
 
@@ -50,10 +46,6 @@ export default function HomeLoggedScreen({ navigation }) {
     navigation.navigate("ProfileScreen");
   }
 
-  let [fontsLoaded] = useFonts({
-    Roboto_400Regular,
-    Roboto_400Regular_Italic,
-  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -145,20 +137,13 @@ const styles = StyleSheet.create({
   },
 
   container: {
-    // flex: 6,
     width: "100%",
     height: "100%",
-    fontFamily: "Roboto_400Regular",
-    // paddingLeft: 28,
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
 
   containerGradient: {
-    // flex: 6,
     width: "100%",
     height: "100%",
-    fontFamily: "Roboto_400Regular",
   },
 
   profileImgContainer: {

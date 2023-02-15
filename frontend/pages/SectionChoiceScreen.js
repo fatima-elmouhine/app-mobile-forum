@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
     // flex: 6,
     width: "100%",
     height: "100%",
-    fontFamily: "Roboto_400Regular",
     // paddingLeft: 28,
     // alignItems: 'center',
     // justifyContent: 'center',
@@ -173,7 +172,6 @@ const styles = StyleSheet.create({
     // flex: 6,
     width: "100%",
     height: "100%",
-    fontFamily: "Roboto_400Regular",
   },
 
   profileImgContainer: {

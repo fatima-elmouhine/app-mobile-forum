@@ -97,6 +97,7 @@ const Forum = ({ navigation }) => {
     const fetchInit = async () => {
       const Theme = await getTheme();
       const Topic = await getTopics();
+      console.log("Theme", Topic);
       return setCards({
         ...cards,
         topic: await getTopics(),
@@ -104,6 +105,10 @@ const Forum = ({ navigation }) => {
       });
     };
     fetchInit();
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      fetchInit();
+    });
+    return willFocusSubscription;
   }, []);
 
   useEffect(() => {

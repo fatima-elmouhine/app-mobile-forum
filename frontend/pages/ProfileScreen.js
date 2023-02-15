@@ -11,11 +11,6 @@ import {
   Alert,
 } from "react-native";
 import {
-  useFonts,
-  Roboto_400Regular,
-  Roboto_400Regular_Italic,
-} from "@expo-google-fonts/roboto";
-import {
   TextInput,
   Avatar,
   IconButton,
@@ -78,6 +73,7 @@ export default function ProfileScreen({ navigation }) {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync();
+
 
     // Explore the result
 
@@ -155,10 +151,7 @@ export default function ProfileScreen({ navigation }) {
     }
   }
 
-  let [fontsLoaded] = useFonts({
-    Roboto_400Regular,
-    Roboto_400Regular_Italic,
-  });
+
 
   return (
     <View style={styles.container}>
@@ -301,7 +294,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     display: "flex",
-    fontFamily: "Roboto_400Regular",
     // paddingLeft: 28,
     margin: 0,
 
@@ -313,7 +305,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     display: "flex",
-    fontFamily: "Roboto_400Regular",
     paddingLeft: 28,
     margin: 0,
   },

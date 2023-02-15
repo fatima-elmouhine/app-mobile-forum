@@ -1,8 +1,10 @@
-const {getQcms, postQcm, getQcm, updateQcm, deleteQcm} = require('../controllers/qcms')
+const {getQcms, postQcm, getQcm, updateQcm, deleteQcm, generateQcm, playGame} = require('../controllers/qcms')
 
 const express = require('express');
 const router = express.Router();
 const auth = require("../Tools/auth");
+
+router.get('/generate/:limit/:idTheme',auth , generateQcm)
 
 router.get('/',getQcms);
 
@@ -13,5 +15,7 @@ router.post('/', auth, postQcm);
 router.put('/:id', auth, updateQcm);
 
 router.delete('/', auth, deleteQcm);
+
+router.post('/playingGame', auth, playGame);
 
 module.exports = router;

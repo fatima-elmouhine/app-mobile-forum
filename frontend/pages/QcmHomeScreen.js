@@ -20,7 +20,7 @@ import {
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function ForumHomeScreen({ navigation }) {
+export default function QcmHomeScreen({ navigation }) {
 
 
 
@@ -35,12 +35,12 @@ export default function ForumHomeScreen({ navigation }) {
           style={styles.bgTop}
         />
         <Text style={{fontSize:40, color:'white', marginTop:120, marginLeft:40, fontWeight:'bold'}}>
-            Forum
+            QCM
         </Text>
         <View style={{flexDirection:'row', marginTop:20,  display:'flex', flexDirection:'column'}}>
             <View style={{  backgroundColor:'#94DFC9', padding:20, borderRadius:8, marginTop:50,
-                marginLeft:40,
-                marginRight:40,
+                marginLeft:20,
+                marginRight:20,
                 shadowColor: '#000',
                 shadowOffset: {
                     width: 0,
@@ -51,8 +51,8 @@ export default function ForumHomeScreen({ navigation }) {
                 elevation: 5,
                 }} >
                     <Button
-                        icon={require('../assets/logo/search.png')}
-                        labelStyle={{fontSize: 22,}}
+                        icon={require('../assets/logo/question.png')}
+                        labelStyle={{fontSize: 22}}
                         mode="contained"
                         style={{
                         alignItems: 'center',
@@ -61,37 +61,43 @@ export default function ForumHomeScreen({ navigation }) {
                         backgroundColor:'#94DFC9', padding:40, width:'100%', borderRadius:8}}
 
                         onPress={() => {
-                        navigation.navigate('ForumScreen')}}
+                        navigation.navigate('ListQcmScreen')}}
                     >
-                        Recherche
+                        Liste des QCM
 
                     </Button>
             </View>
-            <View style={{  backgroundColor:'#EDC538', padding:20, borderRadius:8, marginTop:50,
-                marginLeft:40,
-                marginRight:40,
+            <View style={{  
+                backgroundColor:'#F66C1C', 
+                padding:10,
+                paddingBottom:40,
+                paddingTop:40, 
+                borderRadius:8, 
+                marginTop:50,
+                marginLeft:20,
+                marginRight:20,
                 shadowColor: '#000',
                 shadowOffset: {
-                    width: 0,
-                    height: 2,
-                },
+                        width: 0,
+                        height: 2,
+                    },
                 shadowOpacity: 0.25,
                 shadowRadius: 4,
                 elevation: 5,
                 }} >
                     <Button
                         icon={require('../assets/logo/plus.png')}
-                        labelStyle={{fontSize: 22,}}
+                        labelStyle={{fontSize: 17,}}
                         mode="contained"
                         style={{
                         alignItems: 'center',
                         justifyContent: 'center',
                         display: 'flex',
-                        backgroundColor:'#EDC538', padding:40, width:'100%', borderRadius:8}}
+                        backgroundColor:'#F66C1C', padding:4, width:'100%', borderRadius:8}}
                         onPress={() => {
                         navigation.navigate('NewTopicScreen')}}
                     >
-                        Nouveau sujet
+                        Générer votre propre questionnaire
 
                     </Button>
             </View>

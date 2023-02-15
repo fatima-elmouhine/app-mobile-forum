@@ -27,6 +27,16 @@ function MenuButton() {
           position: 0
         },
         {
+          text: "QCM",
+          name: "QcmHomeScreen",
+          icon: require("../assets/logo/question.png"),
+          color: "#9DC726",
+          buttonSize:45,
+          size:90,
+          margin:0,
+          position: 1
+        },
+        {
           text: "Cours",
           icon: require("../assets/logo/book.png"),
           color: "#FFAC2F",
@@ -34,7 +44,7 @@ function MenuButton() {
           buttonSize:45,
           size:90,
           margin:0,
-          position: 1
+          position: 2
         },
         {
           text: "Forum",
@@ -44,7 +54,7 @@ function MenuButton() {
           buttonSize:45,
           size:90,
           margin:0,
-          position: 2
+          position: 3
         },
         {
           text: "Profile",
@@ -54,7 +64,7 @@ function MenuButton() {
           buttonSize:45,
           size:90,
           margin:0,
-          position: 3
+          position: 4
         },
         {
           text: "Home",
@@ -64,7 +74,7 @@ function MenuButton() {
           buttonSize: 45,
           size:90,
           margin:0,
-          position: 4
+          position: 5
         },
         {
           text: "Se déconnecter",
@@ -74,7 +84,7 @@ function MenuButton() {
           buttonSize: 45,
           size:90,
           margin:0,
-          position: 5
+          position: 6
         }
       ];
   return (
