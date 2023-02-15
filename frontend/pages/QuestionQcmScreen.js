@@ -24,7 +24,8 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import {getQcm} from "../api/Qcms/getQcm";
 import SelectDropdown from 'react-native-select-dropdown'
-import { set } from "date-fns";
+import {playQcmUser } from "../api/Qcms/playQcmUser";
+
 
 export default function QuestionQcmScreen({ route, navigation }) {
 
@@ -38,8 +39,156 @@ export default function QuestionQcmScreen({ route, navigation }) {
     const [goodAnswer, setGoodAnswer] = React.useState({});
     const [indexQuestion, setIndexQuestion] = React.useState(0);
     const [answersChecked, setAnswersChecked] = React.useState({});
+    const letterArray = ["A", "B", "C", "D", "E"];
+    const { idQcm } = route.params;
+    const [saveGame, setSaveGame] = React.useState({});
 
 
+    var errorsArray = []
+
+    function filterGoodAnswersUser(){
+        var arrayAnswersUser = []
+        for (var element in answersChecked) {
+           for(var [key, value] of Object.entries(answersChecked[element])){
+                if(value == true){
+                        arrayAnswersUser = [
+                            ...arrayAnswersUser,
+                            {
+                                questionId : element,
+                                letter : [key]
+                            }
+                        ]
+                }else{
+                    arrayAnswersUser = [
+                        ...arrayAnswersUser,
+                        {
+                            questionId : element,
+                            letter : []
+                        }
+                    ]
+                }
+           }
+
+        }
+
+        const newArray = arrayAnswersUser.reduce((acc, current) => {
+            const x = acc.find(item => item.questionId == current.questionId);
+
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                x.letter = x.letter.concat(current.letter);
+                return acc;
+            }
+        }, []);
+
+        return newArray
+    }
+
+    function countDifferences(array1, array2, id) {
+
+        array1.sort();
+        array2.sort();
+
+        let count = 0;
+
+        var arrNotIn = []
+        var arrIn = []
+        if(JSON.stringify(array1) !== JSON.stringify(array2)){
+   
+            for (var i in array1) {
+                for (var j in array2) {
+                    if (array1[i] === array2[j]) {
+                        if (!arrIn.includes(array2[j])) {
+                            arrIn.push(array2[j])
+                        }
+                    }
+                    
+                    if(!array1.includes(array2[j]) && array1[i] !== array2[j]){  
+                        if (!arrNotIn.includes(array2[j])) {
+                            arrNotIn.push(array2[j])
+                            count++
+                        } 
+                    }
+
+                }
+            }
+        }
+
+        if(arrNotIn.length > 0){
+            count += array1.length - arrIn.length
+        }
+
+        return count;
+    }
+
+    function calculScoreByError(id){
+
+        for(var i = 0; i < errorsArray.length; i++){
+
+            if(errorsArray[i].questionId == id){
+                switch (errorsArray[i].nbrErr) {
+                    case 0:
+                        errorsArray[i].score = 1
+                        break;
+                    case 1:
+                        errorsArray[i].score = 0.5
+                        break;
+                    case 2:
+                        errorsArray[i].score = 0.2
+                        break;
+                    default:
+                        errorsArray[i].score = 0
+                        break;
+
+                }
+                return errorsArray[i].score
+            }
+        }
+      
+    }
+
+    async function saveOneGame(){
+      correctionGame()
+      if( errorsArray.length !== 0){
+
+          const game =  await playQcmUser(idQcm, answersChecked, textInputValue, errorsArray)
+          
+          navigation.navigate("ScoreScreen", {
+              idQcmUser: game.id,         
+            })
+       }
+    }
+
+    function correctionGame(){
+      const userAnswer = filterGoodAnswersUser()
+
+
+      //  useEffect(() => {
+          for (const [key, value] of Object.entries(userAnswer)) {
+      
+              goodAnswer.forEach((element, i) => {
+                  var correctionAnswer = element
+                  var id = element.questionId
+                  if(value.questionId == element.questionId){
+                      let differences = countDifferences(correctionAnswer.letter, value.letter, id)
+                      if(value.letter.length == 0){
+                          differences ="nr"
+                      }
+                      
+                      errorsArray = [
+                          ...errorsArray,
+                          errorsArray[value.questionId] = {
+                              questionId: value.questionId,
+                              nbrErr: differences,
+                          }
+                      ]
+                      calculScoreByError(id)
+      
+                  }
+              });
+          }
+    }
 
     const createTwoButtonAlert = () =>
     Alert.alert('Terminer le quizz ?', 'Êtes-vous sûr de vouloir terminer la partie ?', [
@@ -49,16 +198,8 @@ export default function QuestionQcmScreen({ route, navigation }) {
         style: 'cancel',
       },
       {text: 'Confirmer', onPress: () => {
-        navigation.navigate("ScoreScreen", {
-                      idQcm: idQcm,
-                      textInputValue: textInputValue,
-                      answersChecked: answersChecked,
-                      goodAnswer: goodAnswer,
-                      qcmTitle: qcmTitle,
-                      qcmQuestion: qcmQuestion,
+        saveOneGame()
 
-                      
-                    })
         fetchQcm()
 
 
@@ -69,18 +210,14 @@ export default function QuestionQcmScreen({ route, navigation }) {
     ]);
 
 
-    const letterArray = ["A", "B", "C", "D", "E"];
-
-    const { idQcm } = route.params;
-
-
+ 
 
     async function fetchQcm() {
       const data = await getQcm(idQcm);
       const arrayAnswers = data.answers;
       const qcm = data.qcm
 
-      setTextInputValue(qcm[0]);
+      setTextInputValue(data);
       setQcmTitle(qcm[0].title);
       setQcmQuestion(qcm[0].Questions);
       setCurrentQuestion(qcm[0].Questions[indexQuestion]);

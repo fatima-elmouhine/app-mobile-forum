@@ -23,17 +23,50 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import {getQcm} from "../api/Qcms/getQcm";
 import SelectDropdown from 'react-native-select-dropdown'
-import {playQcmUser } from "../api/Qcms/playQcmUser";
+import {getQcmUser} from "../api/Qcms/getQcmUser";
 
 export default function ScoreScreen({ route, navigation }) {
   // remettre le bouton suivant
   // vider les variables une fois la partie fini
+    const [dataUserQcm, setDataUserQcm] = useState({
+        nbrQuestion : 0,
+        answersUser : [],
+        goodAnswer : [],
+        results : [],
 
-    const qcmId = route.params.idQcm
-    const nbrQuestion = route.params.qcmQuestion.length
-    const answersUser = route.params.answersChecked
-    const textInputValue = route.params.textInputValue
-    const goodAnswer  = route.params.goodAnswer
+    })
+    const {idQcmUser } = route.params
+    useEffect(() => {
+        fetchQcm()
+        calculScoreTotal()
+    }, [])
+    
+    async function fetchQcm() {
+        const data = await getQcmUser(idQcmUser);
+        const response = JSON.parse(data.text_response)
+        const structure = JSON.parse(data.text_structure)
+        const arrayAnswers = structure.answers;
+
+        setDataUserQcm({
+            nbrQuestion : structure.qcm[0].Questions.length,
+            title : structure.qcm[0].title,
+            answersUser : response,
+            goodAnswer : arrayAnswers,
+            results : data.Results,
+        })
+  
+  
+
+  
+      }
+      
+
+    
+
+  
+    const nbrQuestion = dataUserQcm.nbrQuestion
+    const answersUser =  dataUserQcm.answersUser
+    const goodAnswer  = dataUserQcm.goodAnswer
     const [scoreEnd, setScoreEnd] = useState(0)
     const [saveGame, setSaveGame] = useState({})
     var scoreTotal = nbrQuestion
@@ -44,6 +77,7 @@ export default function ScoreScreen({ route, navigation }) {
     function filterGoodAnswersUser(){
         var arrayAnswersUser = []
         for (var element in answersUser) {
+      
            for(var [key, value] of Object.entries(answersUser[element])){
                 if(value == true){
                         arrayAnswersUser = [
@@ -65,7 +99,6 @@ export default function ScoreScreen({ route, navigation }) {
            }
 
         }
-
         const newArray = arrayAnswersUser.reduce((acc, current) => {
             const x = acc.find(item => item.questionId == current.questionId);
 
@@ -76,7 +109,6 @@ export default function ScoreScreen({ route, navigation }) {
                 return acc;
             }
         }, []);
-
         return newArray
     }
     function countDifferences(array1, array2, id) {
@@ -109,9 +141,7 @@ export default function ScoreScreen({ route, navigation }) {
             }
         }
 
-        // if(array2.length == 0){
-        //     count = 3
-        // }
+
 
         if(arrNotIn.length > 0){
             count += array1.length - arrIn.length
@@ -148,11 +178,11 @@ export default function ScoreScreen({ route, navigation }) {
 
     function calculScoreTotal(){
         var scoreStart = 0
-        
-        var arrayBadAnswerId = []
-        for(var i = 0; i < errorsArray.length; i++){
-            scoreStart += errorsArray[i].score
+     
+        for(var i = 0; i < dataUserQcm.results.length; i++){
+            scoreStart += dataUserQcm.results[i].result
         }
+ 
         const score = parseFloat(scoreStart).toFixed(1) % 1 
 
         let partieDecimale = score % 1;
@@ -161,6 +191,7 @@ export default function ScoreScreen({ route, navigation }) {
         if(decimales == 0){
             index = 0
         }
+
         setScoreEnd(parseFloat(scoreStart).toFixed(index))
     }
 
@@ -180,19 +211,12 @@ export default function ScoreScreen({ route, navigation }) {
         }
     }
 
-    async function saveOneGame(){
-        if( errorsArray.length !== 0){
-            const game =  await playQcmUser(qcmId, answersUser, textInputValue, errorsArray)
-            setSaveGame(game)
-            console.log("game", game.id)
-         }
-    }
 
 
     useEffect(() => {
         calculScoreTotal()
-        saveOneGame()
-    }, [])
+
+    }, [dataUserQcm])
     
 
     const userAnswer = filterGoodAnswersUser()
@@ -268,7 +292,7 @@ export default function ScoreScreen({ route, navigation }) {
                             fontWeight:'bold',
                         }}
                     >
-                        QCM {route.params.qcmTitle}
+                        QCM {dataUserQcm.title}
                     </Text>
                     <Text
                         style={{
@@ -318,8 +342,7 @@ export default function ScoreScreen({ route, navigation }) {
                    {scoreEnd}/{nbrQuestion}
                 </Text>
             </View>
-            {console.log(saveGame)}
-        {saveGame.id &&
+
             <View style={{
                 width:'100%',
                 display:'flex',
@@ -334,7 +357,7 @@ export default function ScoreScreen({ route, navigation }) {
 
                 }}
                 onPress={() => {
-                    navigation.navigate("CorrectionQcmScreen", {id : saveGame.id})}
+                    navigation.navigate("CorrectionQcmScreen", {id : idQcmUser})}
                 }
                 style={{
                     marginTop: 25,
@@ -350,7 +373,6 @@ export default function ScoreScreen({ route, navigation }) {
                     Voir la correction
                 </Button>
             </View>
-        }
             <View 
                 style={{
                     width:'100%',
@@ -407,6 +429,7 @@ export default function ScoreScreen({ route, navigation }) {
                             const nbrErrorFound = returnNbrError(answer[0])
 
                             var msgError = ''
+
                             switch(nbrErrorFound){
                                 case 0:
                                     msgError = 'pas d\'erreur'
@@ -414,7 +437,19 @@ export default function ScoreScreen({ route, navigation }) {
                                 case 1:
                                     msgError = '1 erreur'
                                     break;
-                                case (2 || 3 || 4 || 5) :
+                                case  2:
+                                    msgError = nbrErrorFound +' erreurs'
+                                    break;
+                                case  2:
+                                msgError = nbrErrorFound +' erreurs'
+                                    break;
+                                case  3:
+                                msgError = nbrErrorFound +' erreurs'
+                                break;
+                                case  4:
+                                msgError = nbrErrorFound +' erreurs'
+                                    break;
+                                case  5:
                                     msgError = nbrErrorFound +' erreurs'
                                     break;
                                 default:

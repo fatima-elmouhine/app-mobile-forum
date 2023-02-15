@@ -28,7 +28,6 @@ import SelectDropdown from 'react-native-select-dropdown'
 
 export default function CorrectionQcmScreen({ route, navigation }) {
 
-    console.log("route.params", route.params);
     const idQcmUser = route.params.id;
 
     const [qcmQuestion, setQcmQuestion] = React.useState({});
@@ -41,36 +40,10 @@ export default function CorrectionQcmScreen({ route, navigation }) {
     const [goodAnswer, setGoodAnswer] = React.useState({});
     const [indexQuestion, setIndexQuestion] = React.useState(0);
     const [answersChecked, setAnswersChecked] = React.useState({});
+    const [results , setResults] = React.useState(null);
 
 
-
-    const createTwoButtonAlert = () =>
-    Alert.alert('Terminer le quizz ?', 'Êtes-vous sûr de vouloir terminer la partie ?', [
-      {
-        text: 'Annuler',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {text: 'Confirmer', onPress: () => {
-        navigation.navigate("ScoreScreen", {
-                      idQcm: idQcm,
-                      textInputValue: textInputValue,
-                      answersChecked: answersChecked,
-                      goodAnswer: goodAnswer,
-                      qcmTitle: qcmTitle,
-                      qcmQuestion: qcmQuestion,
-
-                      
-                    })
-        fetchQcm()
-
-
-
-
-        }
-      },
-    ]);
-
+   
 
     const letterArray = ["A", "B", "C", "D", "E"];
 
@@ -82,13 +55,10 @@ export default function CorrectionQcmScreen({ route, navigation }) {
       const data = await getQcmUser(idQcmUser);
       const response = JSON.parse(data.text_response)
       const structure = JSON.parse(data.text_structure)
-        console.log("data", structure);
       const arrayAnswers = data.answers;
-      const qcm = structure
+      const qcm = structure.qcm[0]
 
-
-
-    //   setTextInputValue(qcm[0]);
+      setResults(data.Results)
       setQcmTitle(qcm.title);
       setQcmQuestion(qcm.Questions);
       setCurrentQuestion(qcm.Questions[indexQuestion]);
@@ -98,6 +68,7 @@ export default function CorrectionQcmScreen({ route, navigation }) {
       setAnswersChecked(response);
 
     }
+
     useEffect(() => {
 
       fetchQcm();
@@ -120,7 +91,7 @@ export default function CorrectionQcmScreen({ route, navigation }) {
             fontSize: 30,
             fontWeight: "bold",
             marginTop: 50,
-            marginLeft: 40,
+            marginLeft: 20,
             color: "#fff",
           }}
         >
@@ -142,14 +113,14 @@ export default function CorrectionQcmScreen({ route, navigation }) {
                 marginLeft: 20,
                 paddingBottom: 20,
             }}>
-                <Text style={{
+                {/* <Text style={{
                     fontSize: 27,
                     fontWeight: "bold",
                     color: "#EEA923",
                 }}>
                  Correction
-                </Text>
-                {/* <Button
+                </Text> */}
+                <Button
                 labelStyle={{fontSize: 17, color: "#fff"}}
                 style={{
                     backgroundColor: "#00DC9A",
@@ -157,7 +128,7 @@ export default function CorrectionQcmScreen({ route, navigation }) {
                     
                     borderRadius: 8,
                     // marginTop: 50,
-                    marginLeft: 20,
+                    marginLeft: 0,
                     marginRight: 20,
                     shadowColor: "#000",
                     shadowOffset: {
@@ -169,11 +140,13 @@ export default function CorrectionQcmScreen({ route, navigation }) {
                     elevation: 5,
                 }}
                 onPress={() => {
-                  createTwoButtonAlert();
+                    // redirect vers Result
+                    navigation.navigate("ScoreScreen", {idQcmUser: idQcmUser})
+                //   createTwoButtonAlert();
                 }}
                 >
-                    Terminer
-                </Button> */}
+                    Resultat
+                </Button>
 
                   <SelectDropdown
                       data={qcmQuestion}
@@ -232,52 +205,20 @@ export default function CorrectionQcmScreen({ route, navigation }) {
               {questionTitle}/{qcmQuestion?.length}
             </Text>
 
-            {/* <Button
-                labelStyle={{fontSize: 17, color: "#fff"}}
-                style={{
-                    backgroundColor: "#FF00B8",
-                    // padding: 20,
-                    
-                    borderRadius: 8,
-                    // marginTop: 50,
-                    marginLeft: 20,
-                    marginRight: 20,
-                    shadowColor: "#000",
-                    shadowOffset: {
-                    width: 0,
-                    height: 2,
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 4,
-                    elevation: 5,
-                }}
-                onPress={() => {
-                  // console.log('current question',currentQuestion.id);
-                  console.log('current question',questionTitle);
-                  
-                  // setIndexQuestion(indexQuestion+1);
-                  
-                  if (indexQuestion == qcmQuestion?.length) {
-                    // alert('Vous avez terminé le QCM');
-                    // console.log('current question',qcmQuestion);
-                    setIndexQuestion(1);
-                    setCurrentQuestion(qcmQuestion[0]);
-                    setQuestionId(qcmQuestion[0].id);
-                    setQuestionTitle('Question ' + 1);
-                  }else{
-
-                    setCurrentQuestion(nextQuestion);
-                    setQuestionId(nextQuestion.id);
-                    setIndexQuestion(indexQuestion+1);
-                    setQuestionTitle('Question ' + (indexQuestion+1));
-
-                  }
-                  // console.log('next question',questionTitle);
-                  
-                }}
-                >
-                    Suivant
-            </Button> */}
+<View>
+            <Text style={{fontSize: 22, color: "#8BF604", fontWeight: "bold"}}>
+                Point : 
+                {
+                    results !== null && (
+                        results.map((result) => {
+                            if(result.id_question === currentQuestion.id){
+                                return " "+result.result+"/1"
+                            }
+                        })
+                    )
+                }
+            </Text>
+</View>
 
         </View>
 
@@ -305,18 +246,10 @@ export default function CorrectionQcmScreen({ route, navigation }) {
                 marginTop: 10,
             }}>
               {currentQuestion?.Answers?.map((answer, i) => {
-                // setAnswersChecked({
-                //   ...answersChecked,
-                //   [currentQuestion.id] : {
-                //     [letterArray[i]]: false,
-                //   }
-                // });
-                // console.log('answersChecked',answersChecked[currentQuestion.id][letterArray[i]]);
                 return (
                     <View key={i} style={{
                       display: "flex",
                       flexDirection: "row",
-                      // justifyContent: "space-between",
                       alignContent: "center",
                       alignItems: "center",
                       backgroundColor:'white',
@@ -325,22 +258,11 @@ export default function CorrectionQcmScreen({ route, navigation }) {
                       borderWidth: answer.isCorrect_answer ? 5 : 0, 
                       borderColor: (answersChecked[currentQuestion.id]) && (answersChecked[currentQuestion.id][letterArray[i]] !== answer.isCorrect_answer) ?   '#FF0000' : '#8BF604',
                       }}>
-                        {/* {console.log('answer',answer.isCorrect_answer)} */}
                     <Checkbox 
                         status={( (questionId != undefined && answersChecked[questionId]) && answersChecked[questionId][letterArray[i]]) ? 'checked' : 'unchecked'}
                         color="#500E5D"
                         disabled={true}
-                        onPress={() => {
-                          (questionId != undefined && answersChecked[questionId]) &&
-                            setAnswersChecked({
-                                ...answersChecked,
-                                [questionId] : {
-                                  ...answersChecked[questionId],
-                                  [letterArray[i]]: !answersChecked[questionId][letterArray[i]],
-                                }
-                                
-                            });
-                        }}
+                        
                         style={{
                           marginLeft: 16,
                         borderRadius: 8, 

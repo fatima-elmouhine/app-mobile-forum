@@ -232,7 +232,7 @@ async function playGame (req, res)
 async function getOneUserQcm(req, res) {
   const qcm = await UserQcm.findAll({
     where : {id: req.params.id},
-    // include: {model: Question, include: Answer},
+    include: {model: Result},
     // order: [[sequelize.random()]],
 })
 
