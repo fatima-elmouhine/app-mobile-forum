@@ -7,7 +7,6 @@ import axiosInstance from '../config'
     })
 
     try {
-        
         if (data.status == 201) {
             console.log(data);
             console.log(data.data);

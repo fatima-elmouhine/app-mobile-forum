@@ -12,7 +12,7 @@ router.get('/:id', getQcm);
 
 router.post('/', auth, postQcm);
 
-router.put('/:id', auth, updateQcm);
+router.put('/', auth, updateQcm);
 
 router.delete('/', auth, deleteQcm);
 

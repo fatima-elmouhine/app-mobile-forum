@@ -7,11 +7,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 import SideBar from '../component/layout/SideBar';
-import UpdateUser from '../component/users/UpdateUser';
 import DeleteQcm from '@/component/Qcm/DeleteQcm';
 import style from '@/styles/Global.module.css';
 
 import { getQcms } from '@/api/Qcm/getQcms';
+import { getType } from '@/api/Qcm/getType';
 
 const Qcms = () => {
 
@@ -30,11 +30,17 @@ const Qcms = () => {
         window.location.href=`Qcms/${id}`
     }
 
+    const [type, setType] = useState('');
+
     const [qcms, setQcms] = useState([]);
+    console.log(qcms);
 
     useEffect(() => {
         getQcms().then((data) => {
             setQcms(data);
+        });
+        getType(qcms[0].id_type).then((data) => {
+            setType(data);
         });
     }, []);
 
@@ -91,8 +97,8 @@ const Qcms = () => {
             id: qcm.id,
             title: qcm.title,
             isGenerated: qcm.isGenerated ? 'Oui' : 'Non',
-            type: qcm.Type.type_name,
-            id_type: qcm.Type.id,
+            type: type.type_name,
+            id_type: type.id,
             createdAt: new Date(qcm.createdAt).toLocaleDateString(),
             updatedAt: new Date(qcm.updatedAt).toLocaleString()
         };

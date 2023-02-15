@@ -109,7 +109,7 @@ async function postQcm(req, res) {
       isGenerated: req.body.isGenerated,
       id_type: req.body.id_type,
       // TODO : id_user to token
-      id_user: req.body.id_user,
+      id_user: req.user.id,
     });
     res.status(200).json(qcm);
   } catch (error) {
@@ -250,4 +250,5 @@ module.exports = {
   deleteQcm,
   generateQcm,
   playGame,
+  postQcmQuestion,
 };
