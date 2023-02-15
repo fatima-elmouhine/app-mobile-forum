@@ -22,11 +22,14 @@ import {
   Dialog, Portal , Provider
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import {getQcm} from "../api/Qcms/getQcm";
+import {getQcmUser} from "../api/Qcms/getQcmUser";
 import SelectDropdown from 'react-native-select-dropdown'
-import { set } from "date-fns";
 
-export default function QuestionQcmScreen({ route, navigation }) {
+
+export default function CorrectionQcmScreen({ route, navigation }) {
+
+    console.log("route.params", route.params);
+    const idQcmUser = route.params.id;
 
     const [qcmQuestion, setQcmQuestion] = React.useState({});
     const [questionTitle, setQuestionTitle] = React.useState("Question 1"); 
@@ -71,34 +74,28 @@ export default function QuestionQcmScreen({ route, navigation }) {
 
     const letterArray = ["A", "B", "C", "D", "E"];
 
-    const { idQcm } = route.params;
+    
 
 
 
     async function fetchQcm() {
-      const data = await getQcm(idQcm);
+      const data = await getQcmUser(idQcmUser);
+      const response = JSON.parse(data.text_response)
+      const structure = JSON.parse(data.text_structure)
+        console.log("data", structure);
       const arrayAnswers = data.answers;
-      const qcm = data.qcm
+      const qcm = structure
 
-      setTextInputValue(qcm[0]);
-      setQcmTitle(qcm[0].title);
-      setQcmQuestion(qcm[0].Questions);
-      setCurrentQuestion(qcm[0].Questions[indexQuestion]);
-      setQuestionId(qcm[0].Questions[indexQuestion].id);
+
+
+    //   setTextInputValue(qcm[0]);
+      setQcmTitle(qcm.title);
+      setQcmQuestion(qcm.Questions);
+      setCurrentQuestion(qcm.Questions[indexQuestion]);
+      setQuestionId(qcm.Questions[indexQuestion].id);
       setGoodAnswer(arrayAnswers);
-      var userAnswers = {};
-      
-      for (let i = 0; i < qcm[0].Questions.length; i++) {
-        userAnswers[qcm[0].Questions[i].id] = {
-          A: false,
-          B: false,
-          C: false,
-          D: false,
-          E: false,
-        };
-      }
 
-      setAnswersChecked(userAnswers);
+      setAnswersChecked(response);
 
     }
     useEffect(() => {
@@ -145,7 +142,14 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 marginLeft: 20,
                 paddingBottom: 20,
             }}>
-                <Button
+                <Text style={{
+                    fontSize: 27,
+                    fontWeight: "bold",
+                    color: "#EEA923",
+                }}>
+                 Correction
+                </Text>
+                {/* <Button
                 labelStyle={{fontSize: 17, color: "#fff"}}
                 style={{
                     backgroundColor: "#00DC9A",
@@ -169,7 +173,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 }}
                 >
                     Terminer
-                </Button>
+                </Button> */}
 
                   <SelectDropdown
                       data={qcmQuestion}
@@ -307,7 +311,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 //     [letterArray[i]]: false,
                 //   }
                 // });
-                // console.log('answersChecked',answersChecked);
+                // console.log('answersChecked',answersChecked[currentQuestion.id][letterArray[i]]);
                 return (
                     <View key={i} style={{
                       display: "flex",
@@ -318,10 +322,14 @@ export default function QuestionQcmScreen({ route, navigation }) {
                       backgroundColor:'white',
                       fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",   marginTop:20 ,padding:15
                       ,paddingRight: 20,
+                      borderWidth: answer.isCorrect_answer ? 5 : 0, 
+                      borderColor: (answersChecked[currentQuestion.id]) && (answersChecked[currentQuestion.id][letterArray[i]] !== answer.isCorrect_answer) ?   '#FF0000' : '#8BF604',
                       }}>
+                        {/* {console.log('answer',answer.isCorrect_answer)} */}
                     <Checkbox 
                         status={( (questionId != undefined && answersChecked[questionId]) && answersChecked[questionId][letterArray[i]]) ? 'checked' : 'unchecked'}
                         color="#500E5D"
+                        disabled={true}
                         onPress={() => {
                           (questionId != undefined && answersChecked[questionId]) &&
                             setAnswersChecked({
@@ -336,9 +344,11 @@ export default function QuestionQcmScreen({ route, navigation }) {
                         style={{
                           marginLeft: 16,
                         borderRadius: 8, 
+                        border: '9px solid #500E5D',
+                        borderColor: "#500E5D",
                         marginBottom:0
                       }}/>
-                      <Text style={{fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",padding:15, paddingRight: 20}}>
+                      <Text style={{fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",padding:15, paddingRight: 20,}}>
                        {letterArray[i]}) {answer.text} {answer.isCorrect_answer}
                       </Text>
                      </View>

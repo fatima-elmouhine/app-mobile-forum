@@ -70,14 +70,15 @@ export default function HomeLoggedScreen({ navigation }) {
                 handlePressEdit();
               }}
             >
+              {userDetails?.avatar &&
               <Avatar.Image
                 size={120}
-                source={{uri : userDetails.avatar}}
+                source={{uri : userDetails?.avatar}}
                 style={styles.image}
                 onPress={() => {
                   handlePressEdit();
                 }}
-              />
+              />}
             </TouchableOpacity>
             <View
               style={{
@@ -108,6 +109,17 @@ export default function HomeLoggedScreen({ navigation }) {
         </View>
         <Text style={styles.sectionTitle}>Mes derniers cours</Text>
         <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+            <Button mode="contained"
+            onPress={()=>
+              {
+                navigation.navigate('CorrectionQcmScreen', {id: 55})
+              }
+
+            }
+            
+            >
+                correction
+            </Button>
           <View style={styles.sectionLatestCourse}>
             {courses.length !== 0 &&
               courses.map((course, i) => {

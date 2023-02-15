@@ -33,9 +33,9 @@ export default function ScoreScreen({ route, navigation }) {
     const nbrQuestion = route.params.qcmQuestion.length
     const answersUser = route.params.answersChecked
     const textInputValue = route.params.textInputValue
-
     const goodAnswer  = route.params.goodAnswer
     const [scoreEnd, setScoreEnd] = useState(0)
+    const [saveGame, setSaveGame] = useState({})
     var scoreTotal = nbrQuestion
     const letterArray = ['A', 'B', 'C', 'D', 'E']
 
@@ -180,11 +180,18 @@ export default function ScoreScreen({ route, navigation }) {
         }
     }
 
+    async function saveOneGame(){
+        if( errorsArray.length !== 0){
+            const game =  await playQcmUser(qcmId, answersUser, textInputValue, errorsArray)
+            setSaveGame(game)
+            console.log("game", game.id)
+         }
+    }
+
+
     useEffect(() => {
         calculScoreTotal()
-        if( errorsArray.length !== 0){
-            playQcmUser(qcmId, answersUser, textInputValue, errorsArray)
-        }
+        saveOneGame()
     }, [])
     
 
@@ -311,7 +318,8 @@ export default function ScoreScreen({ route, navigation }) {
                    {scoreEnd}/{nbrQuestion}
                 </Text>
             </View>
-
+            {console.log(saveGame)}
+        {saveGame.id &&
             <View style={{
                 width:'100%',
                 display:'flex',
@@ -325,6 +333,9 @@ export default function ScoreScreen({ route, navigation }) {
                     color: "white",
 
                 }}
+                onPress={() => {
+                    navigation.navigate("CorrectionQcmScreen", {id : saveGame.id})}
+                }
                 style={{
                     marginTop: 25,
                     width: 200,
@@ -339,7 +350,7 @@ export default function ScoreScreen({ route, navigation }) {
                     Voir la correction
                 </Button>
             </View>
-
+        }
             <View 
                 style={{
                     width:'100%',
