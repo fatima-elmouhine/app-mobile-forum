@@ -26,6 +26,10 @@ function association(sequelize){
     Question.belongsToMany(Answer, { through: 'QuestionAnswered' });
     Qcm.belongsToMany(Question, { through: 'QcmQuestion' });
     Question.belongsToMany(Qcm, { through: 'QcmQuestion' });
+    // Qcm.hasMany(Question);
+    // Question.belongsTo(Qcm);
+    // Question.hasMany(Qcm);
+    // Qcm.belongsTo(Question);
 
 
     

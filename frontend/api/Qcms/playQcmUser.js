@@ -6,15 +6,10 @@ export const playQcmUser = async (qcmId, answersUser, textInputValue, errorsArra
 try {
     
   const resultSend = await axiosInstance.post('/qcms/playingGame', {
-        
-    
             id_qcm : qcmId,
             text_structure : textInputValue,
             text_response : answersUser,
             errorArray : errorsArray,
-            
-        
-
     })
     console.log(resultSend.data)
 return resultSend
