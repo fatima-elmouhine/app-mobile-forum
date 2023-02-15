@@ -25,7 +25,7 @@ import SelectDropdown from 'react-native-select-dropdown'
 import { set } from "date-fns";
 
 export default function QuestionQcmScreen({ route, navigation }) {
-    // const [checked, setChecked] = React.useState(false);
+
     const [qcmQuestion, setQcmQuestion] = React.useState({});
     const [questionTitle, setQuestionTitle] = React.useState("Question 1"); 
     const [qcmTitle, setQcmTitle] = React.useState();
@@ -68,7 +68,6 @@ export default function QuestionQcmScreen({ route, navigation }) {
         }
 
         setAnswersChecked(userAnswers);
-
 
       }
 

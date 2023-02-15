@@ -23,50 +23,112 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import {getQcm} from "../api/Qcms/getQcm";
 import SelectDropdown from 'react-native-select-dropdown'
-import { set } from "date-fns";
+import {playQcmUser } from "../api/Qcms/playQcmUser";
 
 export default function ScoreScreen({ route, navigation }) {
+  // remettre le bouton suivant
+  // vider les variables une fois la partie fini
 
+    const qcmId = route.params.idQcm
     const nbrQuestion = route.params.qcmQuestion.length
     const answersUser = route.params.answersChecked
+    const textInputValue = route.params.textInputValue
+
     const goodAnswer  = route.params.goodAnswer
     const [scoreEnd, setScoreEnd] = useState(0)
     var scoreTotal = nbrQuestion
     const letterArray = ['A', 'B', 'C', 'D', 'E']
+
     var errorsArray = []
 
-    function addToErrorsArray(id){
-       
-        for(var i = 0; i < errorsArray.length; i++){
-            if(errorsArray[i].questionId == id){
-                errorsArray[i].nbrErr++
-                return
-            }
+    function filterGoodAnswersUser(){
+        var arrayAnswersUser = []
+        for (var element in answersUser) {
+           for(var [key, value] of Object.entries(answersUser[element])){
+                if(value == true){
+                        arrayAnswersUser = [
+                            ...arrayAnswersUser,
+                            {
+                                questionId : element,
+                                letter : [key]
+                            }
+                        ]
+                }else{
+                    arrayAnswersUser = [
+                        ...arrayAnswersUser,
+                        {
+                            questionId : element,
+                            letter : []
+                        }
+                    ]
+                }
+           }
+
         }
-       
-        errorsArray = [
-            ...errorsArray,
-            errorsArray[id] = {
-                questionId: id,
-                nbrErr: 1,
+
+        const newArray = arrayAnswersUser.reduce((acc, current) => {
+            const x = acc.find(item => item.questionId == current.questionId);
+
+            if (!x) {
+                return acc.concat([current]);
+            } else {
+                x.letter = x.letter.concat(current.letter);
+                return acc;
             }
-        ]
+        }, []);
+
+        return newArray
     }
+    function countDifferences(array1, array2, id) {
 
-    function compareAnswer(correctionAnswer, value, id){
-        for(var i = 0; i < letterArray.length; i++){
-            if(correctionAnswer[letterArray[i]] != value[letterArray[i]]){
-                addToErrorsArray(id)
+        array1.sort();
+        array2.sort();
+
+        let count = 0;
+
+        var arrNotIn = []
+        var arrIn = []
+        if(JSON.stringify(array1) !== JSON.stringify(array2)){
+   
+            for (var i in array1) {
+                for (var j in array2) {
+                    if (array1[i] === array2[j]) {
+                        if (!arrIn.includes(array2[j])) {
+                            arrIn.push(array2[j])
+                        }
+                    }
+                    
+                    if(!array1.includes(array2[j]) && array1[i] !== array2[j]){  
+                        if (!arrNotIn.includes(array2[j])) {
+                            arrNotIn.push(array2[j])
+                            count++
+                        } 
+                    }
+
+                }
             }
-
         }
+
+        // if(array2.length == 0){
+        //     count = 3
+        // }
+
+        if(arrNotIn.length > 0){
+            count += array1.length - arrIn.length
+        }
+
+        return count;
     }
 
     function calculScoreByError(id){
 
         for(var i = 0; i < errorsArray.length; i++){
+
             if(errorsArray[i].questionId == id){
                 switch (errorsArray[i].nbrErr) {
+                    case 0:
+                        errorsArray[i].score = 1
+                        break;
                     case 1:
                         errorsArray[i].score = 0.5
                         break;
@@ -89,18 +151,17 @@ export default function ScoreScreen({ route, navigation }) {
         
         var arrayBadAnswerId = []
         for(var i = 0; i < errorsArray.length; i++){
-            for (var value in answersUser) {
-                if(errorsArray[i].questionId == value){
-                    scoreStart += errorsArray[i].score
-                    arrayBadAnswerId.push(value)
-
-                }
-            }
+            scoreStart += errorsArray[i].score
         }
+        const score = parseFloat(scoreStart).toFixed(1) % 1 
 
-        var scorePoint1 = scoreTotal - arrayBadAnswerId.length
-        scoreStart += scorePoint1
-        setScoreEnd(parseFloat(scoreStart).toFixed(1))
+        let partieDecimale = score % 1;
+        let decimales = Math.floor(partieDecimale * 10);
+        let index = 1
+        if(decimales == 0){
+            index = 0
+        }
+        setScoreEnd(parseFloat(scoreStart).toFixed(index))
     }
 
     function returnNbrError(id){
@@ -121,22 +182,42 @@ export default function ScoreScreen({ route, navigation }) {
 
     useEffect(() => {
         calculScoreTotal()
+        if( errorsArray.length !== 0){
+            playQcmUser(qcmId, answersUser, textInputValue, errorsArray)
+        }
     }, [])
+    
+
+    const userAnswer = filterGoodAnswersUser()
 
 
-    for (const [key, value] of Object.entries(answersUser)) {
+//  useEffect(() => {
+    for (const [key, value] of Object.entries(userAnswer)) {
+
         goodAnswer.forEach((element, i) => {
             var correctionAnswer = element
             var id = element.questionId
-            if(key == element.questionId){
-                compareAnswer(correctionAnswer, value, id)
-                calculScoreByError(id)
+            if(value.questionId == element.questionId){
+                let differences = countDifferences(correctionAnswer.letter, value.letter, id)
+                if(value.letter.length == 0){
+                    differences ="nr"
+                }
                 
+                errorsArray = [
+                    ...errorsArray,
+                    errorsArray[value.questionId] = {
+                        questionId: value.questionId,
+                        nbrErr: differences,
+                    }
+                ]
+                calculScoreByError(id)
+
             }
         });
     }
 
-   
+    // }, [errorsArray])
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -262,9 +343,7 @@ export default function ScoreScreen({ route, navigation }) {
             <View 
                 style={{
                     width:'100%',
-                    // marginLeft:55,
                     display:'flex',
-                    // alignItems:'end',
                     justifyContent:'center',
                 }}
             >
@@ -273,7 +352,6 @@ export default function ScoreScreen({ route, navigation }) {
                         fontSize: 20,
                         color: "white",
                         marginLeft:35,
-                        // marginLeft: 10,
                         marginTop: 20,
                         fontWeight:'bold',
                       
@@ -282,12 +360,8 @@ export default function ScoreScreen({ route, navigation }) {
                     Vos résultats :
                 </Text>
                 <View style={{
-                    // width:320,
-                    // display:'flex',
-                    // height:200,
                     alignItems:'center',
                     justifyContent:'center',
-
                     padding:10,
                     margin:15,
                     backgroundColor:'#251245',
@@ -320,9 +394,24 @@ export default function ScoreScreen({ route, navigation }) {
                             </DataTable.Header>
                         {Object.entries(answersUser).map((answer, i) => {
                             const nbrErrorFound = returnNbrError(answer[0])
-                            var msgError = nbrErrorFound > 1 ? ' erreurs' : ' erreur'
-                            const nbrPoint = nbrErrorFound == undefined ? 1 : returnScore(answer[0])
+
+                            var msgError = ''
+                            switch(nbrErrorFound){
+                                case 0:
+                                    msgError = 'pas d\'erreur'
+                                    break;
+                                case 1:
+                                    msgError = '1 erreur'
+                                    break;
+                                case (2 || 3 || 4 || 5) :
+                                    msgError = nbrErrorFound +' erreurs'
+                                    break;
+                                default:
+                                    msgError = '0 reponse'
+                                    break;
+                            }
                             
+                            const nbrPoint = returnScore(answer[0])
                             
                            return ( <DataTable.Row key={i}>
                                 <DataTable.Cell 
@@ -337,16 +426,16 @@ export default function ScoreScreen({ route, navigation }) {
                                     color:'#FDB2FF',
                                     fontSize:18,
 
-                                 }}>{nbrErrorFound != undefined ?
-                                    nbrErrorFound + msgError : '0 erreur'
-                                } </DataTable.Cell>
+                                 }}>
+                                    {msgError} 
+                                </DataTable.Cell>
                                 <DataTable.Cell numeric
                                 textStyle={{
                                     color:'#FFE600',
                                     fontSize:18,
 
                                 }}
-                                >{nbrPoint} point</DataTable.Cell>
+                                >{nbrPoint  || 0} point</DataTable.Cell>
                             </DataTable.Row>)
                         })}
                      

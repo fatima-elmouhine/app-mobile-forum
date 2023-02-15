@@ -14,8 +14,7 @@ export default function QcmCard({qcm,navigation}) {
         7: "#DA70D6",
       };
 
-
-  var numberQuestion = qcm.Questions.length
+  var numberQuestion = qcm.Questions?.length
   numberQuestion = numberQuestion == undefined ?  0 :  numberQuestion
   return (
     <Card style={{marginBottom :10, margin:20, 
@@ -25,7 +24,7 @@ export default function QcmCard({qcm,navigation}) {
             width: 0,
             height: 2,
         },
-        backgroundColor: themeColor[qcm.Questions[0].id_theme],
+        backgroundColor: themeColor[qcm?.Questions && qcm?.Questions[0]?.id_theme],
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
