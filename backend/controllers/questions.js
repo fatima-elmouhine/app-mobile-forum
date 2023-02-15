@@ -48,9 +48,6 @@ async function postQuestion (req, res)
 
     });
     }
-
-    
-
 }
 
 async function updateQuestion (req, res) 

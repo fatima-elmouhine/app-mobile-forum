@@ -1,12 +1,10 @@
 import axiosInstance from '../config'
 
- export const postAnswers = async ( answersArray2, questionID ) => {
-    const { data } = await axiosInstance.post(`answers`, {
-        data: {
-            text: answersArray2.text,
-            isCorrect_answer: answersArray2.isCorrect_answer,
-            Questions: questionID
-        }
+ export const postAnswers = async ( text, isCorrect_answer, questionID ) => {
+    const { data } = await axiosInstance.post(`/answers`, { 
+        text: text,
+        isCorrect_answer: isCorrect_answer,
+        id_question: questionID
     })
 
     try {

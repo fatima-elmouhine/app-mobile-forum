@@ -1,9 +1,10 @@
 import axiosInstance from '../config'
 
- export const postQuestions = async ( text, themeID ) => {
-    const { data } = await axiosInstance.post(`questions`, {
-        text: text,
-        id_theme: themeID
+ export const postQcm = async ( title, isGenerated, id_type ) => {
+    const { data } = await axiosInstance.post(`qcms`, {
+        title: title,
+        isGenerated: isGenerated,
+        id_type: id_type
     })
 
     try {

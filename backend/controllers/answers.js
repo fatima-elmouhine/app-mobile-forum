@@ -30,17 +30,18 @@ async function postAnswer (req, res)
 {
     if(!req.body.text || !req.body.isCorrect_answer) return res.status(406).json('Les champs doivent être tous remplis');
     try {
-        const question = await Question.findOne({ where: {id: req.params.id_question }});
-        if (question == null) return res.status(404).json('La question n\'existe pas');
         const answer = await Answer.create({
             text: req.body.text,
             isCorrect_answer: req.body.isCorrect_answer,
         });
+        res.status(201).json({answer})
+        const question = await Question.findOne({ where: {id: req.body.id_question }});
+        if (question == null) return res.status(404).json('La question n\'existe pas');
         await QuestionAnswered.create({
-            QuestionId: req.params.id_question,
-            AnswerId: answer.id
+            QuestionId: req.body.id_question,
+            AnswerId: answer['dataValues']['id']
         });
-        res.status(200).json({question, answer})
+        res.status(201).json({question, answer})
     }
     catch (error) {
         res.json('error');

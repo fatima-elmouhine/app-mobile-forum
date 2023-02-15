@@ -1,16 +1,32 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
-import { Container, Box, Button, Modal, Select, MenuItem, InputLabel, FormControl, Chip, OutlinedInput, Typography } from '@mui/material';
+import {
+    Container, Box, Button, Modal, Select, MenuItem, InputLabel, RadioGroup,
+    FormControl, Chip, OutlinedInput, Typography, FormControlLabel, Radio, Snackbar
+} from '@mui/material';
 
 import SideBar from '../component/layout/SideBar';
 import { getThemes } from '@/api/Themes/getThemes';
+import { getTypes } from '@/api/Qcm/getTypes';
 import { getQuestions } from '@/api/Qcm/getQuestions';
+import { postQcm } from '@/api/Qcm/postQcm';
+import { postQcmQuestion } from '@/api/Qcm/postQcmQuestion';
 import CreateQuestion from '@/component/Qcm/CreateQuestion';
 import style from '@/styles/Global.module.css';
 
 const CreateQcm = () => {
     const [numberQuestion, setNumberQuestion] = useState(0);
+    console.log('numberQuestion', numberQuestion);
+
+    const [openMessage, setOpenMessage] = useState(false);
+    const [message, setMessage] = useState('');
+    const handleCloseMessage = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+    };
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -18,23 +34,69 @@ const CreateQcm = () => {
 
     const [title, setTitle] = useState('');
 
+    const [themes, setThemes] = useState('');
+    const [themesArray, setThemesArray] = useState([]);
+    const handleChangeThemes = (event) => {
+        setThemes(event.target.value);
+    };
+
+    const [types, setTypes] = useState('');
+    const [typesArray, setTypesArray] = useState([]);
+    const handleChangeTypes = (event) => {
+        setTypes(event.target.value);
+    };
+
     const [questions, setQuestions] = useState([]);
     const [questionsArray, setQuestionsArray] = useState([]);
     const handleChangeQuestions = (event) => {
         setQuestions(event.target.value);
     };
+    console.log('questions', questions.length);
+
+    const [isGenerated, setIsGenerated] = useState('');
+    const handleChangeIsGenerated = (event) => {
+        setIsGenerated(event.target.value);
+    };
 
     useEffect(() => {
-        getQuestions().then((data) => {
-            setQuestionsArray(data);
+        getThemes().then((data) => {
+            setThemesArray(data);
+        });
+        getTypes().then((data) => {
+            setTypesArray(data);
         });
     }, []);
 
     useEffect(() => {
         getQuestions().then((data) => {
-            setQuestionsArray(data);
+            const notQuestions = 'Questions selon le theme choisie';
+            data.map((question) => {
+                if(question.id_theme == themes) {
+                    setQuestionsArray(data);
+                } else {
+                    setQuestionsArray([notQuestions]);
+                }
+            })
         });
-    }, [open]);
+    }, [open, themes]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if(questions.length != numberQuestion) {
+            setMessage('Le nombre de question ne correspond pas au nombre de question choisie');
+            setOpenMessage(true);
+            setTimeout(() => {
+                setOpenMessage(false);
+            }, 2000);
+        } else {
+            postQcm(title, isGenerated, types).then((data) => {
+                console.log(data);
+                questions.map((question) => {
+                    postQcmQuestion(data.id, question);
+                })
+            });
+        }
+    };
 
     return (
         <Container className={style.container}>
@@ -49,15 +111,28 @@ const CreateQcm = () => {
                         <OutlinedInput onChange={(e) => setTitle(e.target.value)} label="Titre du QCM"/>
                     </FormControl>
                     <FormControl>
+                        <InputLabel id="demo-simple-select-label">Thème</InputLabel>
+                        <Select
+                            required
+                            value={themes}
+                            label="Thème"
+                            onChange={handleChangeThemes}
+                        >
+                            {themesArray.map((theme) => (
+                                <MenuItem value={theme.id}>{theme.title}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl>
                         <InputLabel id="demo-simple-select-label">Nombre de question</InputLabel>
                         <OutlinedInput onChange={(e) => setNumberQuestion(e.target.value)} label="Nombre de question"/>
                     </FormControl>
                     <FormControl>
-                        <InputLabel id="demo-simple-select-label">Questions</InputLabel>
+                        <InputLabel id="demo-simple-select-label">Questions selon le theme choisie</InputLabel>
                         <Select
                             id='questions'
                             labelId="demo-multiple-chip-label"
-                            label="Questions"
+                            label="Questions selon le theme choisie"
                             multiple
                             value={questions}
                             onChange={handleChangeQuestions}
@@ -70,7 +145,7 @@ const CreateQcm = () => {
                             )}
                         >
                             {questionsArray.map((question) => (
-                                <MenuItem key={question.id} value={question.text}>
+                                <MenuItem key={question.id} value={question.id} style={{color: 'black'}}>
                                     {question.text}
                                 </MenuItem>
                             ))}
@@ -91,6 +166,50 @@ const CreateQcm = () => {
                             </Modal>
                         </Box>
                     </FormControl>
+                    <FormControl>
+                        <InputLabel id="demo-simple-select-label">Type du QCM</InputLabel>
+                        <Select
+                            required
+                            value={types}
+                            label="Type du QCM"
+                            onChange={handleChangeTypes}
+                        >
+                            {typesArray.map((type) => (
+                                <MenuItem value={type.id}>{type.type_name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <FormControl>
+                        <RadioGroup
+                            required
+                            name="radio"
+                            id='radio'
+                            style={{flexWrap: 'inherit', flexDirection: 'row', color: 'black'}}
+                            onChange={handleChangeIsGenerated}
+                        >
+                            <FormControlLabel value="1" control={<Radio />} label="Publié" />
+                            <FormControlLabel value="0" control={<Radio />} label="Non-Publié" />
+                        </RadioGroup>
+                    </FormControl>
+                    <Button
+                        variant="contained"
+                        style={{backgroundColor: '#3f51b5', color: 'white', width: 'maxContent', margin: 'auto'}}
+                        onClick={handleSubmit}
+                    >
+                        Créer
+                    </Button>
+                    <Snackbar
+                        open={openMessage}
+                        autoHideDuration={3000}
+                        onClose={handleCloseMessage}
+                        message={message}
+                        aaction={{
+                            label: 'X',
+                            onPress: () => {
+                                handleCloseMessage();
+                            },
+                        }}
+                    />
                 </Box>
             </Box>
         </Container>

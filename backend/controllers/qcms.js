@@ -1,5 +1,5 @@
 const sequelize  = require('../models/index');
-const {Qcm, Type, Question, Message, QuestionAnswered, Theme, User, Answer} = sequelize.models;
+const {Qcm, Question, Answer, QcmQuestion} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 
@@ -33,6 +33,7 @@ async function getQcm (req, res)
 
 async function postQcm (req, res) 
 {
+    console.log('userTest', req.user);
     try {
         //if (!req.body.title || !req.body.isGenerated === undefined || !req.body.id_type || !req.body.id_user) return res.status(406).json('Les champs doivent être tous remplis');
         const qcm = await Qcm.create({
@@ -40,9 +41,22 @@ async function postQcm (req, res)
             isGenerated: req.body.isGenerated,
             id_type: req.body.id_type,
             // TODO : id_user to token
-            id_user: req.body.id_user
+            id_user: req.user.id
         });
         res.status(200).json(qcm);
+    } catch (error) {
+        res.status(500).json(error.message);
+    }
+}
+
+async function postQcmQuestion (req, res)
+{
+    try {
+        const qcmQuestion = await QcmQuestion.create({
+            QcmId: req.body.QcmId,
+            QuestionId: req.body.QuestionId
+        });
+        res.status(200).json(qcmQuestion);
     } catch (error) {
         res.status(500).json(error.message);
     }
@@ -80,6 +94,7 @@ async function deleteQcm (req, res)
 module.exports = {
     getQcms,
     postQcm,
+    postQcmQuestion,
     getQcm,
     updateQcm,
     deleteQcm

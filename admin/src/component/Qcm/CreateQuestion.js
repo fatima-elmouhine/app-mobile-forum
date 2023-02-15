@@ -65,32 +65,29 @@ const CreateQuestion = (props) => {
             text: question,
             id_theme: themes
         }
-        postQuestions(data).then((data) => {
+        postQuestions(data.text, data.id_theme).then((data) => {
             if (data.status == 201) {
                 setMessage('Question ajoutée avec succès');
                 setOpen(true);
             } else {
-                setMessage('Une erreur est survenue');
+                setMessage('Une erreur est survenue sur la question');
                 setOpen(true);
             }
-        });
-
-        const answers = [answer1, answer2, answer3, answer4, answer5];
-        const answersArray = answers.filter((answer) => answer.response1 !== undefined);
-        const answersArray2 = answersArray.map((answer) => {
-            return {
-                text: answer.response,
-                isCorrect_answer: answer.radio
-            }
-        });
-        postAnswers(answersArray2, data.id).then((data) => {
-            if (data.status == 200) {
-                setMessage('Réponses enregistrer avec succès');
-                setOpen(true);
-            } else {
-                setMessage('Une erreur est survenue');
-                setOpen(true);
-            }
+        
+            const answers = [answer1, answer2, answer3, answer4, answer5];
+            const answersArray = answers.filter((answer) => answer.response !== undefined);
+            const answersArray2 = answersArray.map((answer) => {
+                postAnswers(answer.response, answer.radio, data.id).then((data) => {
+                    if (data.status == 201) {
+                        setMessage('Réponses enregistrer avec succès');
+                        setOpen(true);
+                    } else {
+                        setMessage("Une erreur est survenue sur l'une des réponses");
+                        setOpen(true);
+                    }
+                });
+            });
+        
         });
     };
 
@@ -104,6 +101,7 @@ const CreateQuestion = (props) => {
                     <FormControl style={{marginTop: '2em'}}>
                         <InputLabel id="demo-simple-select-label">Thème</InputLabel>
                         <Select
+                            required
                             value={themes}
                             label="Thème"
                             onChange={handleChangeThemes}
@@ -134,12 +132,12 @@ const CreateQuestion = (props) => {
                         </FormControl>
                         <FormControl>
                             <RadioGroup
+                                required
                                 name="radio"
-                                defaultValue="0"
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrais" />
+                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
@@ -155,12 +153,12 @@ const CreateQuestion = (props) => {
                         </FormControl>
                         <FormControl>
                             <RadioGroup
+                                required
                                 name="radio"
-                                defaultValue="0"
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrais" />
+                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
@@ -176,12 +174,12 @@ const CreateQuestion = (props) => {
                         </FormControl>
                         <FormControl>
                             <RadioGroup
+                                required
                                 name="radio"
-                                defaultValue="0"
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrais" />
+                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
@@ -197,12 +195,12 @@ const CreateQuestion = (props) => {
                         </FormControl>
                         <FormControl>
                             <RadioGroup
+                                required
                                 name="radio"
-                                defaultValue="0"
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrais" />
+                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
@@ -218,12 +216,12 @@ const CreateQuestion = (props) => {
                         </FormControl>
                         <FormControl>
                             <RadioGroup
+                                required
                                 name="radio"
-                                defaultValue="0"
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrais" />
+                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
                                 <FormControlLabel value="0" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
