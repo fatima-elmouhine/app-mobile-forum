@@ -109,17 +109,6 @@ export default function HomeLoggedScreen({ navigation }) {
         </View>
         <Text style={styles.sectionTitle}>Mes derniers cours</Text>
         <ScrollView style={{ display: "flex", flexDirection: "column" }}>
-            <Button mode="contained"
-            onPress={()=>
-              {
-                navigation.navigate('CorrectionQcmScreen', {id: 59})
-              }
-
-            }
-            
-            >
-                correction
-            </Button>
           <View style={styles.sectionLatestCourse}>
             {courses.length !== 0 &&
               courses.map((course, i) => {
