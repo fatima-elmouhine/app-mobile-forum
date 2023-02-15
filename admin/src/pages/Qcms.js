@@ -14,20 +14,21 @@ import style from '@/styles/Global.module.css';
 import { getQcms } from '@/api/Qcm/getQcms';
 
 const Qcms = () => {
-    const [openCreate, setOpenCreate] = useState(false);
 
     const [item, setItem] = useState();
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const handleOpenUpdate = () => setOpenUpdate(true);
 
     const [openDelete, setOpenDelete] = useState(false);
     const handleOpenDelete = () => setOpenDelete(true);
 
-    const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
+    const handleClose = () => setOpenDelete(false);
 
     const handleClick = () => {
         window.location.href = '/CreateQcm';
     };
+
+    const handleUpdate = (id) => {
+        window.location.href=`Qcms/${id}`
+    }
 
     const [qcms, setQcms] = useState([]);
 
@@ -41,7 +42,7 @@ const Qcms = () => {
         getQcms().then((data) => {
             setQcms(data);
         });
-    }, [openCreate, openUpdate, openDelete]);
+    }, [openDelete]);
 
 
     const columns = [
@@ -57,16 +58,10 @@ const Qcms = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={()=>{setItem(params.row), handleOpenUpdate()}}
+                        onClick={()=>{handleUpdate(params.row.id)}}
                     >
                         Modifier
                     </Button>
-                    <Modal
-                        open={openUpdate}
-                        onClose={handleClose}
-                    >
-                        <UpdateUser data={item} onClose={handleClose}/>
-                    </Modal>
                 </strong>
             ),
         },

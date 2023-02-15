@@ -12,6 +12,6 @@ router.post('/', auth, postQcm);
 
 router.put('/:id', auth, updateQcm);
 
-router.delete('/:id', auth, deleteQcm);
+router.delete('/', auth, deleteQcm);
 
 module.exports = router;

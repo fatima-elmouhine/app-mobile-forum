@@ -6,16 +6,25 @@ import {
     FormControl, Chip, OutlinedInput, Typography, FormControlLabel, Radio, Snackbar
 } from '@mui/material';
 
-import SideBar from '../component/layout/SideBar';
+import SideBar from '@/component/layout/SideBar';
 import { getThemes } from '@/api/Themes/getThemes';
 import { getTypes } from '@/api/Qcm/getTypes';
 import { getQuestions } from '@/api/Qcm/getQuestions';
-import { postQcm } from '@/api/Qcm/postQcm';
-import { postQcmQuestion } from '@/api/Qcm/postQcmQuestion';
+import { getQcm } from '@/api/Qcm/getQcm';
 import CreateQuestion from '@/component/Qcm/CreateQuestion';
 import style from '@/styles/Global.module.css';
 
-const CreateQcm = () => {
+export async function getServerSideProps(context) {
+    return {
+        props: {
+            id: context.query.id
+        }
+    }
+}
+
+const UpdateQcm = (props) => {
+    const idQcm = props.id;
+
     const [numberQuestion, setNumberQuestion] = useState(0);
 
     const [openMessage, setOpenMessage] = useState(false);
@@ -52,6 +61,14 @@ const CreateQcm = () => {
     };
 
     useEffect(() => {
+        getQcm(idQcm).then((data) => {
+            console.log('data', data);
+            setTitle(data[0].title);
+            setTypes(data[0].id_type);
+            data[0].Questions.map((question) => {
+                setQuestions([...questions, question.id]);
+            })
+        });
         getThemes().then((data) => {
             setThemesArray(data);
         });
@@ -82,7 +99,8 @@ const CreateQcm = () => {
                 setOpenMessage(false);
             }, 2000);
         } else {
-            postQcm(title, types).then((data) => {
+            postQcm(title, isGenerated, types).then((data) => {
+                console.log(data);
                 questions.map((question) => {
                     postQcmQuestion(data.id, question);
                 })
@@ -100,11 +118,11 @@ const CreateQcm = () => {
                 <SideBar />
             </Box>
             <Box className={style.tableContent}>
-                <h1 style={{ color: 'black' }}>Création de QCM</h1>
+                <h1 style={{ color: 'black' }}>Modification de QCM</h1>
                 <Box className={style.formContent}>
                     <FormControl>
                         <InputLabel id="demo-simple-select-label">Titre du QCM</InputLabel>
-                        <OutlinedInput onChange={(e) => setTitle(e.target.value)} label="Titre du QCM"/>
+                        <OutlinedInput onChange={(e) => setTitle(e.target.value)} value={title} label="Titre du QCM"/>
                     </FormControl>
                     <FormControl>
                         <InputLabel id="demo-simple-select-label">Thème</InputLabel>
@@ -209,4 +227,4 @@ const CreateQcm = () => {
     );
 }
 
-export default CreateQcm
+export default UpdateQcm
