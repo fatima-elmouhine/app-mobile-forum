@@ -1,7 +1,7 @@
 import axiosInstance from '../config'
 
- export const getQcms = async () => {
-    const { data } = await axiosInstance.get(`qcms`)
+ export const getQcm = async (qcmID) => {
+    const { data } = await axiosInstance.get(`qcms/${qcmID}?include=Type`)
 
     try {
         if (data == 200) {

@@ -109,12 +109,25 @@ async function postQcm(req, res) {
       isGenerated: req.body.isGenerated,
       id_type: req.body.id_type,
       // TODO : id_user to token
-      id_user: req.body.id_user,
+      id_user: req.user.id,
     });
     res.status(200).json(qcm);
   } catch (error) {
     res.status(500).json(error.message);
   }
+}
+
+async function postQcmQuestion (req, res)
+{
+    try {
+        const qcmQuestion = await QcmQuestion.create({
+            QcmId: req.body.QcmId,
+            QuestionId: req.body.QuestionId
+        });
+        res.status(200).json(qcmQuestion);
+    } catch (error) {
+        res.status(500).json(error.message);
+    }
 }
 
 async function updateQcm(req, res) {
@@ -237,4 +250,5 @@ module.exports = {
   deleteQcm,
   generateQcm,
   playGame,
+  postQcmQuestion,
 };

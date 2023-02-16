@@ -7,7 +7,7 @@ router.get('/', getAnswers);
 
 router.get('/:id',getAnswer)
 
-router.post('/:id_question', postAnswer);
+router.post('/', postAnswer);
 
 router.put('/:id', updateAnswer);
 
