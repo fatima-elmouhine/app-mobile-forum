@@ -1,4 +1,4 @@
-const {getThemes, postTheme, getTheme, updateTheme, deleteTheme} = require('../controllers/themes')
+const {getThemes, postTheme, getTheme, updateTheme, deleteTheme, getQcms } = require('../controllers/themes')
 
 const express = require('express');
 const router = express.Router();
@@ -17,6 +17,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage })
 
 router.get('/', getThemes);
+
+router.get('/getQcms/:id', getQcms);
 
 router.get('/:id', getTheme);
 
