@@ -7,6 +7,7 @@ const answersRouter  = require('./routes/answers');
 const coursesRouter  = require('./routes/courses');
 const messagesRouter  = require('./routes/messages');
 const qcmsRouter  = require('./routes/qcms');
+const qcmQuestionRouter  = require('./routes/qcmQuestions');
 const questionsRouter  = require('./routes/questions');
 const resultsRouter  = require('./routes/results');
 const themesRouter  = require('./routes/themes');
@@ -21,10 +22,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static('public'));
 
-
-
-
-
 // start the server
 // app.listen(process.env.BACK_PORT, () => {
 //     console.log(
@@ -38,6 +35,7 @@ app.use('/api/themes', themesRouter);
 app.use('/api/results', resultsRouter);
 app.use('/api/questions', questionsRouter);
 app.use('/api/qcms', qcmsRouter);
+app.use('/api/qcmQuestions', qcmQuestionRouter);
 app.use('/api/messages', messagesRouter);
 app.use('/api/courses', coursesRouter);
 app.use('/api/answers', answersRouter);

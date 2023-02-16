@@ -158,10 +158,7 @@ const CreateUser = (props) => {
                             )}
                         >
                             {roles.map((role) => (
-                                <MenuItem
-                                  key={role}
-                                  value={role}
-                                >
+                                <MenuItem key={role} value={role}>
                                   {role}
                                 </MenuItem>
                             ))}
