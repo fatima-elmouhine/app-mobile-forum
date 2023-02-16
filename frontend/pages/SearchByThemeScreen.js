@@ -16,14 +16,15 @@ import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
 
 export default function SearchByThemeScreen({route, navigation }) {
   const { title, id, type} = route.params;
-  console.log('route.params', route.params);
   const [topics, setTopics] = useState([]);
   const [theme, setTheme] = useState([]);
+  
 
   useEffect( () => {
 
     async function getThemeInScreen() {
       const themeReq = await getTheme(id);
+      console.log(themeReq);
       setTheme(themeReq);
       setTopics(themeReq.Topics);
     }

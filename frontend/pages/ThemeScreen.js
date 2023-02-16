@@ -50,9 +50,9 @@ export default function ThemeScreen({ navigation }) {
                 <ScrollView>
                     <View style={{ display:'flex',  alignItems:'center', justifyContent:'center', }} >
                         <View style={{ display:'flex', flexDirection:'row', flexWrap:'wrap', width:'90%', alignItems:'center', justifyContent:'center',}} >
-                                {themes.map((theme) => {
+                                {themes.map((theme, i) => {
                                     return (
-                                        <View style={{marginRight:25}}>
+                                        <View key={i} style={{marginRight:25}}>
                                             <CardTheme
                                                 key={theme.id}
                                                 id={theme.id}

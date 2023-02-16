@@ -125,7 +125,11 @@ export default function SectionChoiceScreen({route, navigation }) {
                               mode="contained"
                               style={{backgroundColor:'#F5C035', borderRadius:8,}}
 
-                              // onPress={() => Linking.openURL(props.course.link)}
+                              onPress={() => 
+                                // navigation.navigate('CoursesScreen', {title:title, id:id})
+                                navigation.navigate('SearchByThemeScreen', {title:title, id:id, type:'qcm'})
+
+                              }
                           >
                               <Text style={{fontSize:21, color:'white'}}>
                                 QCM
