@@ -1,14 +1,14 @@
 import axiosInstance from '../config'
 
- export const postQcm = async ( title, id_type ) => {
-    const { data } = await axiosInstance.post(`qcms`, {
+ export const updateQcm = async ( title, id_type, id ) => {
+    const { data } = await axiosInstance.put(`qcms`, {
         title: title,
         isGenerated: false,
-        id_type: id_type
+        id_type: id_type,
+        id: id
     })
 
     try {
-        
         if (data.status == 201) {
             console.log(data);
             console.log(data.data);

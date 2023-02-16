@@ -54,12 +54,12 @@ async function updateAnswer (req, res)
     if(!req.body.text || req.body.isCorrect_answer === undefined ) return res.status(406).json('Les champs doivent être tous remplis');
     try 
     {
-        let answer = await Answer.findOne({ where: {id: req.params.id }})
+        let answer = await Answer.findOne({ where: {id: req.body.id }})
         if (answer === null) return res.status(404).json('La réponse n\'existe pas');
         await Answer.update({
             text: req.body.text,
             isCorrect_answer: req.body.isCorrect_answer,
-        }, {where: {id: req.params.id}})
+        }, {where: {id: req.body.id}})
         res.status(200).json({id:answer.id, text: req.body.text, isCorrect_answer: req.body.isCorrect_answer});
     }
     catch (error) {

@@ -1,18 +1,16 @@
 import axiosInstance from '../config'
 
- export const postQcm = async ( title, id_type ) => {
-    const { data } = await axiosInstance.post(`qcms`, {
-        title: title,
-        isGenerated: false,
-        id_type: id_type
-    })
+export const deleteQcmQuestion = async (qcmQuestionID, qcmID) => {
 
+    const { data } = await axiosInstance.delete(`qcmQuestions`, {
+        data: {
+            QuestionId: qcmQuestionID,
+            QcmId: qcmID
+        }})
     try {
-        
-        if (data.status == 201) {
+        if (data.status == 200) {
             console.log(data);
             console.log(data.data);
-            logIn(data.status);
             return data
         } 
     } catch (e) {
@@ -29,6 +27,4 @@ import axiosInstance from '../config'
             console.log(e.config)
         }
     }
-
-    return data
-}
+}                    

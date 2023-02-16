@@ -169,7 +169,19 @@ async function deleteQcm(req, res) {
   }
 }
 
-async function generateQcm(req, res) {
+async function deleteQcmQuestion(req, res) {
+  try {
+    const qcm = await QcmQuestion.destroy({ where: { QuestionId: req.body.QuestionId, QcmId: req.body.QcmId } });
+    if (!qcm) throw new Error("Aucun Question de QCM trouvé");
+    res
+      .status(200)
+      .json({ message: "La Question de QCM" + req.body.QcmId + " a été supprimé" });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+}
+
+async function generateQcm(req, res) {  
   const { limit, idTheme } = req.params;
   if (!limit || !idTheme) {
     return res.status(406).json("Les champs doivent être tous remplis");
@@ -266,4 +278,5 @@ module.exports = {
   playGame,
   getOneUserQcm,
   postQcmQuestion,
+  deleteQcmQuestion,
 };
