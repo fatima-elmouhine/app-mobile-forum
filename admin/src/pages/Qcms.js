@@ -7,39 +7,48 @@ import { DataGrid } from '@mui/x-data-grid';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 import SideBar from '../component/layout/SideBar';
-import CreateUser from '../component/users/CreateUser';
-import UpdateUser from '../component/users/UpdateUser';
 import DeleteQcm from '@/component/Qcm/DeleteQcm';
 import style from '@/styles/Global.module.css';
 
-import { getQcm } from '@/api/Qcm/getQcms';
+import { getQcms } from '@/api/Qcm/getQcms';
+import { getType } from '@/api/Qcm/getType';
 
 const Qcms = () => {
-    const [openCreate, setOpenCreate] = useState(false);
-    const handleOpenCreate = () => setOpenCreate(true);
 
     const [item, setItem] = useState();
-    const [openUpdate, setOpenUpdate] = useState(false);
-    const handleOpenUpdate = () => setOpenUpdate(true);
 
     const [openDelete, setOpenDelete] = useState(false);
     const handleOpenDelete = () => setOpenDelete(true);
 
-    const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
+    const handleClose = () => setOpenDelete(false);
+
+    const handleClick = () => {
+        window.location.href = '/CreateQcm';
+    };
+
+    const handleUpdate = (id) => {
+        window.location.href=`Qcms/${id}`
+    }
+
+    const [type, setType] = useState('');
 
     const [qcms, setQcms] = useState([]);
+    console.log(qcms);
 
     useEffect(() => {
-        getQcm().then((data) => {
+        getQcms().then((data) => {
             setQcms(data);
+        });
+        getType(qcms[0].id_type).then((data) => {
+            setType(data);
         });
     }, []);
 
     useEffect(() => {
-        getQcm().then((data) => {
+        getQcms().then((data) => {
             setQcms(data);
         });
-    }, [openCreate, openUpdate, openDelete]);
+    }, [openDelete]);
 
 
     const columns = [
@@ -55,16 +64,10 @@ const Qcms = () => {
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={()=>{setItem(params.row), handleOpenUpdate()}}
+                        onClick={()=>{handleUpdate(params.row.id)}}
                     >
                         Modifier
                     </Button>
-                    <Modal
-                        open={openUpdate}
-                        onClose={handleClose}
-                    >
-                        <UpdateUser data={item} onClose={handleClose}/>
-                    </Modal>
                 </strong>
             ),
         },
@@ -94,8 +97,8 @@ const Qcms = () => {
             id: qcm.id,
             title: qcm.title,
             isGenerated: qcm.isGenerated ? 'Oui' : 'Non',
-            type: qcm.Type.type_name,
-            id_type: qcm.Type.id,
+            type: type.type_name,
+            id_type: type.id,
             createdAt: new Date(qcm.createdAt).toLocaleDateString(),
             updatedAt: new Date(qcm.updatedAt).toLocaleString()
         };
@@ -114,14 +117,8 @@ const Qcms = () => {
                         variant="contained"
                         color="primary"
                         startIcon={<ControlPointIcon />}
-                        onClick={handleOpenCreate}
+                        onClick={handleClick}
                     />
-                    <Modal
-                        open={openCreate}
-                        onClose={handleClose}
-                    >
-                        <CreateUser onClose={handleClose}/>
-                    </Modal>
                 </Box>
                 <DataGrid
                     rows={rows}

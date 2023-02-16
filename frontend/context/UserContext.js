@@ -3,7 +3,6 @@ import * as SecureStore from 'expo-secure-store'
 import jwtDecode from 'jwt-decode';
 import axiosInstance from  '../api/config';
 import { userAuthentication } from '../api/Users/authentication';
-import { set } from 'date-fns';
 import { getAvatar } from '../api/Users/getAvatar';
 
 export const UserContext = createContext();

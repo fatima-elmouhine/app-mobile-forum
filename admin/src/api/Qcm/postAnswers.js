@@ -1,10 +1,18 @@
 import axiosInstance from '../config'
 
- export const getQcms = async () => {
-    const { data } = await axiosInstance.get(`qcms`)
+ export const postAnswers = async ( text, isCorrect_answer, questionID ) => {
+    const { data } = await axiosInstance.post(`/answers`, { 
+        text: text,
+        isCorrect_answer: isCorrect_answer,
+        id_question: questionID
+    })
 
     try {
-        if (data == 200) {
+        
+        if (data.status == 201) {
+            console.log(data);
+            console.log(data.data);
+            logIn(data.status);
             return data
         } 
     } catch (e) {
@@ -23,4 +31,4 @@ import axiosInstance from '../config'
     }
 
     return data
- }
+}

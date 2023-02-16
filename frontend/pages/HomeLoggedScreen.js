@@ -70,14 +70,15 @@ export default function HomeLoggedScreen({ navigation }) {
                 handlePressEdit();
               }}
             >
+              {userDetails?.avatar &&
               <Avatar.Image
                 size={120}
-                source={{uri : userDetails.avatar}}
+                source={{uri : userDetails?.avatar}}
                 style={styles.image}
                 onPress={() => {
                   handlePressEdit();
                 }}
-              />
+              />}
             </TouchableOpacity>
             <View
               style={{
