@@ -22,12 +22,13 @@ import {
   Dialog, Portal , Provider
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import {getQcm} from "../api/Qcms/getQcm";
+import {getQcmUser} from "../api/Qcms/getQcmUser";
 import SelectDropdown from 'react-native-select-dropdown'
-import {playQcmUser } from "../api/Qcms/playQcmUser";
 
 
-export default function QuestionQcmScreen({ route, navigation }) {
+export default function CorrectionQcmScreen({ route, navigation }) {
+
+    const idQcmUser = route.params.id;
 
     const [qcmQuestion, setQcmQuestion] = React.useState({});
     const [questionTitle, setQuestionTitle] = React.useState("Question 1"); 
@@ -39,205 +40,35 @@ export default function QuestionQcmScreen({ route, navigation }) {
     const [goodAnswer, setGoodAnswer] = React.useState({});
     const [indexQuestion, setIndexQuestion] = React.useState(0);
     const [answersChecked, setAnswersChecked] = React.useState({});
-    const letterArray = ["A", "B", "C", "D", "E"];
-    const { idQcm } = route.params;
-    const [saveGame, setSaveGame] = React.useState({});
+    const [results , setResults] = React.useState(null);
 
 
-    var errorsArray = []
-
-    function filterGoodAnswersUser(){
-        var arrayAnswersUser = []
-        for (var element in answersChecked) {
-           for(var [key, value] of Object.entries(answersChecked[element])){
-                if(value == true){
-                        arrayAnswersUser = [
-                            ...arrayAnswersUser,
-                            {
-                                questionId : element,
-                                letter : [key]
-                            }
-                        ]
-                }else{
-                    arrayAnswersUser = [
-                        ...arrayAnswersUser,
-                        {
-                            questionId : element,
-                            letter : []
-                        }
-                    ]
-                }
-           }
-
-        }
-
-        const newArray = arrayAnswersUser.reduce((acc, current) => {
-            const x = acc.find(item => item.questionId == current.questionId);
-
-            if (!x) {
-                return acc.concat([current]);
-            } else {
-                x.letter = x.letter.concat(current.letter);
-                return acc;
-            }
-        }, []);
-
-        return newArray
-    }
-
-    function countDifferences(array1, array2, id) {
-
-        array1.sort();
-        array2.sort();
-
-        let count = 0;
-
-        var arrNotIn = []
-        var arrIn = []
-        if(JSON.stringify(array1) !== JSON.stringify(array2)){
    
-            for (var i in array1) {
-                for (var j in array2) {
-                    if (array1[i] === array2[j]) {
-                        if (!arrIn.includes(array2[j])) {
-                            arrIn.push(array2[j])
-                        }
-                    }
-                    
-                    if(!array1.includes(array2[j]) && array1[i] !== array2[j]){  
-                        if (!arrNotIn.includes(array2[j])) {
-                            arrNotIn.push(array2[j])
-                            count++
-                        } 
-                    }
 
-                }
-            }
-        }
+    const letterArray = ["A", "B", "C", "D", "E"];
 
-        if(arrNotIn.length > 0){
-            count += array1.length - arrIn.length
-        }
-
-        return count;
-    }
-
-    function calculScoreByError(id){
-
-        for(var i = 0; i < errorsArray.length; i++){
-
-            if(errorsArray[i].questionId == id){
-                switch (errorsArray[i].nbrErr) {
-                    case 0:
-                        errorsArray[i].score = 1
-                        break;
-                    case 1:
-                        errorsArray[i].score = 0.5
-                        break;
-                    case 2:
-                        errorsArray[i].score = 0.2
-                        break;
-                    default:
-                        errorsArray[i].score = 0
-                        break;
-
-                }
-                return errorsArray[i].score
-            }
-        }
-      
-    }
-
-    async function saveOneGame(){
-      correctionGame()
-      if( errorsArray.length !== 0){
-
-          const game =  await playQcmUser(idQcm, answersChecked, textInputValue, errorsArray)
-          
-          navigation.navigate("ScoreScreen", {
-              idQcmUser: game.id,         
-            })
-       }
-    }
-
-    function correctionGame(){
-      const userAnswer = filterGoodAnswersUser()
+    
 
 
-      //  useEffect(() => {
-          for (const [key, value] of Object.entries(userAnswer)) {
-      
-              goodAnswer.forEach((element, i) => {
-                  var correctionAnswer = element
-                  var id = element.questionId
-                  if(value.questionId == element.questionId){
-                      let differences = countDifferences(correctionAnswer.letter, value.letter, id)
-                      if(value.letter.length == 0){
-                          differences ="nr"
-                      }
-                      
-                      errorsArray = [
-                          ...errorsArray,
-                          errorsArray[value.questionId] = {
-                              questionId: value.questionId,
-                              nbrErr: differences,
-                          }
-                      ]
-                      calculScoreByError(id)
-      
-                  }
-              });
-          }
-    }
-
-    const createTwoButtonAlert = () =>
-    Alert.alert('Terminer le quizz ?', 'Êtes-vous sûr de vouloir terminer la partie ?', [
-      {
-        text: 'Annuler',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      {text: 'Confirmer', onPress: () => {
-        saveOneGame()
-
-        fetchQcm()
-
-
-
-
-        }
-      },
-    ]);
-
-
- 
 
     async function fetchQcm() {
-      const data = await getQcm(idQcm);
+      const data = await getQcmUser(idQcmUser);
+      const response = JSON.parse(data.text_response)
+      const structure = JSON.parse(data.text_structure)
       const arrayAnswers = data.answers;
-      const qcm = data.qcm
+      const qcm = structure.qcm[0]
 
-      setTextInputValue(data);
-      setQcmTitle(qcm[0].title);
-      setQcmQuestion(qcm[0].Questions);
-      setCurrentQuestion(qcm[0].Questions[indexQuestion]);
-      setQuestionId(qcm[0].Questions[indexQuestion].id);
+      setResults(data.Results)
+      setQcmTitle(qcm.title);
+      setQcmQuestion(qcm.Questions);
+      setCurrentQuestion(qcm.Questions[indexQuestion]);
+      setQuestionId(qcm.Questions[indexQuestion].id);
       setGoodAnswer(arrayAnswers);
-      var userAnswers = {};
-      
-      for (let i = 0; i < qcm[0].Questions.length; i++) {
-        userAnswers[qcm[0].Questions[i].id] = {
-          A: false,
-          B: false,
-          C: false,
-          D: false,
-          E: false,
-        };
-      }
 
-      setAnswersChecked(userAnswers);
+      setAnswersChecked(response);
 
     }
+
     useEffect(() => {
 
       fetchQcm();
@@ -260,7 +91,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
             fontSize: 30,
             fontWeight: "bold",
             marginTop: 50,
-            marginLeft: 40,
+            marginLeft: 20,
             color: "#fff",
           }}
         >
@@ -282,6 +113,13 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 marginLeft: 20,
                 paddingBottom: 20,
             }}>
+                {/* <Text style={{
+                    fontSize: 27,
+                    fontWeight: "bold",
+                    color: "#EEA923",
+                }}>
+                 Correction
+                </Text> */}
                 <Button
                 labelStyle={{fontSize: 17, color: "#fff"}}
                 style={{
@@ -290,7 +128,7 @@ export default function QuestionQcmScreen({ route, navigation }) {
                     
                     borderRadius: 8,
                     // marginTop: 50,
-                    marginLeft: 20,
+                    marginLeft: 0,
                     marginRight: 20,
                     shadowColor: "#000",
                     shadowOffset: {
@@ -302,10 +140,12 @@ export default function QuestionQcmScreen({ route, navigation }) {
                     elevation: 5,
                 }}
                 onPress={() => {
-                  createTwoButtonAlert();
+                    // redirect vers Result
+                    navigation.navigate("ScoreScreen", {idQcmUser: idQcmUser})
+                //   createTwoButtonAlert();
                 }}
                 >
-                    Terminer
+                    Resultat
                 </Button>
 
                   <SelectDropdown
@@ -365,52 +205,20 @@ export default function QuestionQcmScreen({ route, navigation }) {
               {questionTitle}/{qcmQuestion?.length}
             </Text>
 
-            {/* <Button
-                labelStyle={{fontSize: 17, color: "#fff"}}
-                style={{
-                    backgroundColor: "#FF00B8",
-                    // padding: 20,
-                    
-                    borderRadius: 8,
-                    // marginTop: 50,
-                    marginLeft: 20,
-                    marginRight: 20,
-                    shadowColor: "#000",
-                    shadowOffset: {
-                    width: 0,
-                    height: 2,
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 4,
-                    elevation: 5,
-                }}
-                onPress={() => {
-                  // console.log('current question',currentQuestion.id);
-                  console.log('current question',questionTitle);
-                  
-                  // setIndexQuestion(indexQuestion+1);
-                  
-                  if (indexQuestion == qcmQuestion?.length) {
-                    // alert('Vous avez terminé le QCM');
-                    // console.log('current question',qcmQuestion);
-                    setIndexQuestion(1);
-                    setCurrentQuestion(qcmQuestion[0]);
-                    setQuestionId(qcmQuestion[0].id);
-                    setQuestionTitle('Question ' + 1);
-                  }else{
-
-                    setCurrentQuestion(nextQuestion);
-                    setQuestionId(nextQuestion.id);
-                    setIndexQuestion(indexQuestion+1);
-                    setQuestionTitle('Question ' + (indexQuestion+1));
-
-                  }
-                  // console.log('next question',questionTitle);
-                  
-                }}
-                >
-                    Suivant
-            </Button> */}
+<View>
+            <Text style={{fontSize: 22, color: "#8BF604", fontWeight: "bold"}}>
+                Point : 
+                {
+                    results !== null && (
+                        results.map((result) => {
+                            if(result.id_question === currentQuestion.id){
+                                return " "+result.result+"/1"
+                            }
+                        })
+                    )
+                }
+            </Text>
+</View>
 
         </View>
 
@@ -438,44 +246,31 @@ export default function QuestionQcmScreen({ route, navigation }) {
                 marginTop: 10,
             }}>
               {currentQuestion?.Answers?.map((answer, i) => {
-                // setAnswersChecked({
-                //   ...answersChecked,
-                //   [currentQuestion.id] : {
-                //     [letterArray[i]]: false,
-                //   }
-                // });
-                // console.log('answersChecked',answersChecked);
                 return (
                     <View key={i} style={{
                       display: "flex",
                       flexDirection: "row",
-                      // justifyContent: "space-between",
                       alignContent: "center",
                       alignItems: "center",
                       backgroundColor:'white',
                       fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",   marginTop:20 ,padding:15
                       ,paddingRight: 20,
+                      borderWidth: answer.isCorrect_answer ? 5 : 0, 
+                      borderColor: (answersChecked[currentQuestion.id]) && (answersChecked[currentQuestion.id][letterArray[i]] !== answer.isCorrect_answer) ?   '#FF0000' : '#8BF604',
                       }}>
                     <Checkbox 
                         status={( (questionId != undefined && answersChecked[questionId]) && answersChecked[questionId][letterArray[i]]) ? 'checked' : 'unchecked'}
                         color="#500E5D"
-                        onPress={() => {
-                          (questionId != undefined && answersChecked[questionId]) &&
-                            setAnswersChecked({
-                                ...answersChecked,
-                                [questionId] : {
-                                  ...answersChecked[questionId],
-                                  [letterArray[i]]: !answersChecked[questionId][letterArray[i]],
-                                }
-                                
-                            });
-                        }}
+                        disabled={true}
+                        
                         style={{
                           marginLeft: 16,
                         borderRadius: 8, 
+                        border: '9px solid #500E5D',
+                        borderColor: "#500E5D",
                         marginBottom:0
                       }}/>
-                      <Text style={{fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",padding:15, paddingRight: 20}}>
+                      <Text style={{fontSize: 19, borderRadius:8, color: "#86439D", fontWeight: "bold",padding:15, paddingRight: 20,}}>
                        {letterArray[i]}) {answer.text} {answer.isCorrect_answer}
                       </Text>
                      </View>

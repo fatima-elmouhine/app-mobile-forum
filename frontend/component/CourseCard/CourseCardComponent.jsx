@@ -51,7 +51,7 @@ const styles = (bgColor) =>
   StyleSheet.create({
     cardContainer: {
       width: Dimensions.get("window").width - 32,
-      marginTop:35,
+      marginTop:10,
       marginBottom: 16,
       borderRadius: 10,
       height: 96,

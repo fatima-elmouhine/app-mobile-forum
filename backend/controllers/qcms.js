@@ -236,10 +236,24 @@ async function playGame (req, res)
             })
         }
         
-        res.send('Votre partie a bien été enregistré')
+        res.send({message : 'Votre partie a bien été enregistré', id : userQcmId})
     } catch (error) {
         res.status(500).json(error.message);
     }
+}
+
+async function getOneUserQcm(req, res) {
+  const qcm = await UserQcm.findAll({
+    where : {id: req.params.id},
+    include: {model: Result},
+    // order: [[sequelize.random()]],
+})
+
+if (qcm.length == 0) return res.status(404).json('Resultat indisponible');
+
+res.status(200).json(qcm);
+
+
 }
 
 module.exports = {
@@ -250,5 +264,6 @@ module.exports = {
   deleteQcm,
   generateQcm,
   playGame,
+  getOneUserQcm
   postQcmQuestion,
 };

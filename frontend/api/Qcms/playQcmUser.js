@@ -12,7 +12,7 @@ try {
             errorArray : errorsArray,
     })
     console.log(resultSend.data)
-return resultSend
+return resultSend.data
         
   } catch (e) {
     switch (e) {
