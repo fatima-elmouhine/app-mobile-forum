@@ -5,8 +5,10 @@ import { Modal, Container, Box, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import SideBar from '../component/layout/SideBar';
+import UpdateQcm from '@/component/Qcm/UpdateQcm';
 import DeleteQcm from '@/component/Qcm/DeleteQcm';
 import style from '@/styles/Global.module.css';
 
@@ -14,23 +16,23 @@ import { getQcms } from '@/api/Qcm/getQcms';
 import { getType } from '@/api/Qcm/getType';
 
 const Qcms = () => {
-
     const [item, setItem] = useState();
-
-    const [openDelete, setOpenDelete] = useState(false);
-    const handleOpenDelete = () => setOpenDelete(true);
-
-    const handleClose = () => setOpenDelete(false);
 
     const handleClick = () => {
         window.location.href = '/CreateQcm';
     };
 
-    const handleUpdate = (id) => {
-        window.location.href=`Qcms/${id}`
-    }
+    const [openUpdate, setOpenUpdate] = useState(false);
+    const handleOpenUpdate = () => setOpenUpdate(true);
 
-    const [type, setType] = useState('');
+    const [openDelete, setOpenDelete] = useState(false);
+    const handleOpenDelete = () => setOpenDelete(true);
+
+    const handleClose = () => setOpenDelete(false) || setOpenUpdate(false);
+
+    const handleQuestions = (id) => {
+        window.location.href=`Questions/${id}`
+    }
 
     const [qcms, setQcms] = useState([]);
     console.log(qcms);
@@ -39,35 +41,50 @@ const Qcms = () => {
         getQcms().then((data) => {
             setQcms(data);
         });
-        getType(qcms[0].id_type).then((data) => {
-            setType(data);
-        });
     }, []);
 
     useEffect(() => {
         getQcms().then((data) => {
             setQcms(data);
         });
-    }, [openDelete]);
-
+    }, [openDelete, openUpdate]);
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'title', headerName: 'Titre', width: 230 },
-        { field: 'isGenerated', headerName: 'Visible', width: 130 },
-        { field: 'type', headerName: 'Type', width: 200 },
+        { field: 'isGenerated', headerName: 'Générer', width: 130 },
+        { field: 'id_type', headerName: 'Type', width: 200 },
         { field: 'createdAt', headerName: 'Date de création', width: 130 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
+        { field: 'Questions', headerName: 'Questions', width: 160 ,
+            renderCell: (params) => (
+                <strong>
+                    <Button
+                        variant="contained"
+                        color="inherit"
+                        onClick={()=>handleQuestions(params.row.id)}
+                    >
+                        <VisibilityIcon/> Voir
+                    </Button>
+                </strong>
+            ),
+        },
         { field: 'update', headerName: 'Modifier', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={()=>{handleUpdate(params.row.id)}}
+                        onClick={()=>{setItem(params.row), handleOpenUpdate()}}
                     >
                         Modifier
                     </Button>
+                    <Modal
+                        open={openUpdate}
+                        onClose={handleClose}
+                    >
+                        <UpdateQcm data={item} onClose={handleClose}/>
+                    </Modal>
                 </strong>
             ),
         },
@@ -97,8 +114,7 @@ const Qcms = () => {
             id: qcm.id,
             title: qcm.title,
             isGenerated: qcm.isGenerated ? 'Oui' : 'Non',
-            type: type.type_name,
-            id_type: type.id,
+            id_type: qcm.id_type,
             createdAt: new Date(qcm.createdAt).toLocaleDateString(),
             updatedAt: new Date(qcm.updatedAt).toLocaleString()
         };

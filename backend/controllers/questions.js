@@ -51,9 +51,10 @@ async function postQuestion (req, res)
 
 async function updateQuestion (req, res) 
 {
+    console.log('body',req.body);
     try 
     {
-        const question = await Question.findOne({ where: {id: req.params.id }})
+        const question = await Question.findOne({ where: {id: req.body.id }})
         .then(question => {
             return question;
         })
@@ -79,7 +80,7 @@ async function updateQuestion (req, res)
                 {
                 where: 
                 {
-                    id: req.params.id
+                    id: req.body.id
                 }})
                 .then(question => {
                     res.status(201).send('La modification a été effectuée')

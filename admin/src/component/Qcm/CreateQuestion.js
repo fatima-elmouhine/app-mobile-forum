@@ -66,7 +66,8 @@ const CreateQuestion = (props) => {
             id_theme: themes
         }
         postQuestions(data.text, data.id_theme).then((data) => {
-            if (data.status == 201) {
+            console.log('question Status',data);
+            if (data) {
                 setMessage('Question ajoutée avec succès');
                 setOpen(true);
             } else {
@@ -78,7 +79,8 @@ const CreateQuestion = (props) => {
             const answersArray = answers.filter((answer) => answer.response !== undefined);
             const answersArray2 = answersArray.map((answer) => {
                 postAnswers(answer.response, answer.radio, data.id).then((data) => {
-                    if (data.status == 201) {
+                    console.log('Answer Status',data);
+                    if (data) {
                         setMessage('Réponses enregistrer avec succès');
                         setOpen(true);
                     } else {
@@ -137,8 +139,8 @@ const CreateQuestion = (props) => {
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
-                                <FormControlLabel value="0" control={<Radio />} label="Faux" />
+                                <FormControlLabel value="true" control={<Radio />} label="Vrai" />
+                                <FormControlLabel value="false" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
@@ -158,8 +160,8 @@ const CreateQuestion = (props) => {
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
-                                <FormControlLabel value="0" control={<Radio />} label="Faux" />
+                                <FormControlLabel value="true" control={<Radio />} label="Vrai" />
+                                <FormControlLabel value="false" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
@@ -179,8 +181,8 @@ const CreateQuestion = (props) => {
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
-                                <FormControlLabel value="0" control={<Radio />} label="Faux" />
+                                <FormControlLabel value="true" control={<Radio />} label="Vrai" />
+                                <FormControlLabel value="false" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
@@ -200,8 +202,8 @@ const CreateQuestion = (props) => {
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
-                                <FormControlLabel value="0" control={<Radio />} label="Faux" />
+                                <FormControlLabel value="true" control={<Radio />} label="Vrai" />
+                                <FormControlLabel value="false" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>
@@ -221,8 +223,8 @@ const CreateQuestion = (props) => {
                                 id='radio'
                                 style={{flexWrap: 'inherit', flexDirection: 'row'}}
                             >
-                                <FormControlLabel value="1" control={<Radio />} label="Vrai" />
-                                <FormControlLabel value="0" control={<Radio />} label="Faux" />
+                                <FormControlLabel value="true" control={<Radio />} label="Vrai" />
+                                <FormControlLabel value="false" control={<Radio />} label="Faux" />
                             </RadioGroup>
                         </FormControl>
                     </Box>

@@ -9,7 +9,7 @@ router.get('/:id',getAnswer)
 
 router.post('/', postAnswer);
 
-router.put('/:id', updateAnswer);
+router.put('/', updateAnswer);
 
 router.delete('/:id', deleteAnswer);
 
