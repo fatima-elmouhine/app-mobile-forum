@@ -7,6 +7,7 @@ const auth = require("../Tools/auth");
 router.get('/generate/:limit/:idTheme',auth , generateQcm)
 
 router.get('/',getQcms);
+
 router.get('/correction/:id', getOneUserQcm);
 
 router.get('/:id', getQcm);

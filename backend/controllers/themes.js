@@ -1,5 +1,5 @@
 const sequelize  = require('../models/index');
-const {Theme} = sequelize.models;
+const {Theme, Qcm, Question} = sequelize.models;
 const {genericGetAll, genericGetOne} = require('../Tools/dbTools');
 
 async function getThemes(req, res)
@@ -80,10 +80,24 @@ async function deleteTheme (req, res)
     }
 }
 
+async function getQcms (req,res) 
+{
+    try {
+        const Qcms = await Qcm.findAll({
+            where: {isGenerated: false},
+            include: {model: Question, where: {id_theme: req.params.id}}
+        });
+        res.status(200).json(Qcms);        
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}
+
 module.exports = {
     getThemes,
     postTheme,
     getTheme,
     updateTheme,
-    deleteTheme
+    deleteTheme,
+    getQcms
 }

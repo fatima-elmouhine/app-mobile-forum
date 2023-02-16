@@ -1,17 +1,16 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Button, Box, Typography, Snackbar } from '@mui/material';
-import { deleteQcm } from '@/api/Qcm/deleteQcm';
+import { deleteQcmQuestion } from '@/api/Qcm/deleteQcmQuestion';
 
-export const DeleteQcm = (props) => {
-    console.log('ici', props.data);
+export const DeleteQcmQuestion = (props) => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
     const handleSubmit = async () => {
         try {
-            const response = await deleteQcm(props.data.id);
-            setMessage('Le QCM a bien été supprimé');
+            const response = await deleteQcmQuestion(props.data.id, props.qcmID);
+            setMessage('La Question a bien été supprimé');
             setTimeout(() => {
                 props.onClose()
             }, 2000);
@@ -32,8 +31,8 @@ export const DeleteQcm = (props) => {
     return (
         <Box sx={{ background: '#f0f0f0', p: 2, m: 2, textAlign: 'center', margin: 'auto', marginTop: '16vh' }} maxWidth="sm">
             <Typography component="h1" gutterBottom>
-                Êtes-vous sûr de vouloir supprimer ce QCM ?<br></br>
-                ({props.data.title})<br></br>
+                Êtes-vous sûr de vouloir supprimer cette question du QCM ?<br></br>
+                ({props.data.text})<br></br>
                 Cette action est irréversible.
             </Typography>
             <Button
@@ -69,4 +68,4 @@ export const DeleteQcm = (props) => {
     );
 }
 
-export default DeleteQcm;
+export default DeleteQcmQuestion;

@@ -4,69 +4,80 @@ import { useEffect, useState } from 'react';
 import { Modal, Container, Box, Button } from '@mui/material';
 
 import { DataGrid } from '@mui/x-data-grid';
-import AddCommentIcon from '@mui/icons-material/AddComment';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import SideBar from '../component/layout/SideBar';
-import CreateTopic from '@/component/topics/CreateTopic';
-import UpdateTopic from '@/component/topics/UpdateTopic';
-import DeleteTopic from '@/component/topics/DeleteTopic';
+import SideBar from '@/component/layout/SideBar';
+import CreateQuestion from '@/component/Qcm/CreateQuestion';
+import UpdateQcmQuestion from '@/component/Qcm/UpdateQcmQuestion';
+import DeleteQcmQuestion from '@/component/Qcm/DeleteQcmQuestion';
 import style from '@/styles/Global.module.css';
 
-import { getTopics } from '../api/Topics/getTopics';
+import { getQcm } from '@/api/Qcm/getQcm';
+import { getThemes } from '@/api/Themes/getThemes';
 
-const Topics = () => {
+export async function getServerSideProps(context) {
+    return {
+        props: {
+            id: context.query.id
+        }
+    }
+}
+
+const Questions = (props) => {
+    const qcmID = props.id
+    const [item, setItem] = useState();
+
     const [openCreate, setOpenCreate] = useState(false);
     const handleOpenCreate = () => setOpenCreate(true);
 
-    const [item, setItem] = useState();
     const [openUpdate, setOpenUpdate] = useState(false);
     const handleOpenUpdate = () => setOpenUpdate(true);
-
-    const handleOpenMessages = (id) => {
-        window.location.href=`Messages/${id}`
-    }
 
     const [openDelete, setOpenDelete] = useState(false);
     const handleOpenDelete = () => setOpenDelete(true);
 
-    const handleClose = () => setOpenCreate(false) || setOpenUpdate(false) || setOpenDelete(false);
+    const handleClose = () => setOpenDelete(false) || setOpenUpdate(false) || setOpenCreate(false);
 
-    const [topics, setTopics] = useState([]);
+    const handleResponse = (qcmID, id) => {
+        window.location.href=`/Response/${qcmID}_${id}`
+    }
+
+    const [qcms, setQcms] = useState([]);
+    console.log(qcms);
 
     useEffect(() => {
-        getTopics().then((data) => {
-            setTopics(data);
+        getQcm(props.id).then((data) => {
+            setQcms(data.qcm[0].Questions);
         });
     }, []);
-    
+
     useEffect(() => {
-        getTopics().then((data) => {
-            setTopics(data);
+        getQcm(props.id).then((data) => {
+            setQcms(data.qcm[0].Questions);
         });
-    }, [openCreate, openUpdate, openDelete]);
+    }, [openDelete, openUpdate]);
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'title', headerName: 'Titre', width: 170 },
-        { field: 'user', headerName: 'De', width: 210 },
-        { field: 'theme', headerName: 'Thème', width: 250 },
-        { field: 'createdAt', headerName: 'Date de création', width: 180 },
-        { field: 'updatedAt', headerName: 'Date de modification', width: 180 },
-        { field: 'messages', headerName: 'Messages', width: 180, 
+        { field: 'text', headerName: 'Question', width: 230 },
+        { field: 'id_theme', headerName: 'Thème', width: 130 },
+        { field: 'createdAt', headerName: 'Date de création', width: 130 },
+        { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
+        { field: 'Answers', headerName: 'Réponses', width: 160 ,
             renderCell: (params) => (
                 <strong>
                     <Button
                         variant="contained"
                         color="inherit"
-                        onClick={()=>{handleOpenMessages(params.row.id)}}
+                        onClick={()=>handleResponse(qcmID, params.row.id)}
                     >
-                        <VisibilityIcon /> Voir
+                        <VisibilityIcon/> Voir
                     </Button>
                 </strong>
             ),
         },
-        { field: 'update', headerName: 'Modifier', width: 150,
+        { field: 'update', headerName: 'Modifier', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -80,12 +91,12 @@ const Topics = () => {
                         open={openUpdate}
                         onClose={handleClose}
                     >
-                        <UpdateTopic data={item} onClose={handleClose}/>
+                        <UpdateQcmQuestion data={item} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 150,
+        { field: 'delete', headerName: 'Supprimer', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -99,23 +110,21 @@ const Topics = () => {
                         open={openDelete}
                         onClose={handleClose}
                     >
-                        <DeleteTopic data={item} onClose={handleClose}/>
+                        <DeleteQcmQuestion data={item} qcmID={props.id} onClose={handleClose}/>
                     </Modal>
                 </strong>
             ),
         },
     ];
 
-    const rows = topics.map((topic) => {
+    const rows = qcms.map((question) => {
         return {
-            id: topic.id,
-            title: topic.title,
-            user: topic.User.firstName + ' ' + topic.User.lastName,
-            userID: topic.User.id,
-            theme: topic.Theme.title,
-            themeID: topic.Theme.id,
-            createdAt: new Date(topic.createdAt).toLocaleString(),
-            updatedAt: new Date(topic.updatedAt).toLocaleString()
+            id: question.id,
+            text: question.text,
+            id_theme: question.id_theme,
+            createdAt: new Date(question.createdAt).toLocaleDateString(),
+            updatedAt: new Date(question.updatedAt).toLocaleString(),
+            Answers: question.Answers.lenght,
         };
     });
 
@@ -125,20 +134,28 @@ const Topics = () => {
                 <SideBar />
             </Box>
             <Box className={style.tableContent}>
-                <h1 style={{ color: 'black' }}>Liste des forums</h1>
+                <h1 style={{ color: 'black' }}>Liste des QCM</h1>
+                <Button
+                        style={{ width: 'max-content' }}
+                        variant="contained"
+                        color="primary"
+                        onClick={() => window.location.href = '/Qcms'}
+                    >
+                        Retour
+                    </Button>
                 <Box className={style.buttonAdd}>
                     <Button
                         style={{ width: 'max-content' }}
                         variant="contained"
                         color="primary"
-                        startIcon={<AddCommentIcon />}
+                        startIcon={<ControlPointIcon />}
                         onClick={handleOpenCreate}
                     />
                     <Modal
                         open={openCreate}
                         onClose={handleClose}
                     >
-                        <CreateTopic onClose={handleClose}/>
+                        <CreateQuestion onClose={handleClose}/>
                     </Modal>
                 </Box>
                 <DataGrid
@@ -153,4 +170,4 @@ const Topics = () => {
     );
 }
 
-export default Topics
+export default Questions
