@@ -18,7 +18,6 @@ import QcmCard from "../component/Qcms/QcmCardHome";
 
 export default function SearchByThemeScreen({route, navigation }) {
   const { title, id, type} = route.params;
-  console.log(route.params);
   const [topics, setTopics] = useState([]);
   const [theme, setTheme] = useState([]);
   const [qcm, setQcm] = useState([]);
@@ -28,13 +27,12 @@ export default function SearchByThemeScreen({route, navigation }) {
 
     async function getThemeInScreen() {
       const themeReq = await getTheme(id);
-      // console.log(themeReq);
       setTheme(themeReq);
       setTopics(themeReq.Topics);
       if(type == 'qcm'){
+
         const qcmReq = await getThemeQcms(id);
-        console.log(qcmReq);
-        // setQcm(themeReq.Qcms);
+        setQcm(qcmReq);
       }
     }
         getThemeInScreen();
