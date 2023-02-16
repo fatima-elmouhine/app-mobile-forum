@@ -48,6 +48,7 @@ const CreateQcm = () => {
     const [questions, setQuestions] = useState([]);
     const [questionsArray, setQuestionsArray] = useState([]);
     const handleChangeQuestions = (event) => {
+        // console.log('ici',event.target.value.id);
         setQuestions(event.target.value);
     };
 
@@ -86,6 +87,8 @@ const CreateQcm = () => {
                 questions.map((question) => {
                     postQcmQuestion(data.id, question);
                 })
+                setMessage('QCM créé avec succès');
+                setOpenMessage(true);
             });
         }
     };
@@ -133,8 +136,10 @@ const CreateQcm = () => {
                             value={questions}
                             onChange={handleChangeQuestions}
                             renderValue={(selected) => (
+                                // console.log('select', selected),
                                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                     {selected.map((value) => (
+                                        // console.log('value', value),
                                         <Chip key={value} label={value} />
                                     ))}
                                 </Box>
