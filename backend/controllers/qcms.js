@@ -278,5 +278,5 @@ module.exports = {
   playGame,
   getOneUserQcm,
   postQcmQuestion,
-  deleteQcmQuestion,
+  deleteQcmQuestion
 };
