@@ -19,6 +19,7 @@ import QcmHomeScreen from './pages/QcmHomeScreen.js';
 import ListQcmScreen from './pages/ListQcmScreen.js';
 import QuestionQcmScreen from './pages/QuestionQcmScreen.js';
 import ScoreScreen from './pages/ScoreScreen.js';
+import NewQcmScreen from './pages/NewQcmScreen.js';
 import CorrectionQcmScreen from './pages/CorrectionQcmScreen.js';
 
 const Stack = createStackNavigator();
@@ -43,6 +44,7 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="ListQcmScreen" component={ListQcmScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="QuestionQcmScreen" component={QuestionQcmScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ScoreScreen" component={ScoreScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="NewQcmScreen" component={NewQcmScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="CorrectionQcmScreen" component={CorrectionQcmScreen} />
                 </Stack.Navigator>
             <MenuButton/>

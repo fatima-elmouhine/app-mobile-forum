@@ -95,7 +95,7 @@ export default function QcmHomeScreen({ navigation }) {
                         display: 'flex',
                         backgroundColor:'#F66C1C', padding:4, width:'100%', borderRadius:8}}
                         onPress={() => {
-                        navigation.navigate('NewTopicScreen')}}
+                        navigation.navigate('NewQcmScreen')}}
                     >
                         Générer votre propre questionnaire
 
