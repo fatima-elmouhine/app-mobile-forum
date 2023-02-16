@@ -22,3 +22,12 @@
     margin-bottom: 1vh;
     margin-right: 1vh;
 }
+
+.formContent {
+    display: flex;
+    flex-direction: column;
+    width: 50rem;
+    margin: auto;
+    margin-top: 5em;
+    gap: 3vh;
+}

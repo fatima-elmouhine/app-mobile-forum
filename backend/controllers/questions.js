@@ -35,7 +35,7 @@ async function postQuestion (req, res)
     }
     else
     {
-        const newQuestion = {            
+        const newQuestion = {
             text: req.body.text,
             id_theme: req.body.id_theme
         }
@@ -45,11 +45,8 @@ async function postQuestion (req, res)
         })
         .catch(err => {
             res.status(406).send('Cette adresse email est déjà utilisée');
-    
         });
     }
-
-
 }
 
 async function updateQuestion (req, res) 
