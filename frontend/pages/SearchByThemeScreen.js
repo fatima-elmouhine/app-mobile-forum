@@ -11,22 +11,29 @@ import {
 import { useEffect, useContext, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { getTheme } from "../api/Themes/getTheme";
+import {getThemeQcms} from "../api/Themes/getThemeQcm";
 import CardTopic from "../component/Forum/CardTopic";
 import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
+import QcmCard from "../component/Qcms/QcmCardHome";
 
 export default function SearchByThemeScreen({route, navigation }) {
   const { title, id, type} = route.params;
   const [topics, setTopics] = useState([]);
   const [theme, setTheme] = useState([]);
+  const [qcm, setQcm] = useState([]);
   
 
   useEffect( () => {
 
     async function getThemeInScreen() {
       const themeReq = await getTheme(id);
-      console.log(themeReq);
       setTheme(themeReq);
       setTopics(themeReq.Topics);
+      if(type == 'qcm'){
+
+        const qcmReq = await getThemeQcms(id);
+        setQcm(qcmReq);
+      }
     }
         getThemeInScreen();
       }, []);
@@ -104,6 +111,19 @@ export default function SearchByThemeScreen({route, navigation }) {
               Aucun résultat
               </Text>
               
+              }
+              {
+                type == 'qcm' && qcm?.length != 0 ?
+                qcm?.map((item) => {
+                  return (
+                    <QcmCard key={item.id} qcm={item} navigation={navigation} />
+                  );
+                }
+                )
+                :
+                <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
+                Aucun résultat
+                </Text>
               }
             </View>
         </ScrollView>
