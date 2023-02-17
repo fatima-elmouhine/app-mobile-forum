@@ -15,8 +15,6 @@ const CreateTheme = (props) => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
-    // console.log('image', image);
-
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
           return;
@@ -32,16 +30,24 @@ const CreateTheme = (props) => {
     };
     const handleImageChange = (event) => {
         setImage(event.target.files[0]);
+        console.log('ici', event.target.files[0]);
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         try {
             if (title.length < 3) {
                 setMessage('Le titre doit contenire au moins 3 caractères');
                 setOpen(true);
                 return;
             }
-            const response = await postTheme(title, description, image);
+            const formData = new FormData();
+            formData.append('image', {
+                uri: image,
+                type: 'image/jpeg',
+                name: `image-${Date.now()}.jpg`,
+            });
+            const response = await postTheme(title, description, formData);
             setMessage('Le thème a bien été créé');
             setTimeout(() => {
                 props.onClose()

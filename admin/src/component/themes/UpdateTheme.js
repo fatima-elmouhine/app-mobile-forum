@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
 import { 
-    Card, Typography, Container , Select, Input, 
-    InputLabel, MenuItem, FormControl, Button, Snackbar
+    Card, Typography, Container, Input, 
+    InputLabel, FormControl, Button, Snackbar
 } from '@mui/material';
 
 import { putTheme } from '@/api/Themes/putTheme';
+import { postImageTheme } from '@/api/Themes/postImageTheme';
 
 const UpdateTheme = (props) => {
     const themeID = props.data.id
     const [title, setTitle] = useState(props.data.title);
     const [description, setDescription] = useState(props.data.description);
+    const [image, setImage] = useState(null);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -27,6 +29,9 @@ const UpdateTheme = (props) => {
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
+    const handleImageChange = (event) => {
+        setImage(event.target.files[0]);
+    };
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -36,10 +41,20 @@ const UpdateTheme = (props) => {
                 return;
             }
             const response = await putTheme(themeID, title, description);
-            setMessage('Modification réussie');
-            setTimeout(() => {
-                props.onClose()
-            }, 2000);
+        
+            if (response) {
+                const imageTheme = await postImageTheme(themeID, image);
+                if (imageTheme) {
+                    setMessage('Modification réussie');
+                    setTimeout(() => {
+                        props.onClose()
+                    }, 2000);
+                } else {
+                    setMessage('Une erreur est survenue sur l\'image');
+                }
+            } else {
+                setMessage('Une erreur est survenue sur la modification');
+            }
         } catch (error) {
             console.log(error);
             setMessage('Une erreur est survenue');
@@ -71,6 +86,19 @@ const UpdateTheme = (props) => {
                             value={description}
                             onChange={handleDescriptionChange}
                         />
+                    </FormControl>
+                    <FormControl fullWidth sx={{ m: 1 }}>
+                        <Button variant='contained' component='label' color='secondary'>
+                            Ajouter une image
+                            <input
+                                type="file"
+                                accept='image/*'
+                                hidden
+                                multiple
+                                onChange={handleImageChange}
+                            />
+                        </Button>
+                        {image && <Typography>{image.name}</Typography>}
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Modifier
