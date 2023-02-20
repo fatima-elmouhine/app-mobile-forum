@@ -21,7 +21,7 @@ import QuestionQcmScreen from './pages/QuestionQcmScreen.js';
 import ScoreScreen from './pages/ScoreScreen.js';
 import NewQcmScreen from './pages/NewQcmScreen.js';
 import CorrectionQcmScreen from './pages/CorrectionQcmScreen.js';
-
+import StatsScreen from './pages/StatsScreen.js';
 const Stack = createStackNavigator();
 
 function Routes() {
@@ -46,6 +46,7 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="ScoreScreen" component={ScoreScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="NewQcmScreen" component={NewQcmScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="CorrectionQcmScreen" component={CorrectionQcmScreen} />
+                    <Stack.Screen options={{ headerShown: false}} name="StatsScreen" component={StatsScreen} />
                 </Stack.Navigator>
             <MenuButton/>
             </NavigationContainer>

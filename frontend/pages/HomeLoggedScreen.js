@@ -13,6 +13,7 @@ import {
 import { useEffect, useContext, useState } from "react";
 
 import {
+  TouchableRipple,
   ProgressBar,
   Avatar,
   MD3Colors,
@@ -109,6 +110,18 @@ export default function HomeLoggedScreen({ navigation }) {
         </View>
         <Text style={styles.sectionTitle}>Mes derniers cours</Text>
         <ScrollView style={{ display: "flex", flexDirection: "column" }}>
+          <TouchableRipple 
+          onPress={() => {
+            navigation.navigate("StatsScreen");
+          }}
+                rippleColor="rgba(0, 0, 0, .32)"
+          
+          >
+            <Button mode="contained">
+              <Text style={{ color: "white" }}>Mes statistiques</Text>
+            </Button>
+
+          </TouchableRipple>
           <View style={styles.sectionLatestCourse}>
             {courses.length !== 0 &&
               courses.map((course, i) => {

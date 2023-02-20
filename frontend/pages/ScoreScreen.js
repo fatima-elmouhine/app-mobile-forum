@@ -27,7 +27,7 @@ import {getQcmUser} from "../api/Qcms/getQcmUser";
 
 export default function ScoreScreen({ route, navigation }) {
   // remettre le bouton suivant
-  // vider les variables une fois la partie fini
+
     const [dataUserQcm, setDataUserQcm] = useState({
         nbrQuestion : 0,
         answersUser : [],
