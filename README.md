@@ -22,6 +22,14 @@ Le "stop" nous permet d'arrêter tout docker qui a été précédemment lancé
 Le "run" nous permet de lancer un container avec une image MySQL
 Le "makemigration" nous permet de lancer des fixtures dans notre base donnée
 
+⚠️ Si ce script ne fonctionne pas (parfois sur environnement windows), il faut :
+- Pour lancer docker
+  - cd backend
+  - docker compose up
+- Pour lancer les migration, vous devez :
+  - cd backend/models
+  - node initDB.js
+
 ### ✅ 💡 API
 
 - cd backend
@@ -42,7 +50,7 @@ Le "makemigration" nous permet de lancer des fixtures dans notre base donnée
 - À la racine :
   - cd admin
   - npm i
-  - npm start
+  - npm run dev
 
 
 ------------------------------------------------------
