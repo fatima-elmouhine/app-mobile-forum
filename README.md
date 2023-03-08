@@ -18,9 +18,9 @@ Ce projet contient :
   -  ./start.sh makemigration
 
 
-Le "stop" nous permet d'arrêter tout docker qui a été précédemment lancé
-Le "run" nous permet de lancer un container avec une image MySQL
-Le "makemigration" nous permet de lancer des fixtures dans notre base donnée
+- Le "stop" nous permet d'arrêter tout docker qui a été précédemment lancé
+- Le "run" nous permet de lancer un container avec une image MySQL
+- Le "makemigration" nous permet de lancer des fixtures dans notre base donnée
 
 ⚠️ Si ce script ne fonctionne pas (parfois sur environnement windows), il faut :
 - Pour lancer docker
