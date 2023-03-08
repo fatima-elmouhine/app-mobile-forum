@@ -30,7 +30,7 @@ import { getThemes } from "../api/Themes/getThemes";
 import { postMessageInTopic } from '../api/Forum/postMessageInTopic';
 import {postTopic} from '../api/Forum/postTopic';
 
-export default function HomeLoggedScreen({ navigation }) {
+export default function NewTopicScreen({ navigation }) {
 
     const [themes, setThemes] = useState();
     const [selectedTheme, setSelectedTheme] = useState();

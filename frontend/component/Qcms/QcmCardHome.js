@@ -37,7 +37,7 @@ export default function QcmCard({qcm,navigation}) {
         marginRight:50,
 
     }} onPress={()=> 
-      navigation.navigate('QuestionQcmScreen', {idQcm:qcm.id})}
+      navigation.navigate('QuestionQcmScreen', {idQcm:qcm.id, game:false})}
       >
       <Card.Content style={{ flexDirection:"row",
       

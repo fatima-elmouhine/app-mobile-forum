@@ -5,14 +5,15 @@ import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../context/UserContext';
 import * as SecureStore from 'expo-secure-store';
 
-
 function MenuButton() {
 
     const navigation = useNavigation();
     const {isLogged, userLogout} = useContext(UserContext);
 
     if (isLogged === false) {
-         return navigation.navigate('HomeScreen');;
+      if (navigation.isReady()){
+          return navigation?.navigate('HomeScreen');
+        }
     }
 
     const actions = [
