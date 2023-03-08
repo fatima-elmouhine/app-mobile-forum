@@ -41,7 +41,6 @@ const Users = () => {
         });
     }, [openCreate, openUpdate, openDelete]);
 
-
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'firstName', headerName: 'Prénom', width: 130 },

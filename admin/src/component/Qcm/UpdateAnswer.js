@@ -10,7 +10,9 @@ import { updateAnswer } from '@/api/Qcm/updateAnswer';
 const UpdateAnswer = (props) => {
     const questionID = props.data.id;
     const [text, setText] = useState(props.data.text);
-    const [isCorrect_answer, setIsCorrect_answer] = useState(props.data.isCorrect_answer);
+    const [isCorrect_answer, setIsCorrect_answer] = useState(props.data.isCorrect_answer === 'Faux' ? false : true);
+    console.log('iciProps', props.data.isCorrect_answer);
+    console.log('iciCurrent', isCorrect_answer);
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');

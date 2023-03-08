@@ -79,7 +79,7 @@ const Response = (props) => {
         return {
             id: res.id,
             text: res.text,
-            isCorrect_answer: res.isCorrect_answer,
+            isCorrect_answer: res.isCorrect_answer ? 'Vrai' : 'Faux',
             createdAt: new Date(res.createdAt).toLocaleDateString(),
             updatedAt: new Date(res.updatedAt).toLocaleString(),
         };

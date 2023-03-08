@@ -41,13 +41,7 @@ const CreateTheme = (props) => {
                 setOpen(true);
                 return;
             }
-            const formData = new FormData();
-            formData.append('image', {
-                uri: image,
-                type: 'image/jpeg',
-                name: `image-${Date.now()}.jpg`,
-            });
-            const response = await postTheme(title, description, formData);
+            const response = await postTheme(title, description);
             setMessage('Le thème a bien été créé');
             setTimeout(() => {
                 props.onClose()
@@ -97,6 +91,9 @@ const CreateTheme = (props) => {
                                 onChange={handleImageChange}
                             />
                         </Button>
+                        <Typography variant="body2" component="p" gutterBottom>
+                            {image ? image.name : ''}
+                        </Typography>
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Enregistrer

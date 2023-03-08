@@ -33,7 +33,7 @@ async function postTheme (req, res)
     console.log('req.file', req.file);
     try 
     {
-        if(!req.body.title || !req.body.description || !req.file.imageTheme)
+        if(!req.body.title || !req.body.description /*|| !req.file.imageTheme*/)
         {
             res.status(406).send('Les champs doivent être tous remplis');
         }
@@ -42,7 +42,7 @@ async function postTheme (req, res)
             const newTheme = {
                 title: req.body.title,
                 description: req.body.description,
-                imageTheme: req.file.imageTheme
+                // imageTheme: req.file.imageTheme
             }
             const theme = await Theme.create(newTheme);
             return
