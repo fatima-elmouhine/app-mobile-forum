@@ -2,17 +2,9 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
-import {
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import {
-  Searchbar,
-  Checkbox,
-} from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Searchbar, Checkbox } from "react-native-paper";
 import { getTheme } from "../api/Forum/forum";
 import { getTopics } from "../api/Forum/getTopics";
 import { searchAll } from "../api/Forum/searchAll";
@@ -64,7 +56,7 @@ const Forum = ({ navigation }) => {
         theme: false,
         topic: false,
         messages: false,
-      })
+      });
     }
   };
 
@@ -95,9 +87,6 @@ const Forum = ({ navigation }) => {
 
   useEffect(() => {
     const fetchInit = async () => {
-      const Theme = await getTheme();
-      const Topic = await getTopics();
-      console.log("Theme", Topic);
       return setCards({
         ...cards,
         topic: await getTopics(),
@@ -105,26 +94,31 @@ const Forum = ({ navigation }) => {
       });
     };
     fetchInit();
-    const willFocusSubscription = navigation.addListener('focus', () => {
-      fetchInit();
-    });
-    return willFocusSubscription;
+    // const willFocusSubscription = navigation.addListener('focus', async () => {
+    //   handleSearch(searchQuery);
+    //   fetchInit();
+    // });
+    // return willFocusSubscription;
   }, []);
 
   useEffect(() => {
     if (searchQuery) {
       handleSearch(searchQuery);
     }
-    console.log("test", checkFilterIsTrue("Topics"));
   }, [checked]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {/* <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/> */}
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
         style={styles.containerGradient}
       >
+        <Image
+          source={require("../assets/logo_fond.png")}
+          style={styles.bgTop}
+        />
+
         <Searchbar
           style={{
             borderRadius: 30,
@@ -133,6 +127,7 @@ const Forum = ({ navigation }) => {
             marginHorizontal: "5%",
             zIndex: 1000,
           }}
+          value={searchQuery}
           onChangeText={(query) => {
             handleSearch(query);
             setSearchQuery(query);
@@ -211,7 +206,7 @@ const Forum = ({ navigation }) => {
         {activeSearch == false && (
           <View style={{ display: "flex", width: "100%" }}>
             <ScrollView horizontal={true}>
-              {cards.themeMenu.map((item) => {
+              {cards?.themeMenu?.map((item) => {
                 return (
                   <CardTheme
                     key={item.id}
@@ -226,7 +221,7 @@ const Forum = ({ navigation }) => {
             <ScrollView
               contentContainerStyle={{ display: "flex", flexGrow: 1 }}
             >
-              {cards.topic.map((item) => {
+              {cards.topic?.map((item) => {
                 // console.log('item = ',cards.topic)
                 return (
                   <CardTopic
@@ -239,7 +234,7 @@ const Forum = ({ navigation }) => {
                   />
                 );
               })}
-              {cards.topic.map((item) => {
+              {cards.topic?.map((item) => {
                 // console.log('item = ',cards.topic)
                 return (
                   <CardTopic
@@ -256,11 +251,11 @@ const Forum = ({ navigation }) => {
           </View>
         )}
         {activeSearch === true && (
-          <ScrollView style={{marginTop:16}}>
+          <ScrollView style={{ marginTop: 16 }}>
             {checkFilterIsTrue("Themes") && (
               <SearchHeaderCard
                 table="Themes"
-                count={cards.themeMenu.count}
+                count={cards?.themeMenu?.count}
                 handleSetExpanded={() =>
                   setExpanded({ ...expanded, theme: !expanded.theme })
                 }
@@ -269,13 +264,14 @@ const Forum = ({ navigation }) => {
             {expanded.theme === true && (
               <ScrollView horizontal={true}>
                 {cards.themeMenu.count > 0 &&
-                  cards.themeMenu.rows.map((item) => {
+                  cards.themeMenu?.rows?.map((item) => {
                     return (
                       <CardTheme
                         key={item.id}
                         id={item.id}
                         title={item.title}
                         description={item.description}
+                        navigation={navigation}
                       />
                     );
                   })}
@@ -297,22 +293,24 @@ const Forum = ({ navigation }) => {
                     return (
                       <CardTopic
                         key={item.id}
-                        id={item.id}
+                        idTopic={item.id}
                         title={item.title}
                         theme={item.Theme.title}
                         messages={item.Messages}
+                        navigation={navigation}
                       />
                     );
                   })}
-                  {cards.topic.count > 0 &&
+                {cards.topic.count > 0 &&
                   cards.topic.rows.map((item) => {
                     return (
                       <CardTopic
                         key={item.id}
-                        id={item.id}
+                        idTopic={item.id}
                         title={item.title}
                         theme={item.Theme.title}
                         messages={item.Messages}
+                        navigation={navigation}
                       />
                     );
                   })}
@@ -328,26 +326,24 @@ const Forum = ({ navigation }) => {
               />
             )}
             {expanded.messages === true && (
-                    <ScrollView style={{
-                    }}>
-                      {cards.message.count > 0 &&
-                        cards.message.rows.map((item) => {
-                          return (
-                            <CardMessage
-                              key={item.id}
-                              idTopic={item.Topic.id}
-                              theme={item.Topic.Theme.title}
-                              text={item.text}
-                              topic={item.Topic.title}
-                              createdAt={item.createdAt}
-                            />
-                          );
-                        })}
-                    </ScrollView>
-                  )}
+              <ScrollView style={{}}>
+                {cards.message.count > 0 &&
+                  cards.message.rows.map((item) => {
+                    return (
+                      <CardMessage
+                        key={item.id}
+                        idTopic={item.Topic.id}
+                        theme={item.Topic.Theme.title}
+                        text={item.text}
+                        topic={item.Topic.title}
+                        createdAt={item.createdAt}
+                      />
+                    );
+                  })}
+              </ScrollView>
+            )}
           </ScrollView>
         )}
-      
 
         {/* CONDITION SI LE MOT RECHERCHER EST TROP COURT  */}
         {activeSearch == true && searchQuery == undefined && (
@@ -362,7 +358,7 @@ const Forum = ({ navigation }) => {
           </View>
         )}
       </LinearGradient>
-    </SafeAreaView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -370,22 +366,17 @@ const styles = StyleSheet.create({
     backgroundSize: "cover",
     borderWidth: 1,
     position: "absolute",
-    top: 10,
     height: 150,
     width: "100%",
-    zIndex: 1,
     // backgroundPosition: 'bottom',
   },
   linearGradient: {
     flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5,
     backgroundImage: "url(../assets/img-test/image1.png)",
   },
   container: {
-    flex: 1,
     width: "100%",
+    height: "100%",
     // padding:10,
   },
   containerGradient: {

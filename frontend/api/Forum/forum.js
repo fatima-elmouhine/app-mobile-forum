@@ -5,6 +5,7 @@ export const getTheme = async () => {
         const Data = await axiosInstance.get(`themes?include=Topic&limitInclude=3`)
         return Data.data 
     } catch (error) {
+        console.log('error')
         console.log(error)
     }
 

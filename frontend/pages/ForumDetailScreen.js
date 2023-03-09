@@ -17,6 +17,7 @@ export default function ForumDetailScreen({route,navigation}, ) {
 
     const getTopicInForumDetail = async () => {
       const topicReq = await getTopic(route.params.id);
+      console.log(topicReq, 'topicReq')
       setTopic(topicReq);
       
     }

@@ -5,38 +5,34 @@ import {
   Image,
   View,
   ScrollView,
-
   SafeAreaView,
 } from "react-native";
 import { useEffect, useContext, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { getTheme } from "../api/Themes/getTheme";
-import {getThemeQcms} from "../api/Themes/getThemeQcm";
+import { getThemeQcms } from "../api/Themes/getThemeQcm";
 import CardTopic from "../component/Forum/CardTopic";
 import CourseCardComponent from "../component/CourseCard/CourseCardComponent";
 import QcmCard from "../component/Qcms/QcmCardHome";
 
-export default function SearchByThemeScreen({route, navigation }) {
-  const { title, id, type} = route.params;
+export default function SearchByThemeScreen({ route, navigation }) {
+  const { title, id, type } = route.params;
   const [topics, setTopics] = useState([]);
   const [theme, setTheme] = useState([]);
   const [qcm, setQcm] = useState([]);
-  
 
-  useEffect( () => {
-
+  useEffect(() => {
     async function getThemeInScreen() {
       const themeReq = await getTheme(id);
       setTheme(themeReq);
       setTopics(themeReq.Topics);
-      if(type == 'qcm'){
-
+      if (type == "qcm") {
         const qcmReq = await getThemeQcms(id);
         setQcm(qcmReq);
       }
     }
-        getThemeInScreen();
-      }, []);
+    getThemeInScreen();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,53 +44,99 @@ export default function SearchByThemeScreen({route, navigation }) {
           source={require("../assets/logo_fond.png")}
           style={styles.bgTop}
         />
-        <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
-            Résultats pour le theme :
+        <Text
+          style={{
+            fontSize: 27,
+            color: "white",
+            marginTop: 110,
+            marginLeft: 40,
+            fontWeight: "bold",
+          }}
+        >
+          Résultats pour le theme :
         </Text>
-        <Text style={{fontSize:27, color:'white', fontStyle:'italic' , marginLeft:40, fontWeight:'bold'}}>
-           {title}
+        <Text
+          style={{
+            fontSize: 27,
+            color: "white",
+            fontStyle: "italic",
+            marginLeft: 40,
+            fontWeight: "bold",
+          }}
+        >
+          {title}
         </Text>
 
         <ScrollView>
-            <View style={{ display:'flex',  alignItems:'center', justifyContent:'center', }} >
-            {type == 'topic' ?
-              topics?.length != 0 ?
-             topics.map((item) => {
-                return (
-                  <CardTopic
-                    key={item.id}
-                    idTopic={item.id}
-                    title={item.title}
-                    theme={title}
-                    navigation={navigation}
-                  />
-                );
-              }):
-              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
-              Aucun résultat
-              </Text>
-              :
-              theme.Courses?.length != 0 ?
-
-              (
-                type == 'course' && theme.Courses?.map((item,i) => {
+          <View
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {type == "topic" ? (
+              topics?.length != 0 ? (
+                topics.map((item) => {
                   return (
-                    <>
-                      <CourseCardComponent key={i} themeTitle={theme.title} course={item} />
-                    </>
+                    <CardTopic
+                      key={item.id}
+                      idTopic={item.id}
+                      title={item.title}
+                      theme={title}
+                      navigation={navigation}
+                    />
                   );
                 })
+              ) : (
+                <Text
+                  style={{
+                    fontSize: 27,
+                    color: "white",
+                    marginTop: 110,
+                    marginLeft: 40,
+                    fontWeight: "bold",
+                  }}
+                >
+                  Aucun résultat
+                </Text>
               )
-              :
-              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
-              Aucun résultat
+            ) : theme.Courses?.length != 0 ? (
+              type == "course" &&
+              theme.Courses?.map((item, i) => {
+                return (
+                  <>
+                    <CourseCardComponent
+                      key={i}
+                      themeTitle={theme.title}
+                      course={item}
+                    />
+                  </>
+                );
+              })
+            ) : <Text
+                style={{
+                  fontSize: 27,
+                  color: "white",
+                  marginTop: 110,
+                  marginLeft: 40,
+                  fontWeight: "bold",
+                }}
+              >
+                Aucun résultat
+              </Text> ? (
+              <Text
+                style={{
+                  fontSize: 27,
+                  color: "white",
+                  marginTop: 110,
+                  marginLeft: 40,
+                  fontWeight: "bold",
+                }}
+              >
+                Aucun résultat
               </Text>
-              ? 
-              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
-              Aucun résultat
-              </Text>
-              : 
-              topics?.length != 0 ?
+            ) : topics?.length != 0 ? (
               topics?.map((item) => {
                 return (
                   <CardTopic
@@ -106,28 +148,42 @@ export default function SearchByThemeScreen({route, navigation }) {
                   />
                 );
               })
-              :
-              <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
-              Aucun résultat
-              </Text>
-              
-              }
-              {
-                type == 'qcm' && qcm?.length != 0 ?
-                qcm?.map((item) => {
-                  return (
-                    <QcmCard key={item.id} qcm={item} navigation={navigation} />
-                  );
-                }
-                )
-                :
-                <Text style={{fontSize:27, color:'white', marginTop:110, marginLeft:40, fontWeight:'bold'}}>
+            ) : (
+              <Text
+                style={{
+                  fontSize: 27,
+                  color: "white",
+                  marginTop: 110,
+                  marginLeft: 40,
+                  fontWeight: "bold",
+                }}
+              >
                 Aucun résultat
-                </Text>
-              }
-            </View>
+              </Text>
+            )}
+            {type === "qcm" &&
+              qcm?.length != 0 &&
+              qcm?.map((item) => {
+                return (
+                  <QcmCard key={item.id} qcm={item} navigation={navigation} />
+                );
+              })}
+            {qcm?.length === 0 
+            && type === "qcm" &&
+              <Text
+                style={{
+                  fontSize: 27,
+                  color: "white",
+                  marginTop: 110,
+                  marginLeft: 40,
+                  fontWeight: "bold",
+                }}
+              >
+                Aucun résultat
+              </Text>
+            }
+          </View>
         </ScrollView>
-
       </LinearGradient>
     </SafeAreaView>
   );

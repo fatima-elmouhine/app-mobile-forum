@@ -7,16 +7,16 @@ export default function CardTopic({idTopic, title, theme, messages, navigation})
   const [topic, setTopic] = React.useState();
   const getTopicInForumDetail = async () => {
     const topicReq = await getTopic(idTopic);
+    console.log(topicReq.length)
     setTopic(topicReq);
   }
 
   React.useEffect(() => {
+    console.log('useEffect')
     getTopicInForumDetail();
-  }, [idTopic]);
+  }, []);
 
 
-  var numberMessage = topic?.length
-  numberMessage = numberMessage == undefined ?  0 :  numberMessage
   return (
     <Card style={{marginBottom :10, margin:20}} onPress={()=> 
       navigation.navigate('ForumDetailScreen',{id: idTopic, title:title})}
@@ -28,7 +28,7 @@ export default function CardTopic({idTopic, title, theme, messages, navigation})
         </View>
         <View style={{alignItems: "flex-end", left: 0, }}>
           <Text variant="bodyMedium">Contient </Text>
-          <Text variant="bodyMedium"> {messages?.length} message{messages?.length > 1 &&'s'}</Text>
+          <Text variant="bodyMedium"> {topic?.length ? topic.length : 0} message{topic?.length > 1 &&'s'}</Text>
         </View>
       </Card.Content>
     </Card>
