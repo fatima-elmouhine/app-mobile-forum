@@ -51,12 +51,12 @@ const Qcms = () => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'title', headerName: 'Titre', width: 230 },
+        { field: 'title', headerName: 'Titre', width: 300 },
         { field: 'isGenerated', headerName: 'Générer', width: 130 },
         { field: 'id_type', headerName: 'Type', width: 200 },
         { field: 'createdAt', headerName: 'Date de création', width: 130 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
-        { field: 'Questions', headerName: 'Questions', width: 160 ,
+        { field: 'Questions', headerName: 'Questions', width: 180 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -69,7 +69,7 @@ const Qcms = () => {
                 </strong>
             ),
         },
-        { field: 'update', headerName: 'Modifier', width: 140 ,
+        { field: 'update', headerName: 'Modifier', width: 180 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -88,7 +88,7 @@ const Qcms = () => {
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 140 ,
+        { field: 'delete', headerName: 'Supprimer', width: 180 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -139,7 +139,7 @@ const Qcms = () => {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={14}
+                    pageSize={13}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
                 />

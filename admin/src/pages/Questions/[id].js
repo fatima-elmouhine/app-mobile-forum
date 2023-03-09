@@ -60,11 +60,11 @@ const Questions = (props) => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'text', headerName: 'Question', width: 230 },
-        { field: 'id_theme', headerName: 'Thème', width: 130 },
+        { field: 'text', headerName: 'Question', width: 420 },
+        { field: 'id_theme', headerName: 'Thème', width: 220 },
         { field: 'createdAt', headerName: 'Date de création', width: 130 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
-        { field: 'Answers', headerName: 'Réponses', width: 160 ,
+        { field: 'Answers', headerName: 'Réponses', width: 180 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -77,7 +77,7 @@ const Questions = (props) => {
                 </strong>
             ),
         },
-        { field: 'update', headerName: 'Modifier', width: 140 ,
+        { field: 'update', headerName: 'Modifier', width: 180 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -96,7 +96,7 @@ const Questions = (props) => {
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 140 ,
+        { field: 'delete', headerName: 'Supprimer', width: 170 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -161,7 +161,7 @@ const Questions = (props) => {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={14}
+                    pageSize={13}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
                 />

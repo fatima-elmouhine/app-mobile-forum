@@ -41,7 +41,6 @@ const Users = () => {
         });
     }, [openCreate, openUpdate, openDelete]);
 
-
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
         { field: 'firstName', headerName: 'Prénom', width: 130 },
@@ -152,7 +151,7 @@ const Users = () => {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={14}
+                    pageSize={13}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
                 />

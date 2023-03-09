@@ -49,11 +49,11 @@ const Response = (props) => {
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'text', headerName: 'Response', width: 230 },
+        { field: 'text', headerName: 'Response', width: 850 },
         { field: 'isCorrect_answer', headerName: 'Vrai / Faux', width: 130 },
         { field: 'createdAt', headerName: 'Date de création', width: 130 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
-        { field: 'update', headerName: 'Modifier', width: 140 ,
+        { field: 'update', headerName: 'Modifier', width: 180 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -79,7 +79,7 @@ const Response = (props) => {
         return {
             id: res.id,
             text: res.text,
-            isCorrect_answer: res.isCorrect_answer,
+            isCorrect_answer: res.isCorrect_answer ? 'Vrai' : 'Faux',
             createdAt: new Date(res.createdAt).toLocaleDateString(),
             updatedAt: new Date(res.updatedAt).toLocaleString(),
         };
@@ -103,7 +103,7 @@ const Response = (props) => {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={14}
+                    pageSize={13}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
                 />

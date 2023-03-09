@@ -133,7 +133,7 @@ const Themes = () => {
                 <DataGrid
                     rows={rows}
                     columns={columns}
-                    pageSize={14}
+                    pageSize={13}
                     rowsPerPageOptions={[5]}
                     checkboxSelection
                 />
