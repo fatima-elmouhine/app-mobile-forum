@@ -33,7 +33,7 @@ const Qcms = () => {
     const [openPrint, setOpenPrint] = useState(false);
     const handleOpenPrint = () => setOpenPrint(true);
 
-    const handleClose = () => setOpenDelete(false) || setOpenUpdate(false);
+    const handleClose = () => setOpenDelete(false) || setOpenUpdate(false) || setOpenPrint(false);
 
     const handleQuestions = (id) => {
         window.location.href=`Questions/${id}`
