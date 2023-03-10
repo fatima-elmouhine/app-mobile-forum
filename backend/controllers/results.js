@@ -5,7 +5,7 @@ async function getResultsByUser(req, res) {
   try {
     const { id } = req.user;
     const { isGenerated } = req.query;
-    console.log("isGenerated", isGenerated);
+    // console.log("isGenerated", isGenerated);
     const results = await Result.findAll({
       attributes: ["result"],
       include: {
@@ -41,7 +41,7 @@ async function getResultsByUser(req, res) {
         const sum = scores.reduce((acc, score) => acc + score, 0);
         const scoreOn100 = (sum / scores.length) * 100;
         total += scoreOn100;
-        acc[qcmId] = scoreOn100;
+        acc[qcmId] = Math.round(scoreOn100);
         return acc;
       },
       {}
@@ -81,6 +81,7 @@ async function getResultsByTheme(req, res) {
       ],
     });
 
+
     if (results.length === 0) {
         return res.status(404).json("Aucun résultat trouvé");
       }
@@ -97,7 +98,7 @@ async function getResultsByTheme(req, res) {
         const sum = scores.reduce((acc, score) => acc + score, 0);
         const scoreOn100 = (sum / scores.length) * 100;
         total += scoreOn100;
-        acc[qcmId] = scoreOn100;
+        acc[qcmId] = Math.round(scoreOn100);
         return acc;
       },
       {}
