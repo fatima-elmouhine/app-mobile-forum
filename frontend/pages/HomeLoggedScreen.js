@@ -49,7 +49,6 @@ export default function HomeLoggedScreen({ navigation }) {
 
 
   return (
-    <SafeAreaView style={styles.container}>
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
         style={styles.containerGradient}
@@ -130,7 +129,6 @@ export default function HomeLoggedScreen({ navigation }) {
           </View>
         </ScrollView>
       </LinearGradient>
-    </SafeAreaView>
   );
 }
 

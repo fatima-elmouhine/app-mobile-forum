@@ -11,9 +11,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useEffect, useContext, useState } from "react";
-// import Radar from 'paths-js/radar';
-// import { Radar } from './Radar.js'
-// import { Radar, RadarChart, PolarGrid, Legend, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+
 import {
   ProgressBar,
   Avatar,
@@ -23,46 +21,44 @@ import {
   DataTable
 } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
+// import RadarChart from 'react-svg-radar-chart'; 
+// import 'react-svg-radar-chart/build/css/index.css'
 
 function UserResultComponent(){
-        let data = [{
-          "speed": 74,
-          "balance": 29,
-          "explosives": 40,
-          "energy": 40,
-          "flexibility": 30,
-          "agility": 25,
-          "endurance": 44
-        }]
-      
-        let options = {
-          width: 290,
-          height: 290,
-          margin: {
-            top: 20,
-            left: 20,
-            right: 30,
-            bottom: 20
-          },
-          r: 150,
-          max: 100,
-          fill: "#2980B9",
-          stroke: "#2980B9",
-          animate: {
-            type: 'oneByOne',
-            duration: 200
-          },
-          label: {
-            fontFamily: 'Arial',
-            fontSize: 14,
-            fontWeight: true,
-            fill: '#34495E'
-          }
-        }
-      
+  const data = [
+    {
+      data: {
+        battery: 0.7,
+        design: .8,
+        useful: 0.9,
+        speed: 0.67,
+        weight: 0.8
+      },
+      meta: { color: 'blue' }
+    },
+    {
+      data: {
+        battery: 0.6,
+        design: .85,
+        useful: 0.5,
+        speed: 0.6,
+        weight: 0.7
+      },
+      meta: { color: 'red' }
+    }
+  ];
+
+      const captions = {
+        // columns
+        battery: 'Battery Capacity',
+        design: 'Design',
+        useful: 'Usefulness',
+        speed: 'Speed',
+        weight: 'Weight'
+      };
         return (
           <View>
-            {/* <Radar data={data} options={options} /> */}
+       
           </View>
         )
 }
@@ -104,11 +100,11 @@ export default function StatsScreen({ route, navigation }) {
                 display:'flex',
                 alignItems:'center',
                 justifyContent:'center',
-                marginTop:100,
+                marginTop:50,
                 width:'100%',
             }}>
 
-            <Text style={{fontSize:32, color:'white', marginTop:10, marginLeft:40, fontWeight:'bold',display:'flex',
+            <Text style={{fontSize:25, color:'white', marginTop:0, marginLeft:40, fontWeight:'bold',display:'flex',
                 alignSelf:'flex-start', width:'100%'
                  }}>
                 Statistiques
@@ -121,17 +117,20 @@ export default function StatsScreen({ route, navigation }) {
                 justifyContent:'center',
                 marginTop:20,
                 width:'100%',
+                marginRight:40,
+                marginLeft:40,
             }}>
                 <TouchableOpacity 
                 onPress={() => setSelected('result')}
                 style={{
                     backgroundColor:'#052346',
                     padding:10,
-                    paddingHorizontal:40,
+                    paddingHorizontal:10,
                     paddingBottom:20,
                     borderRadius:10,
                     borderWidth:3,
                     borderColor: selected == 'result' ? 'white' : 'transparent',
+                    
 
                     
                 }}>
@@ -146,7 +145,7 @@ export default function StatsScreen({ route, navigation }) {
                 style={{
                     backgroundColor:'#771182',
                     padding:10,
-                    paddingHorizontal:40,
+                    paddingHorizontal:10,
                     paddingBottom:20,
                     borderRadius:10,
                     marginLeft:10,
