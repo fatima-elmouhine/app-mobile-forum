@@ -5,7 +5,7 @@ import axiosInstance from '../config'
     const { data } = await axiosInstance.post(`themes`, {
         title: title,
         description: description,
-        imageTheme: image
+        // imageTheme: image
     })
 
     try {

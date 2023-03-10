@@ -15,8 +15,6 @@ const CreateTheme = (props) => {
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
-    // console.log('image', image);
-
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
           return;
@@ -32,16 +30,18 @@ const CreateTheme = (props) => {
     };
     const handleImageChange = (event) => {
         setImage(event.target.files[0]);
+        console.log('ici', event.target.files[0]);
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
+
         try {
             if (title.length < 3) {
                 setMessage('Le titre doit contenire au moins 3 caractères');
                 setOpen(true);
                 return;
             }
-            const response = await postTheme(title, description, image);
+            const response = await postTheme(title, description);
             setMessage('Le thème a bien été créé');
             setTimeout(() => {
                 props.onClose()
@@ -91,6 +91,9 @@ const CreateTheme = (props) => {
                                 onChange={handleImageChange}
                             />
                         </Button>
+                        <Typography variant="body2" component="p" gutterBottom>
+                            {image ? image.name : ''}
+                        </Typography>
                     </FormControl>
                     <Button variant="contained" sx={{ m: 1 }} type="submit">
                         Enregistrer
