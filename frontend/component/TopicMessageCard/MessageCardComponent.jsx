@@ -28,6 +28,8 @@ export default function MessageCardComponent(props) {
   }
   var colorThumb = isLiked ? "black" : "white";
   const avatar = props.message.User.avatar ? `${API_IP}/avatars/${props.message.User.avatar}` : `${API_IP}/default/default.png`;
+  var role = props.message.User.role.role;
+  console.log("role", role);
   return (
     <View style={styles.card}>
       <List.Item
@@ -72,10 +74,33 @@ export default function MessageCardComponent(props) {
           </View>
         )}
         left={(props) => (
-          <Avatar.Image
-            size={70}
-            source={{uri : avatar}}
-          />
+          <View>
+            <Avatar.Image
+              size={70}
+              source={{uri : avatar}}
+            />
+            {role.map((role) => {
+              if (role === "ROLE_ADMIN") {
+                return (
+                  <Avatar.Icon
+                    size={40}
+                    color={colorThumb}
+                    icon="shield-account"
+                    style={{ backgroundColor: "#FFC107", marginRight: 10 }}
+                  />
+                );
+              } else if (role === "ROLE_TUTOR") {
+                return (
+                  <Avatar.Icon
+                    size={40}
+                    color={colorThumb}
+                    icon="school"
+                    style={{ backgroundColor: "#FFC107", marginRight: 10 }}
+                  />
+                );
+              }
+            })}
+          </View>
         )}
       />
     </View>
