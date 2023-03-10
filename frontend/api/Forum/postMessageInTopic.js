@@ -1,6 +1,7 @@
 import axiosInstance from '../config'
 
 export const postMessageInTopic = async (topicID, textMessage) => {
+  
 try {
     
   const messageSend = await axiosInstance.post('/messages', {
@@ -10,7 +11,7 @@ try {
         }
 
     })
-    console.log(messageSend.data)
+    // console.log('message : ',messageSend.data)
 return messageSend
         
   } catch (e) {

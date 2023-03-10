@@ -6,10 +6,12 @@ import { Modal, Container, Box, Button } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 
 import SideBar from '../component/layout/SideBar';
 import UpdateQcm from '@/component/Qcm/UpdateQcm';
 import DeleteQcm from '@/component/Qcm/DeleteQcm';
+import PrintQcm from '@/component/Qcm/PrintQcm';
 import style from '@/styles/Global.module.css';
 
 import { getQcms } from '@/api/Qcm/getQcms';
@@ -28,7 +30,10 @@ const Qcms = () => {
     const [openDelete, setOpenDelete] = useState(false);
     const handleOpenDelete = () => setOpenDelete(true);
 
-    const handleClose = () => setOpenDelete(false) || setOpenUpdate(false);
+    const [openPrint, setOpenPrint] = useState(false);
+    const handleOpenPrint = () => setOpenPrint(true);
+
+    const handleClose = () => setOpenDelete(false) || setOpenUpdate(false) || setOpenPrint(false);
 
     const handleQuestions = (id) => {
         window.location.href=`Questions/${id}`
@@ -56,7 +61,7 @@ const Qcms = () => {
         { field: 'id_type', headerName: 'Type', width: 200 },
         { field: 'createdAt', headerName: 'Date de création', width: 130 },
         { field: 'updatedAt', headerName: 'Date de modification', width: 160 },
-        { field: 'Questions', headerName: 'Questions', width: 180 ,
+        { field: 'Questions', headerName: 'Questions', width: 120 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -69,7 +74,7 @@ const Qcms = () => {
                 </strong>
             ),
         },
-        { field: 'update', headerName: 'Modifier', width: 180 ,
+        { field: 'update', headerName: 'Modifier', width: 140 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -88,7 +93,7 @@ const Qcms = () => {
                 </strong>
             ),
         },
-        { field: 'delete', headerName: 'Supprimer', width: 180 ,
+        { field: 'delete', headerName: 'Supprimer', width: 150 ,
             renderCell: (params) => (
                 <strong>
                     <Button
@@ -107,6 +112,25 @@ const Qcms = () => {
                 </strong>
             ),
         },
+        { field: 'imprimer', headerName: 'Imprimer', width: 150 ,
+            renderCell: (params) => (
+                <strong>
+                    <Button
+                        variant="contained"
+                        color="inherit"
+                        onClick={()=>{setItem(params.row), handleOpenPrint()}}
+                    >
+                        <LocalPrintshopIcon/>Imprimer
+                    </Button>
+                    <Modal
+                        open={openPrint}
+                        onClose={handleClose}
+                    >
+                        <PrintQcm data={item} onClose={handleClose}/>
+                    </Modal>
+                </strong>
+            ),
+        },
     ];
 
     const rows = qcms.map((qcm) => {
@@ -115,6 +139,7 @@ const Qcms = () => {
             title: qcm.title,
             isGenerated: qcm.isGenerated ? 'Oui' : 'Non',
             id_type: qcm.id_type,
+            questions: qcm.Questions,
             createdAt: new Date(qcm.createdAt).toLocaleDateString(),
             updatedAt: new Date(qcm.updatedAt).toLocaleString()
         };

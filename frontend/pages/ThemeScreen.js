@@ -15,22 +15,19 @@ import { useEffect, useContext, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import { getThemes } from "../api/Themes/getThemes";
 import { UserContext } from "../context/UserContext";
-import CardTheme from '../component/Forum/CardTheme';
+import CardTheme from "../component/Forum/CardTheme";
 
 export default function ThemeScreen({ navigation }) {
   const [themes, setThemes] = useState([]);
-  const { userDetails,isLogged } = useContext(UserContext);
+  const { userDetails, isLogged } = useContext(UserContext);
 
-  useEffect( () => {
-
+  useEffect(() => {
     async function getThemesInScreen() {
-        const themesReq = await getThemes();
-        setThemes(themesReq);
+      const themesReq = await getThemes();
+      setThemes(themesReq);
     }
     getThemesInScreen();
-}, []);
-
-
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,57 +40,54 @@ export default function ThemeScreen({ navigation }) {
           style={styles.bgTop}
         />
         <View style={styles.profileImgContainer}>
-        <Text style={{fontSize:40, color:'white', marginTop:50, marginLeft:10, fontWeight:'bold'}}>
+          <Text
+            style={{
+              fontSize: 40,
+              color: "white",
+              marginTop: 50,
+              marginLeft: 10,
+              fontWeight: "bold",
+            }}
+          >
             Themes
-        </Text>
+          </Text>
 
-                <ScrollView>
-                    <View style={{ display:'flex',  alignItems:'center', justifyContent:'center', }} >
-                        <View style={{ display:'flex', flexDirection:'row', flexWrap:'wrap', width:'90%', alignItems:'center', justifyContent:'center',}} >
-                                {themes.map((theme, i) => {
-                                    return (
-                                        <View key={i} style={{marginRight:25}}>
-                                            <CardTheme
-                                                key={theme.id}
-                                                id={theme.id}
-                                                title={theme.title}
-                                                description={theme.description}
-                                                num={120}
-                                                navigation={navigation}
-                                            />
-                                        </View>
-                                )})}
-                                {themes.map((theme) => {
-                                    return (
-                                        <View style={{marginRight:25}}>
-                                            <CardTheme
-                                                key={theme.id}
-                                                id={theme.id}
-                                                title={theme.title}
-                                                description={theme.description}
-                                                num={120}
-                                                navigation={navigation}
-                                            />
-                                        </View>
-                                )})}
-                                {themes.map((theme) => {
-                                    return (
-                                        <View style={{marginRight:25}}>
-                                            <CardTheme
-                                                key={theme.id}
-                                                id={theme.id}
-                                                title={theme.title}
-                                                description={theme.description}
-                                                num={120}
-                                                navigation={navigation}
-                                            />
-                                        </View>
-                                )})}
-                        </View>
+          <ScrollView>
+            <View
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  width: "90%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {themes.map((theme, i) => {
+                  return (
+                    <View key={i} style={{ marginRight: 25 }}>
+                      <CardTheme
+                        key={theme.id}
+                        id={theme.id}
+                        title={theme.title}
+                        description={theme.description}
+                        num={120}
+                        navigation={navigation}
+                      />
                     </View>
-                </ScrollView>
+                  );
+                })}
+              </View>
+            </View>
+          </ScrollView>
         </View>
-
       </LinearGradient>
     </SafeAreaView>
   );
@@ -169,4 +163,3 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
 });
-

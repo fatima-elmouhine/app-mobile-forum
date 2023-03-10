@@ -28,8 +28,9 @@ async function getMessage (req, res)
 }
 
 async function postMessage (req, res) 
-
 {
+
+
     // TODO: Recuperer l'id de l'utilisateur connecté et l'ajouter à la requete depuis le Token JWT
     try {
         if (!req.body.data.id_topic) throw new Error("Une erreur est survenue lors de la création du message");

@@ -17,18 +17,23 @@ export default function ForumDetailScreen({route,navigation}, ) {
 
     const getTopicInForumDetail = async () => {
       const topicReq = await getTopic(route.params.id);
+      console.log('topicReq')
+      
       setTopic(topicReq);
       
     }
+
 
     React.useEffect( () => {
       
       if(route.params.id){
 
         getTopicInForumDetail();
+        // console.log('topic', topic)
       }
 
   }, [])
+
 
   React.useEffect( () => {
     if(route.params.id){
@@ -56,11 +61,25 @@ export default function ForumDetailScreen({route,navigation}, ) {
                 <PopUpPostMessage topicID={route.params.id} handlePostMessageSnackBar={handlePostMessageSnackBar}/>
 
                 <View style={styles.messagesContainer}>
-                    {topic && topic.map((message) => {
+                    {topic !== "Aucun message n'a été trouvé" ? 
+                    topic?.map((message) => {
                         return (
                             <MessageCardComponent key={message.id} message={message}/>
                         )}
-                    )}
+                    )
+                    : <Text 
+                        style={{
+                          fontSize: 19,
+                          color: "white",
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          fontWeight: "bold",
+                        }}
+                      > 
+                        {topic} 
+                      </Text>
+                  }
                 </View>
 
             </ScrollView>

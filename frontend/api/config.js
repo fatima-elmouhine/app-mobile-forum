@@ -12,6 +12,7 @@ axiosInstance.interceptors.request.use(function (request) {
   })
   return request
 }, function (error) {
+  console.log(error);
   return Promise.reject(error)
 })
 
