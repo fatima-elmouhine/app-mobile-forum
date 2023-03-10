@@ -9,6 +9,10 @@ import {
   Dimensions,
   Modal,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
 import {
   TextInput,
@@ -25,10 +29,10 @@ import { UserContext } from "../context/UserContext";
 import * as ImagePicker from "expo-image-picker";
 import { postAvatar } from "../api/Users/postAvatar";
 import { getAvatar } from "../api/Users/getAvatar";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function ProfileScreen({ navigation }) {
   const { userDetails, setUserDetails, isLogged } = useContext(UserContext);
-
   if (isLogged === false) {
     return navigation.navigate("HomeScreen");
   }
@@ -96,21 +100,22 @@ export default function ProfileScreen({ navigation }) {
     }
   }
   async function handleSaveEdit() {
+    let userInfo = {};
     if (firstname !== "" && lastname !== "" && email !== "") {
       if (password !== "") {
         userInfo = {
           id: userDetails.id,
-          firstName: firstname,
-          lastName: lastname,
-          email: email,
+          firstName: firstname.trim(),
+          lastName: lastname.trim(),
+          email: email.trim(),
           password: password,
         };
       } else {
         userInfo = {
           id: userDetails.id,
-          firstName: firstname,
-          lastName: lastname,
-          email: email,
+          firstName: firstname.trim(),
+          lastName: lastname.trim(),
+          email: email.trim(),
         };
       }
       const response = await putUser(userInfo);
@@ -121,9 +126,9 @@ export default function ProfileScreen({ navigation }) {
       } else {
         setUserDetails({
           id: userDetails.id,
-          email: userInfo.email,
-          firstName: userInfo.firstName,
-          lastName: userInfo.lastName,
+          email: userInfo.email.trim(),
+          firstName: userInfo.firstName.trim(),
+          lastName: userInfo.lastName.trim(),
         });
         setColorMessage("purple");
         setMessage("Vos informations ont bien été modifiées");
@@ -154,6 +159,9 @@ export default function ProfileScreen({ navigation }) {
 
 
   return (
+    <KeyboardAvoidingView 
+    behavior={Platform.OS === 'ios' ?  'padding' : 'height'}
+    >
     <View style={styles.container}>
       <Modal animationType="fade" transparent={true} visible={modalVisible}>
         <View style={styles.centeredView}>
@@ -187,88 +195,97 @@ export default function ProfileScreen({ navigation }) {
         colors={["purple", "#02254F", "#2D84EA"]}
         style={styles.containerGradient}
       >
-        <View style={[styles.profileImgContainer]}>
-          <Avatar.Image
-            size={150}
-            source={{ uri: userDetails?.avatar }}
-            style={styles.image}
-          />
-          <IconButton
-            icon="camera"
-            iconColor="#00FAAF"
-            style={styles.icon}
-            size={40}
-            onPress={() => {
-              setModalVisible(true);
-            }}
-          />
-          <Text style={styles.advise}>Change de photo</Text>
-          <Text style={styles.title}>Profile</Text>
-        </View>
-        <View style={styles.form}>
-          <TextInput
-            label="Prenom"
-            style={styles.input}
-            value={firstname}
-            onChangeText={(text) => setFirstname(text)}
-          />
-          <TextInput
-            label="Nom"
-            style={styles.input}
-            value={lastname}
-            onChangeText={(text) => setLastname(text)}
-          />
-          <TextInput
-            label="Email"
-            style={styles.input}
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-          />
-          <TextInput
-            label="password"
-            style={styles.input}
-            secureTextEntry={true}
-            // value={text}
-            onChangeText={(text) => setPassword(text)}
-          />
-          <Pressable
-            style={({ pressed }) => [
-              { backgroundColor: pressed ? "#50F4E1" : "#0160D0" },
-              styles.button,
-            ]}
-            onPress={() => {
-              handleSaveEdit();
-            }}
-          >
-            {({ pressed }) => (
-              <Text
-                style={[{ color: pressed ? "black" : "white" }, styles.btnText]}
+  
+          <View style={[styles.profileImgContainer]}>
+            <Avatar.Image
+              size={150}
+              source={{ uri: userDetails?.avatar }}
+              style={styles.image}
+            />
+            <IconButton
+              icon="camera"
+              iconColor="#00FAAF"
+              style={styles.icon}
+              size={40}
+              onPress={() => {
+                setModalVisible(true);
+              }}
+            />
+            <Text style={styles.advise}>Change de photo</Text>
+            <Text style={styles.title}>Profile</Text>
+          </View>
+
+          <ScrollView onPress={Keyboard.dismiss}>
+
+              <View style={styles.form}
               >
-                Modifier
-              </Text>
-            )}
-          </Pressable>
-        </View>
-        <View style={styles.containerSnackBar}>
-          <Snackbar
-            visible={visible}
-            onDismiss={onDismissSnackBar}
-            style={{
-              backgroundColor: colorMessage,
-              fontSize: 130,
-            }}
-            action={{
-              label: "X",
-              onPress: () => {
-                onDismissSnackBar();
-              },
-            }}
-          >
-            {message}
-          </Snackbar>
-        </View>
+                <TextInput
+                  label="Prenom"
+                  style={styles.input}
+                  value={firstname}
+                  onChangeText={(text) => setFirstname(text)}
+                />
+                <TextInput
+                  label="Nom"
+                  style={styles.input}
+                  value={lastname}
+                  onChangeText={(text) => setLastname(text)}
+                />
+                <TextInput
+                  label="Email"
+                  style={styles.input}
+                  value={email.trim()}
+                  onChangeText={(text) => setEmail(text)}
+                />
+                <TextInput
+                  label="password"
+                  style={styles.input}
+                  secureTextEntry={true}
+                  // value={text}
+                  onChangeText={(text) => setPassword(text)}
+                />
+                <Pressable
+                  style={({ pressed }) => [
+                    { backgroundColor: pressed ? "#50F4E1" : "#0160D0" },
+                    styles.button,
+                  ]}
+                  onPress={() => {
+                    handleSaveEdit();
+                  }}
+                >
+                  {({ pressed }) => (
+                    <Text
+                      style={[{ color: pressed ? "black" : "white" }, styles.btnText]}
+                    >
+                      Modifier
+                    </Text>
+                  )}
+                </Pressable>
+              </View>
+          </ScrollView>
+          <View style={styles.containerSnackBar}>
+            <Snackbar
+              visible={visible}
+              onDismiss={onDismissSnackBar}
+              style={{
+                backgroundColor: colorMessage,
+                fontSize: 130,
+              }}
+              action={{
+                label: "X",
+                onPress: () => {
+                  onDismissSnackBar();
+                },
+              }}
+            >
+              {message}
+            </Snackbar>
+          </View>
+
+
       </LinearGradient>
     </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -279,41 +296,37 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 10,
     height: 150,
-    zIndex: 1,
     width: "100%",
+    borderColor: "transparent",
+    // zIndex: 1,
   },
   linearGradient: {
     flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5,
+    zIndex: 2,
     backgroundImage: "url(../assets/img-test/image1.png)",
   },
   container: {
     // flex: 6,
     width: "100%",
     height: "100%",
-    display: "flex",
-    // paddingLeft: 28,
-    margin: 0,
+    // display: "flex",
+    // margin: 0,
 
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   containerGradient: {
     // flex: 6,
     width: "100%",
     height: "100%",
-    display: "flex",
+    // display: "flex",
     paddingLeft: 28,
-    margin: 0,
+    // margin: 0,
+    
   },
 
   profileImgContainer: {
-    zIndex: 4,
-    top: 50,
-    left: 28,
-    position: "relative",
+    marginTop: 50,
+    justifyContent: "space-between",
+    // marginBottom: 64,
   },
 
   image: {
@@ -325,7 +338,7 @@ const styles = StyleSheet.create({
     borderColor: "#50F4E1",
   },
   icon: {
-    zIndex: 2,
+    zIndex: 4,
     position: "absolute",
     top: 100,
     left: 110,
@@ -345,7 +358,7 @@ const styles = StyleSheet.create({
     marginLeft: 150,
   },
   form: {
-    marginTop: 150,
+    marginTop:100,
     marginRight: 30,
     alignItems: "center",
     justifyContent: "center",

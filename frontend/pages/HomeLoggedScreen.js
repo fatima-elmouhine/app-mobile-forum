@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     height: 150,
     width: "100%",
+    borderColor: "transparent",
     // backgroundPosition: 'bottom',
   },
 
