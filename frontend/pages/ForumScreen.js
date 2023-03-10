@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState, useEffect, useRef } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, SafeAreaView } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Searchbar, Checkbox } from "react-native-paper";
 import { getTheme } from "../api/Forum/forum";
@@ -41,6 +41,7 @@ const Forum = ({ navigation }) => {
       const datas = await searchAll(
         "search=" + query + "&" + itemQuery(checked)
       );
+      // console.log("mes datas : ",datas.Topics.rows.length);
       setCards({
         ...cards,
         themeMenu: datas.Themes !== null ? datas.Themes : [],
@@ -108,7 +109,7 @@ const Forum = ({ navigation }) => {
   }, [checked]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* <Image source={require('../assets/logo_fond.png')} style={styles.bgTop}/> */}
       <LinearGradient
         colors={["purple", "#02254F", "#2D84EA"]}
@@ -222,7 +223,6 @@ const Forum = ({ navigation }) => {
               contentContainerStyle={{ display: "flex", flexGrow: 1 }}
             >
               {cards.topic?.map((item) => {
-                // console.log('item = ',cards.topic)
                 return (
                   <CardTopic
                     key={item.id}
@@ -234,19 +234,7 @@ const Forum = ({ navigation }) => {
                   />
                 );
               })}
-              {cards.topic?.map((item) => {
-                // console.log('item = ',cards.topic)
-                return (
-                  <CardTopic
-                    key={item.id}
-                    idTopic={item.id}
-                    title={item.title}
-                    theme={item.Theme.title}
-                    messages={item.Messages}
-                    navigation={navigation}
-                  />
-                );
-              })}
+              
             </ScrollView>
           </View>
         )}
@@ -255,7 +243,7 @@ const Forum = ({ navigation }) => {
             {checkFilterIsTrue("Themes") && (
               <SearchHeaderCard
                 table="Themes"
-                count={cards?.themeMenu?.count}
+                count={cards?.themeMenu?.rows?.length}
                 handleSetExpanded={() =>
                   setExpanded({ ...expanded, theme: !expanded.theme })
                 }
@@ -280,7 +268,7 @@ const Forum = ({ navigation }) => {
             {checkFilterIsTrue("Topics") && (
               <SearchHeaderCard
                 table="Sujets"
-                count={cards.topic.count}
+                count={cards.topic?.rows?.length}
                 handleSetExpanded={() =>
                   setExpanded({ ...expanded, topic: !expanded.topic })
                 }
@@ -301,25 +289,12 @@ const Forum = ({ navigation }) => {
                       />
                     );
                   })}
-                {cards.topic.count > 0 &&
-                  cards.topic.rows.map((item) => {
-                    return (
-                      <CardTopic
-                        key={item.id}
-                        idTopic={item.id}
-                        title={item.title}
-                        theme={item.Theme.title}
-                        messages={item.Messages}
-                        navigation={navigation}
-                      />
-                    );
-                  })}
               </ScrollView>
             )}
             {checkFilterIsTrue("Messages") && (
               <SearchHeaderCard
                 table="Messages"
-                count={cards.message.count}
+                count={cards.message?.rows?.length}
                 handleSetExpanded={() =>
                   setExpanded({ ...expanded, messages: !expanded.messages })
                 }
@@ -358,7 +333,7 @@ const Forum = ({ navigation }) => {
           </View>
         )}
       </LinearGradient>
-    </View>
+    </ScrollView>
   );
 };
 const styles = StyleSheet.create({

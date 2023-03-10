@@ -46,9 +46,9 @@ export default function SearchByThemeScreen({ route, navigation }) {
         />
         <Text
           style={{
-            fontSize: 27,
+            fontSize: 22,
             color: "white",
-            marginTop: 110,
+            marginTop: 20,
             marginLeft: 40,
             fontWeight: "bold",
           }}
@@ -57,7 +57,7 @@ export default function SearchByThemeScreen({ route, navigation }) {
         </Text>
         <Text
           style={{
-            fontSize: 27,
+            fontSize: 21,
             color: "white",
             fontStyle: "italic",
             marginLeft: 40,
