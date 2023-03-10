@@ -2,8 +2,6 @@ import axiosInstance from '../config'
 import * as SecureStore from 'expo-secure-store'
 
 export const putUser = async (userInformations) => {
-  console.log('USER INFORMATIONS',userInformations)
-  return
   try {
      
       const userResponse = await axiosInstance.put(`/users`,
