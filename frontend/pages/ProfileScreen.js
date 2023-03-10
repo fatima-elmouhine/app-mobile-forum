@@ -96,21 +96,22 @@ export default function ProfileScreen({ navigation }) {
     }
   }
   async function handleSaveEdit() {
+    let userInfo = {};
     if (firstname !== "" && lastname !== "" && email !== "") {
       if (password !== "") {
         userInfo = {
           id: userDetails.id,
-          firstName: firstname,
-          lastName: lastname,
-          email: email,
+          firstName: firstname.trim(),
+          lastName: lastname.trim(),
+          email: email.trim(),
           password: password,
         };
       } else {
         userInfo = {
           id: userDetails.id,
-          firstName: firstname,
-          lastName: lastname,
-          email: email,
+          firstName: firstname.trim(),
+          lastName: lastname.trim(),
+          email: email.trim(),
         };
       }
       const response = await putUser(userInfo);

@@ -23,8 +23,9 @@ function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   
   const handleLogin = async () => {
+    let emailTrimed = email.trim();
     try {
-      const response = await userAuthentication(email, password);
+      const response = await userAuthentication(emailTrimed, password);
       Alert.alert('Success', 'You are connected');
       navigation.navigate('HomeLoggedScreen');
     } catch (error) {

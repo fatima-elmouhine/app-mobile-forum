@@ -59,6 +59,7 @@ async function postUser(req, res) {
 }
 
 async function updateUser(req, res, next) {
+  console.log("L. req.body", req.body);
   try {
     if (req.body.password) {
       req.body.password = hashPassword(req.body.password);

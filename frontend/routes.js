@@ -30,7 +30,7 @@ function Routes() {
             <NavigationContainer>
                 <Stack.Navigator>
                     <Stack.Screen options={{ headerShown: false}} name="HomeScreen" component={HomeScreen} />
-                    <Stack.Screen options={{ headerShown: false}} name="HomeLoggedScreen" component={HomeLoggedScreen} />
+                    <Stack.Screen options={{ headerShown: false, gestureEnabled: false}} name="HomeLoggedScreen" component={HomeLoggedScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ProfileScreen" component={ProfileScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ForumDetailScreen" component={ForumDetailScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ForumScreen" component={ForumScreen} />
@@ -43,7 +43,7 @@ function Routes() {
                     <Stack.Screen options={{ headerShown: false}} name="QcmHomeScreen" component={QcmHomeScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="ListQcmScreen" component={ListQcmScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="QuestionQcmScreen" component={QuestionQcmScreen} />
-                    <Stack.Screen options={{ headerShown: false}} name="ScoreScreen" component={ScoreScreen} />
+                    <Stack.Screen options={{ headerShown: false, gestureEnabled: false}} name="ScoreScreen" component={ScoreScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="NewQcmScreen" component={NewQcmScreen} />
                     <Stack.Screen options={{ headerShown: false}} name="CorrectionQcmScreen" component={CorrectionQcmScreen} />
                 </Stack.Navigator>
