@@ -7,6 +7,7 @@ import axiosInstance from '../config'
       return data
     }
     catch (e) {
+      console.log(e, 'testestse')
         // console.log('LE E',e)
         // return e.status
     //     switch (e) {

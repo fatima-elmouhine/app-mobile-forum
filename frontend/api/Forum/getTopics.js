@@ -1,6 +1,11 @@
 import axiosInstance from '../config'
 
  export const getTopics = async () => {
-    const { data } = await axiosInstance.get(`topics?include=Message,Theme`)
-    return data
+   try {
+      const { data } = await axiosInstance.get(`topics?include=Message,Theme`)
+  
+      return data      
+   } catch (error) {
+      console.log(error, 'error')
+   }
  }
